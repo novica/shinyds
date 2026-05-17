@@ -1,0 +1,365 @@
+---
+title: "Getting Started with shinyds"
+output: html
+vignette: >
+  %\VignetteIndexEntry{Getting Started with shinyds}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(shinyds)
+```
+
+## Introduction
+
+`shinyds` provides R wrappers for [Designsystemet](https://designsystemet.no), the Norwegian
+government's design system. It lets you build Shiny applications that follow Norwegian public
+sector design guidelines using familiar `ds_*` functions.
+
+Components come from two upstream sources:
+
+- **CSS components** — plain HTML elements styled with `ds-*` CSS classes (`ds_button()`,
+  `ds_alert()`, `ds_input()`, …)
+- **Web components** — custom HTML elements with built-in JavaScript behaviour (`ds_tabs()`,
+  `ds_pagination()`, `ds_suggestion()`)
+
+## Installation
+
+```{r}
+#| eval: false
+# install.packages("remotes")
+remotes::install_github("your-org/shinyds")
+```
+
+## Minimal app
+
+Every app needs `use_designsystemet()` in the UI. It loads the CSS and JavaScript bundles and
+activates the design token colour scheme.
+
+```{r}
+#| eval: false
+library(shiny)
+library(bslib)
+library(shinyds)
+
+ui <- bslib::page_fluid(
+  use_designsystemet(),
+
+  ds_heading("Hello Designsystemet!", level = 1),
+  ds_paragraph("A Shiny app using Norwegian government design components."),
+
+  ds_field(
+    ds_label("Your name", `for` = "name"),
+    ds_input("name", placeholder = "Enter your name")
+  ),
+
+  ds_button("Submit", inputId = "submit", variant = "primary"),
+
+  verbatimTextOutput("out")
+)
+
+server <- function(input, output, session) {
+  output$out <- renderPrint(list(name = input$name, clicks = input$submit))
+}
+
+shinyApp(ui, server)
+```
+
+`bslib::page_fluid()` is the recommended page function — it provides Bootstrap 5 and works
+cleanly alongside Designsystemet's own CSS tokens.
+
+## Form controls
+
+### Button
+
+```{r}
+#| eval: false
+# label first, then inputId
+ds_button("Click me",  inputId = "btn1", variant = "primary")
+ds_button("Secondary", inputId = "btn2", variant = "secondary")
+ds_button("Tertiary",  inputId = "btn3", variant = "tertiary")
+
+# sizes
+ds_button("Small",  size = "sm")
+ds_button("Medium", size = "md")
+ds_button("Large",  size = "lg")
+
+# states
+ds_button("Disabled", variant = "primary", disabled = TRUE)
+ds_button("Loading",  variant = "secondary", loading = TRUE)
+```
+
+`input$btn1` starts at `0` and increments by 1 on each click.
+
+### Text inputs
+
+```{r}
+#| eval: false
+ds_field(
+  ds_label("Email", `for` = "email"),
+  ds_input("email", type = "email", placeholder = "you@example.com"),
+  ds_validation_message("Must be a valid email address", variant = "error")
+)
+
+ds_field(
+  ds_label("Message", `for` = "msg"),
+  ds_textarea("msg", placeholder = "Type here…", rows = 4)
+)
+```
+
+Wrap `ds_input()` / `ds_textarea()` in `ds_field()` with a `ds_label()` — this is the standard
+Designsystemet pattern and ensures correct label association and spacing.
+
+### Checkbox and radio
+
+```{r}
+#| eval: false
+ds_checkbox("agree", label = "I accept the terms")
+
+# Radio buttons — group them with a shared name
+ds_radio("opt_a", label = "Option A", value = "a", name = "opts", checked = TRUE)
+ds_radio("opt_b", label = "Option B", value = "b", name = "opts")
+```
+
+`input$agree` returns `TRUE` / `FALSE`. Radio inputs are individual elements; read any one of the
+group's `inputId` values to get the selected `value`.
+
+### Select
+
+```{r}
+#| eval: false
+ds_field(
+  ds_label("Country", `for` = "country"),
+  ds_select("country",
+    choices  = c("Norway" = "no", "Sweden" = "se", "Denmark" = "dk"),
+    selected = "no"
+  )
+)
+```
+
+`input$country` returns the selected option's value string.
+
+### Fieldset
+
+Group related controls under a shared legend:
+
+```{r}
+#| eval: false
+ds_fieldset(
+  legend = "Notification preferences",
+  ds_checkbox("notif_email", label = "Email"),
+  ds_checkbox("notif_sms",   label = "SMS"),
+  ds_checkbox("notif_push",  label = "Push")
+)
+```
+
+> **Note:** `ds_fieldset()` is backed by a behaviour-only JavaScript module. See the
+> *Reactivity Patterns* vignette if you need to react to fieldset-level events.
+
+### Search and suggestion
+
+```{r}
+#| eval: false
+# Search input — input$q returns the current text
+ds_field(
+  ds_label("Search", `for` = "q"),
+  ds_search("q", placeholder = "Search…")
+)
+
+# Autocomplete suggestion — input$fruit returns the selected value
+ds_field(
+  ds_label("Fruit", `for` = "fruit"),
+  ds_suggestion("fruit",
+    choices     = c("Apple", "Banana", "Cherry"),
+    placeholder = "Start typing…"
+  )
+)
+```
+
+## Typography
+
+```{r}
+#| eval: false
+# Headings — level sets the HTML element (h1–h6), size sets the visual token
+ds_heading("Page Title",    level = 1, size = "2xl")
+ds_heading("Section Title", level = 2, size = "lg")
+ds_heading("Card Title",    level = 3, size = "md")
+
+ds_paragraph("Body copy.", size = "md")
+ds_paragraph("Small caption.", size = "sm")
+
+ds_link("Designsystemet", href = "https://designsystemet.no")
+
+ds_list(
+  ds_list_item("First"),
+  ds_list_item("Second"),
+  ds_list_item("Third"),
+  ordered = TRUE
+)
+```
+
+## Layout
+
+### Cards
+
+```{r}
+#| eval: false
+ds_card(
+  ds_card_block(
+    ds_heading("Card Title", level = 3, size = "sm"),
+    ds_paragraph("Card content.")
+  )
+)
+
+ds_card(variant = "tinted",
+  ds_card_block("Highlighted content")
+)
+```
+
+### Tables
+
+```{r}
+#| eval: false
+ds_table(
+  ds_thead(
+    ds_tr(ds_th("Name"), ds_th("Role"), ds_th("Status"))
+  ),
+  ds_tbody(
+    ds_tr(ds_td("Alice"), ds_td("Developer"),
+          ds_td(ds_tag("Active", color = "success"))),
+    ds_tr(ds_td("Bob"),   ds_td("Designer"),
+          ds_td(ds_tag("Active", color = "success")))
+  )
+)
+```
+
+### Tabs (web component)
+
+```{r}
+#| eval: false
+ds_tabs("my_tabs",
+  ds_tablist(
+    ds_tab("Overview",  value = "overview",  selected = TRUE),
+    ds_tab("Details",   value = "details")
+  ),
+  ds_tabpanel(value = "overview",
+    ds_paragraph("Overview content.")
+  ),
+  ds_tabpanel(value = "details",
+    ds_paragraph("Details content.")
+  )
+)
+
+# In server: input$my_tabs returns the selected tab value string
+```
+
+### Pagination (web component)
+
+```{r}
+#| eval: false
+ds_pagination("pager", current = 1, total = 10)
+
+# In server: input$pager returns the current page number (integer)
+```
+
+## Feedback components
+
+```{r}
+#| eval: false
+ds_alert("Informational message.", variant = "info")
+ds_alert("Operation succeeded.",   variant = "success")
+ds_alert("Review before saving.",  variant = "warning")
+ds_alert("Something went wrong.",  variant = "danger")
+
+ds_spinner(title = "Loading…", size = "md")
+
+ds_skeleton(variant = "text",      width = "100%")
+ds_skeleton(variant = "circle",    width = "48px", height = "48px")
+ds_skeleton(variant = "rectangle", width = "200px", height = "80px")
+
+ds_badge_position(
+  ds_button("Inbox", variant = "secondary"),
+  ds_badge(count = 4, color = "danger")
+)
+```
+
+## Updating inputs from the server
+
+Several inputs support programmatic updates:
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  observeEvent(input$reset, {
+    update_ds_input(session,    "name",    value = "")
+    update_ds_checkbox(session, "agree",   value = FALSE)
+    update_ds_select(session,   "country", value = "no")
+    update_ds_tabs(session,     "my_tabs", selected = "overview")
+    update_ds_pagination(session, "pager", current = 1)
+  })
+}
+```
+
+## Using bslib layout primitives
+
+Because `shinyds` components are plain HTML tags, they compose naturally with `bslib` layout
+functions:
+
+```{r}
+#| eval: false
+ui <- bslib::page_fluid(
+  use_designsystemet(),
+
+  bslib::layout_sidebar(
+    sidebar = bslib::sidebar(
+      title    = "Controls",
+      position = "right",
+      width    = 280,
+      verbatimTextOutput("values")
+    ),
+
+    # Main content
+    ds_tabs("tabs",
+      ds_tablist(
+        ds_tab("Form",   value = "form",   selected = TRUE),
+        ds_tab("Result", value = "result")
+      ),
+      ds_tabpanel(value = "form",
+        ds_field(ds_label("Name", `for` = "nm"), ds_input("nm")),
+        ds_button("Submit", inputId = "go")
+      ),
+      ds_tabpanel(value = "result",
+        verbatimTextOutput("out")
+      )
+    )
+  )
+)
+```
+
+Use `bslib::layout_columns()` for equal-width column grids, and
+`bslib::layout_column_wrap(width = "220px")` for auto-fitting responsive grids.
+
+## Running the example apps
+
+```{r}
+#| eval: false
+# Minimal form example
+shiny::runApp(system.file("examples/basic", package = "shinyds"))
+
+# Data visualisation with tabs and layout_sidebar
+shiny::runApp(system.file("examples/faithful", package = "shinyds"))
+
+# Full component reference
+shiny::runApp(system.file("examples/showcase", package = "shinyds"))
+```
+
+## Next steps
+
+- **Reactivity Patterns** — how to add Shiny reactivity to behaviour-only module components
+  (toggle group, details, dialog, popover, fieldset):
+  `vignette("reactivity-patterns", package = "shinyds")`
+- [Designsystemet documentation](https://designsystemet.no)
+- [Shiny documentation](https://shiny.posit.co)

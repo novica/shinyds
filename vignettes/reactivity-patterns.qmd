@@ -1,0 +1,260 @@
+---
+title: "Reactivity Patterns in shinyds"
+output: html
+vignette: >
+  %\VignetteIndexEntry{Reactivity Patterns in shinyds}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(shinyds)
+```
+
+## Two kinds of components
+
+`shinyds` components fall into two categories that require different approaches to Shiny
+reactivity.
+
+### Standard input bindings
+
+Most components use a `Shiny.InputBinding` registered in `ds-bindings.js`. You use them
+exactly like native Shiny inputs:
+
+| Component | Function(s) | `input$id` value |
+|---|---|---|
+| Button | `ds_button(inputId=)` | click count (integer) |
+| Text input | `ds_input()` | character string |
+| Textarea | `ds_textarea()` | character string |
+| Checkbox | `ds_checkbox()` | `TRUE` / `FALSE` |
+| Radio | `ds_radio()` | selected value string |
+| Select | `ds_select()` | selected value string |
+| Search | `ds_search()` | character string |
+| Suggestion | `ds_suggestion()` | selected value string |
+| Tabs | `ds_tabs()` | selected tab value string |
+| Pagination | `ds_pagination()` | current page integer |
+
+### Behaviour-only module components
+
+The Designsystemet JavaScript bundle also includes modules that **enhance native HTML elements**
+rather than defining custom elements. The affected components are:
+
+| Component | Function(s) | HTML element |
+|---|---|---|
+| Toggle group | `ds_toggle_group()` | `<div>` with buttons |
+| Fieldset | `ds_fieldset()` | `<fieldset>` |
+| Details | `ds_details()` | `<details>` |
+| Dialog | `ds_dialog()` | `<dialog>` |
+| Popover | `ds_popover()` | `<div popover>` |
+
+These modules take over the element's behaviour for accessibility purposes (focus management,
+ARIA attributes, keyboard navigation). Registering a `Shiny.InputBinding` on the same element
+creates a conflict — the binding and the module fight over the element's state.
+
+**Do not use `Shiny.InputBinding` for these components.** Use `Shiny.setInputValue()` from a
+plain JavaScript event listener instead.
+
+## The `Shiny.setInputValue()` pattern
+
+`Shiny.setInputValue(id, value)` pushes a value directly to the Shiny server without needing a
+binding on the element. The server receives it via `input$id` and you react to it with
+`observeEvent()`.
+
+`ds_toggle_group()` uses this pattern out of the box — it generates the script block for you:
+
+```{r}
+#| eval: false
+# UI
+ds_toggle_group(
+  "view_mode",
+  tags$button(class = "ds-button", `data-variant` = "secondary",
+              `aria-pressed` = "true",  value = "list", "List"),
+  tags$button(class = "ds-button", `data-variant` = "secondary",
+              `aria-pressed` = "false", value = "grid", "Grid"),
+  tags$button(class = "ds-button", `data-variant` = "secondary",
+              `aria-pressed` = "false", value = "map",  "Map")
+)
+
+# Server
+observeEvent(input$view_mode, {
+  # input$view_mode is "list", "grid", or "map"
+})
+```
+
+For the other behaviour-only components you attach your own listener.
+
+## Details / accordion
+
+React to open/close events:
+
+```{r}
+#| eval: false
+# UI
+ds_details(
+  id      = "my_details",
+  summary = "Click to expand",
+  ds_paragraph("Hidden content revealed on open.")
+)
+
+tags$script(HTML("
+  document.getElementById('my_details').addEventListener('toggle', function(e) {
+    Shiny.setInputValue('my_details_open', e.target.open, {priority: 'event'});
+  });
+"))
+
+# Server
+observeEvent(input$my_details_open, {
+  if (isTRUE(input$my_details_open)) {
+    # user expanded the panel
+  }
+})
+```
+
+`{priority: 'event'}` ensures the value fires even when it hasn't changed (e.g. opening,
+closing, and reopening without navigating away).
+
+## Dialog
+
+Track whether the dialog is open and which button was used to close it:
+
+```{r}
+#| eval: false
+# UI
+tags$button(
+  class   = "ds-button", `data-variant` = "primary",
+  onclick = "document.getElementById('confirm-dialog').showModal()",
+  "Delete item"
+)
+
+ds_dialog(
+  id = "confirm-dialog",
+  ds_heading("Confirm deletion", level = 2, size = "md"),
+  ds_paragraph("This action cannot be undone."),
+  tags$div(
+    style = "display:flex; gap:0.75rem; margin-top:1rem;",
+    tags$button(
+      id = "dialog-confirm",
+      class = "ds-button", `data-variant` = "primary",
+      onclick = "document.getElementById('confirm-dialog').close('confirm')",
+      "Delete"
+    ),
+    tags$button(
+      class = "ds-button", `data-variant` = "secondary",
+      onclick = "document.getElementById('confirm-dialog').close('cancel')",
+      "Cancel"
+    )
+  )
+)
+
+tags$script(HTML("
+  document.getElementById('confirm-dialog').addEventListener('close', function(e) {
+    Shiny.setInputValue('confirm_dialog', e.target.returnValue, {priority: 'event'});
+  });
+"))
+
+# Server
+observeEvent(input$confirm_dialog, {
+  if (input$confirm_dialog == 'confirm') {
+    # perform deletion
+  }
+})
+```
+
+`HTMLDialogElement.close(returnValue)` sets `dialog.returnValue`, which the `close` event
+makes available as `e.target.returnValue`.
+
+## Popover
+
+Detect when a popover is shown or hidden:
+
+```{r}
+#| eval: false
+# UI
+ds_button("Info", inputId = "info-btn", `popovertarget` = "info-pop")
+
+ds_popover(
+  id      = "info-pop",
+  popover = NA,
+  ds_paragraph("Contextual help text.")
+)
+
+tags$script(HTML("
+  var pop = document.getElementById('info-pop');
+  pop.addEventListener('toggle', function(e) {
+    Shiny.setInputValue('info_pop_open', e.newState === 'open', {priority: 'event'});
+  });
+"))
+
+# Server
+observeEvent(input$info_pop_open, {
+  if (isTRUE(input$info_pop_open)) {
+    # log that user opened the popover, lazy-load content, etc.
+  }
+})
+```
+
+## Fieldset
+
+React when a checkbox or radio inside a fieldset changes, reporting the full set of checked
+values:
+
+```{r}
+#| eval: false
+# UI
+ds_fieldset(
+  id     = "notif-fieldset",
+  legend = "Notification preferences",
+  ds_checkbox("notif_email", label = "Email"),
+  ds_checkbox("notif_sms",   label = "SMS"),
+  ds_checkbox("notif_push",  label = "Push")
+)
+
+tags$script(HTML("
+  document.getElementById('notif-fieldset').addEventListener('change', function(e) {
+    var checked = Array.from(
+      e.currentTarget.querySelectorAll('input[type=checkbox]:checked')
+    ).map(function(el) { return el.id; });
+    Shiny.setInputValue('notif_prefs', checked);
+  });
+"))
+
+# Server
+observeEvent(input$notif_prefs, {
+  # input$notif_prefs is a character vector of checked checkbox IDs
+})
+```
+
+## Phantom input suppression
+
+The Designsystemet JavaScript bundle's `useId` utility auto-generates IDs like `:ds:1`,
+`:ds:2`, … for child elements that have no `id` attribute (e.g. `<legend>` inside
+`<fieldset>`). Shiny picks these up as phantom input names and produces errors:
+
+```
+No handler registered for type :ds:1
+key must not be "" or NA
+```
+
+Two guards prevent this:
+
+1. **`R/zzz.R`** — registers a pass-through handler for the `"ds"` input type so Shiny does not
+   error on type lookup.
+2. **`inst/www/js/ds-bindings.js`** — a `shiny:inputchanged` listener that calls
+   `preventDefault()` on any input whose name starts with `:`, blocking phantom inputs before
+   they reach the server.
+
+Both guards are always active. You do not need to add anything to your app. If you add a new
+behaviour-only module component and see this error, check whether the module assigns `:ds:*` IDs
+to elements that an existing binding might pick up.
+
+## Summary
+
+| Component | Approach | Notes |
+|---|---|---|
+| `ds_toggle_group()` | `Shiny.setInputValue()` built in | script generated by the R function |
+| `ds_details()` | `toggle` event → `setInputValue` | use `{priority:'event'}` |
+| `ds_dialog()` | `close` event → `setInputValue` | `returnValue` carries which button |
+| `ds_popover()` | `toggle` event → `setInputValue` | `e.newState === 'open'` |
+| `ds_fieldset()` | `change` event → `setInputValue` | collect checked inputs manually |
