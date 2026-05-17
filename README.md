@@ -6,7 +6,7 @@ R wrappers for the [Designsystemet](https://designsystemet.no) component library
 
 ```r
 # install.packages("remotes")
-remotes::install_github("your-org/shinyds")
+remotes::install_github("novica/shinyds")
 ```
 
 ## Demo 
