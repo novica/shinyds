@@ -11,7 +11,7 @@ remotes::install_github("novica/shinyds")
 
 ## Demo 
 
-[Old Faitful](https://novica.shinyapps.io/faithful/)
+[Old Faitful](https://novica-faitful.share.connect.posit.cloud/)
 
 ## Usage
 
