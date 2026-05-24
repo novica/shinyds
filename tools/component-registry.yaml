@@ -1,0 +1,576 @@
+# Designsystemet Component Registry
+# =================================
+# This file defines all components and their metadata for code generation.
+
+# Package metadata
+package:
+  name: shinyds
+  prefix: ds_
+  version: "0.1.0"
+  designsystemet_version: "1.14.0"
+
+# Web components (from @digdir/designsystemet-web)
+# These have custom elements and are parsed from custom-elements.json
+web_components:
+  tabs:
+    tag: ds-tabs
+    sub_elements:
+      - tag: ds-tablist
+        r_function: ds_tablist
+      - tag: ds-tab
+        r_function: ds_tab
+      - tag: ds-tabpanel
+        r_function: ds_tabpanel
+    binding: tabs
+    binding_event: click
+    value_getter: |
+      var selected = el.querySelector('ds-tab[aria-selected="true"]');
+      return selected ? selected.getAttribute('data-value') : null;
+
+  pagination:
+    tag: ds-pagination
+    binding: pagination
+    binding_event: click
+    attributes:
+      - name: data-current
+        r_param: current
+        type: integer
+        default: 1
+      - name: data-total
+        r_param: total
+        type: integer
+        required: true
+      - name: data-href
+        r_param: href
+        type: string
+      - name: aria-label
+        r_param: label
+        type: string
+        default: "Sidenavigasjon"
+    value_getter: |
+      return parseInt(el.getAttribute('data-current')) || 1;
+
+  suggestion:
+    tag: ds-suggestion
+    binding: suggestion
+    binding_event: input
+    composed_of:
+      - tag: input
+        class: ds-input
+      - tag: datalist
+    value_getter: |
+      var input = el.querySelector('input');
+      return input ? input.value : null;
+
+  breadcrumbs:
+    tag: ds-breadcrumbs
+    binding: none
+
+  error_summary:
+    tag: ds-error-summary
+    r_function: ds_error_summary
+    binding: none
+
+  field:
+    tag: ds-field
+    binding: none
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  tooltip:
+    type: attribute
+    attribute: data-tooltip
+    binding: none
+
+# CSS components (from @digdir/designsystemet-css)
+# These are plain HTML with CSS classes
+css_components:
+  button:
+    html_tag: button
+    css_class: ds-button
+    binding: action
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: enum
+        values: [primary, secondary, tertiary]
+        default: primary
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+      - name: data-icon
+        r_param: icon
+        type: boolean
+      - name: data-fullwidth
+        r_param: fullwidth
+        type: boolean
+      - name: aria-busy
+        r_param: loading
+        type: boolean
+      - name: disabled
+        r_param: disabled
+        type: boolean_attr
+
+  input:
+    html_tag: input
+    css_class: ds-input
+    binding: text
+    attributes:
+      - name: type
+        r_param: type
+        type: enum
+        values: [text, email, password, number, tel, url]
+        default: text
+      - name: value
+        r_param: value
+        type: string
+        default: ""
+      - name: placeholder
+        r_param: placeholder
+        type: string
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+      - name: readonly
+        r_param: readonly
+        type: boolean_attr
+      - name: disabled
+        r_param: disabled
+        type: boolean_attr
+      - name: aria-invalid
+        r_param: invalid
+        type: boolean
+
+  textarea:
+    html_tag: textarea
+    css_class: ds-input
+    binding: text
+    attributes:
+      - name: placeholder
+        r_param: placeholder
+        type: string
+      - name: rows
+        r_param: rows
+        type: integer
+        default: 3
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+      - name: readonly
+        r_param: readonly
+        type: boolean_attr
+      - name: disabled
+        r_param: disabled
+        type: boolean_attr
+
+  checkbox:
+    html_tag: input
+    html_type: checkbox
+    css_class: ds-input
+    binding: checkbox
+    with_label: true
+    attributes:
+      - name: checked
+        r_param: value
+        type: boolean_attr
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+      - name: disabled
+        r_param: disabled
+        type: boolean_attr
+
+  radio:
+    html_tag: input
+    html_type: radio
+    css_class: ds-input
+    binding: none  # Handled at group level
+    with_label: true
+    attributes:
+      - name: value
+        r_param: value
+        type: string
+        required: true
+      - name: name
+        r_param: name
+        type: string
+        required: true
+      - name: checked
+        r_param: checked
+        type: boolean_attr
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  select:
+    html_tag: select
+    css_class: ds-input
+    binding: select
+    has_choices: true
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+      - name: disabled
+        r_param: disabled
+        type: boolean_attr
+
+  card:
+    html_tag: div
+    css_class: ds-card
+    binding: none
+    sub_components:
+      - css_class: ds-card__block
+        r_function: ds_card_block
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: enum
+        values: [default, tinted]
+
+  alert:
+    html_tag: div
+    css_class: ds-alert
+    binding: none
+    extra_attrs:
+      role: alert
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: enum
+        values: [info, warning, danger, success]
+        default: info
+
+  heading:
+    html_tag: h{level}
+    css_class: ds-heading
+    binding: none
+    custom_params:
+      - name: level
+        type: integer
+        default: 2
+        range: [1, 6]
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [2xs, xs, sm, md, lg, xl, 2xl]
+
+  paragraph:
+    html_tag: p
+    css_class: ds-paragraph
+    binding: none
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  link:
+    html_tag: a
+    css_class: ds-link
+    binding: none
+    attributes:
+      - name: href
+        r_param: href
+        type: string
+        default: "#"
+
+  label:
+    html_tag: label
+    css_class: ds-label
+    binding: none
+    attributes:
+      - name: for
+        r_param: for
+        type: string
+
+  divider:
+    html_tag: hr
+    css_class: ds-divider
+    binding: none
+    no_children: true
+
+  badge:
+    html_tag: span
+    css_class: ds-badge
+    binding: none
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: string
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  tag:
+    html_tag: span
+    css_class: ds-tag
+    binding: none
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: string
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  chip:
+    html_tag: button
+    css_class: ds-chip
+    binding: none
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: string
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+      - name: aria-pressed
+        r_param: selected
+        type: boolean
+        default: false
+
+  spinner:
+    html_tag: span
+    css_class: ds-spinner
+    binding: none
+    no_children: true
+    extra_attrs:
+      role: status
+    attributes:
+      - name: aria-label
+        r_param: title
+        type: string
+        default: "Laster..."
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  skeleton:
+    html_tag: div
+    css_class: ds-skeleton
+    binding: none
+    no_children: true
+    extra_attrs:
+      aria-hidden: "true"
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: enum
+        values: [text, circle, rectangle]
+        default: text
+
+  avatar:
+    html_tag: span
+    css_class: ds-avatar
+    binding: none
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: string
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  avatar_stack:
+    html_tag: div
+    css_class: ds-avatar-stack
+    r_function: ds_avatar_stack
+    binding: none
+
+  skip_link:
+    html_tag: a
+    css_class: ds-skip-link
+    r_function: ds_skip_link
+    binding: none
+    attributes:
+      - name: href
+        r_param: href
+        type: string
+        default: "#main"
+
+  validation_message:
+    html_tag: div
+    css_class: ds-validation-message
+    r_function: ds_validation_message
+    binding: none
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: enum
+        values: [error, warning]
+        default: error
+
+  combobox:
+    html_tag: div
+    css_class: ds-combobox
+    r_function: ds_combobox
+    binding: none
+    custom_structure: true
+    note: "Size uses BEM modifier classes (ds-combobox--sm/md/lg), not data-size"
+    attributes:
+      - name: size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  fieldset:
+    html_tag: fieldset
+    css_class: ds-fieldset
+    r_function: ds_fieldset
+    binding: none
+    custom_structure: true
+
+  popover:
+    html_tag: div
+    css_class: ds-popover
+    r_function: ds_popover
+    binding: none
+    attributes:
+      - name: data-variant
+        r_param: variant
+        type: string
+
+  details:
+    html_tag: details
+    css_class: ds-details
+    binding: none
+    custom_structure: true
+    attributes:
+      - name: open
+        r_param: open
+        type: boolean_attr
+
+  dialog:
+    html_tag: dialog
+    css_class: ds-dialog
+    binding: none
+
+  dropdown:
+    html_tag: div
+    css_class: ds-dropdown
+    binding: none
+    custom_structure: true
+
+  search:
+    html_tag: div
+    css_class: ds-search
+    binding: none
+    custom_structure: true
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  toggle_group:
+    html_tag: div
+    css_class: ds-toggle-group
+    r_function: ds_toggle_group
+    binding: none
+    note: "Reactivity via Shiny.setInputValue() in inline script — not an InputBinding"
+    extra_attrs:
+      role: group
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  table:
+    html_tag: table
+    css_class: ds-table
+    binding: none
+    sub_components:
+      - html_tag: thead
+        r_function: ds_thead
+      - html_tag: tbody
+        r_function: ds_tbody
+      - html_tag: tr
+        r_function: ds_tr
+      - html_tag: th
+        r_function: ds_th
+      - html_tag: td
+        r_function: ds_td
+    attributes:
+      - name: data-size
+        r_param: size
+        type: enum
+        values: [sm, md, lg]
+
+  list:
+    html_tag: ul
+    css_class: ds-list
+    binding: none
+    custom_params:
+      - name: ordered
+        type: boolean
+        default: false
+    sub_components:
+      - html_tag: li
+        r_function: ds_list_item
+
+# Binding types and their configurations
+binding_types:
+  action:
+    type: action
+    value_getter: |
+      return $(el).data('val') || 0;
+    event: click
+    increment: true
+
+  text:
+    type: value
+    value_getter: |
+      return el.value;
+    event: input change
+
+  checkbox:
+    type: value
+    value_getter: |
+      return el.checked;
+    event: change
+
+  select:
+    type: value
+    value_getter: |
+      return el.value;
+    event: change
+
+  tabs:
+    type: value
+    event: click
+    delegate: ds-tab
+
+  pagination:
+    type: value
+    event: click
+    delegate: button, a
+
+  suggestion:
+    type: value
+    event: input change
+    delegate: input
+
+  toggle:
+    type: value
+    value_getter: |
+      var pressed = el.querySelector('[aria-pressed="true"]');
+      return pressed ? pressed.value || pressed.textContent.trim() : null;
+    event: click
+    delegate: button
