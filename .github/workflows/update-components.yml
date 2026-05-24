@@ -1,0 +1,132 @@
+name: Update Designsystemet components
+
+on:
+  # Trigger manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      designsystemet_version:
+        description: "Designsystemet version to build against (e.g. 1.15.0)"
+        required: true
+        type: string
+
+  # Trigger automatically when a new release is published by the upstream
+  # org via repository_dispatch (requires a webhook or a companion workflow
+  # in the designsystemet repo that calls this one via the GitHub API).
+  repository_dispatch:
+    types: [designsystemet-release]
+
+jobs:
+  update:
+    name: Regenerate wrappers
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout shinyds
+        uses: actions/checkout@v4
+        with:
+          path: shinyds
+
+      # Clone the upstream at the specified tag/version so we can build assets.
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.designsystemet_version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${{ github.event.client_payload.version }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout designsystemet upstream
+        uses: actions/checkout@v4
+        with:
+          repository: digdir/designsystemet
+          ref: "@digdir/designsystemet-css@${{ steps.version.outputs.version }}"
+          path: designsystemet
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Build designsystemet
+        working-directory: designsystemet
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Copy CSS asset
+        run: |
+          cp designsystemet/packages/css/dist/designsystemet.min.css \
+             shinyds/inst/www/css/designsystemet.min.css
+
+      - name: Copy JS (UMD) asset
+        run: |
+          cp designsystemet/packages/web/dist/umd/index.js \
+             shinyds/inst/www/js/designsystemet-web.umd.js
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: shinyds
+          extra-packages: |
+            yaml
+            jsonlite
+            whisker
+
+      - name: Check for new web components
+        working-directory: shinyds
+        run: Rscript tools/bootstrap-registry.R
+
+      - name: Regenerate R wrappers and JS bindings
+        working-directory: shinyds
+        run: Rscript tools/generate.R --clean
+
+      - name: Bump version strings
+        working-directory: shinyds
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # DESCRIPTION
+          sed -i "s/^Version: .*/Version: 0.1.0.9000/" DESCRIPTION
+          # ds-dependencies.R — both htmlDependency version strings
+          sed -i "s/version = \"[0-9.]*\"/version = \"${VERSION}\"/g" R/ds-dependencies.R
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          path: shinyds
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "auto/update-designsystemet-${{ steps.version.outputs.version }}"
+          commit-message: |
+            chore: update Designsystemet to ${{ steps.version.outputs.version }}
+
+            Regenerated R wrappers and JS bindings from updated upstream assets.
+          title: "Update Designsystemet to ${{ steps.version.outputs.version }}"
+          body: |
+            Automated update triggered by a new Designsystemet release.
+
+            ## What changed
+            - CSS and JS assets copied from `@digdir/designsystemet-css@${{ steps.version.outputs.version }}`
+            - R wrappers regenerated via `tools/generate.R --clean`
+            - JS bindings regenerated
+            - Version strings bumped in `DESCRIPTION` and `R/ds-dependencies.R`
+
+            ## Checklist
+            - [ ] Review `tools/bootstrap-registry.R` output — any new web components to add?
+            - [ ] Run `devtools::check()` locally
+            - [ ] Run `NOT_CRAN=true devtools::test()` to exercise browser tests
+            - [ ] Update `NEWS.md`
+          labels: dependencies,automated

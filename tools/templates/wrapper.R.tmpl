@@ -1,0 +1,44 @@
+#' {{TITLE}}
+#'
+#' {{DESCRIPTION}}
+#'
+{{#PARAMS}}
+#' @param {{NAME}} {{DESCRIPTION}}{{#DEFAULT}} Default: {{DEFAULT}}.{{/DEFAULT}}
+{{/PARAMS}}
+#' @param ... Additional attributes passed to the element.
+{{#HAS_INPUT_ID}}
+#' @param inputId The input slot for Shiny reactivity.
+{{/HAS_INPUT_ID}}
+#'
+#' @return A Shiny tag object.
+#' @export
+#'
+#' @examples
+#' {{EXAMPLE}}
+{{FUNCTION_NAME}} <- function({{SIGNATURE}}) {
+
+{{#VALIDATIONS}}
+  {{.}}
+{{/VALIDATIONS}}
+
+  attribs <- list(
+{{#ATTRIB_MAPPINGS}}
+    {{HTML_ATTR}} = {{R_VALUE}}{{^LAST}},{{/LAST}}
+{{/ATTRIB_MAPPINGS}}
+  )
+
+  attribs <- Filter(Negate(is.null), attribs)
+
+{{#HAS_BINDING}}
+  # Add Shiny binding class
+  attribs$class <- .ds_classes(attribs$class, "ds-shiny-input")
+  attribs$id <- inputId
+{{/HAS_BINDING}}
+
+  tag <- htmltools::tag("{{HTML_TAG}}", c(attribs, list(...)))
+{{#HAS_CHILDREN}}
+  tag <- htmltools::tagAppendChildren(tag, {{CHILDREN}})
+{{/HAS_CHILDREN}}
+
+  htmltools::attachDependencies(tag, ds_dependencies())
+}

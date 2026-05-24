@@ -1,0 +1,21 @@
+#' Update {{TITLE}}
+#'
+#' Change the {{COMPONENT_NAME}} from the server.
+#'
+#' @param session The Shiny session object.
+#' @param inputId The input ID of the component.
+{{#UPDATE_PARAMS}}
+#' @param {{NAME}} {{DESCRIPTION}}
+{{/UPDATE_PARAMS}}
+#'
+#' @export
+{{FUNCTION_NAME}} <- function(session = shiny::getDefaultReactiveDomain(),
+                              inputId{{#UPDATE_PARAMS}}, {{NAME}} = NULL{{/UPDATE_PARAMS}}) {
+  message <- list(
+{{#UPDATE_PARAMS}}
+    {{NAME}} = {{NAME}}{{^LAST}},{{/LAST}}
+{{/UPDATE_PARAMS}}
+  )
+  message <- Filter(Negate(is.null), message)
+  session$sendInputMessage(inputId, message)
+}

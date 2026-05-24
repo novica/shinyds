@@ -1,0 +1,43 @@
+// {{COMPONENT_NAME}} binding
+var {{BINDING_VAR}}Binding = new Shiny.InputBinding();
+$.extend({{BINDING_VAR}}Binding, {
+  find: function(scope) {
+    return $(scope).find('{{SELECTOR}}');
+  },
+
+  getId: function(el) {
+    return el.id;
+  },
+
+  getValue: function(el) {
+{{VALUE_GETTER}}
+  },
+
+  setValue: function(el, value) {
+{{VALUE_SETTER}}
+  },
+
+  subscribe: function(el, callback) {
+{{#DELEGATE}}
+    $(el).on('{{EVENT}}.{{BINDING_VAR}}Binding', '{{DELEGATE}}', function(e) {
+{{/DELEGATE}}
+{{^DELEGATE}}
+    $(el).on('{{EVENT}}.{{BINDING_VAR}}Binding', function(e) {
+{{/DELEGATE}}
+{{#INCREMENT}}
+      var val = $(el).data('val') || 0;
+      $(el).data('val', val + 1);
+{{/INCREMENT}}
+      callback(true);
+    });
+  },
+
+  unsubscribe: function(el) {
+    $(el).off('.{{BINDING_VAR}}Binding');
+  },
+
+  receiveMessage: function(el, data) {
+{{RECEIVE_MESSAGE}}
+  }
+});
+Shiny.inputBindings.register({{BINDING_VAR}}Binding, 'designsystemet.{{COMPONENT_NAME}}');
