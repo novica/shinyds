@@ -1,5 +1,7 @@
 # shinyds
 
+<img src="man/figures/shinyds.svg" alt="shinyds logo" width="200">
+
 R wrappers for the [Designsystemet](https://designsystemet.no) component library.
 
 ## Installation
@@ -106,4 +108,3 @@ Designsystemet components come from two upstream packages:
 | `ds-toggle-group` | `ds_toggle_group()` | none ⚠️ |
 | `ds-tooltip` | `ds_tooltip()` | none |
 | `ds-validation-message` | `ds_validation_message()` | none |
-
