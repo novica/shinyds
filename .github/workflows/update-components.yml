@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout shinyds
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           path: shinyds
 
@@ -41,19 +41,19 @@ jobs:
           fi
 
       - name: Checkout designsystemet upstream
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           repository: digdir/designsystemet
           ref: "@digdir/designsystemet-css@${{ steps.version.outputs.version }}"
           path: designsystemet
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "24"
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@v3
         with:
           version: 9
 
@@ -63,13 +63,11 @@ jobs:
           pnpm install --no-frozen-lockfile
           pnpm build
 
-      - name: Copy CSS asset
+      - name: Copy assets
         run: |
-          cp designsystemet/packages/css/dist/src/index.css \  
+          mkdir -p shinyds/inst/www/css shinyds/inst/www/js
+          cp designsystemet/packages/css/dist/src/index.css \
              shinyds/inst/www/css/designsystemet.min.css
-
-      - name: Copy JS (UMD) asset
-        run: |
           cp designsystemet/packages/web/dist/umd/index.js \
              shinyds/inst/www/js/designsystemet-web.umd.js
 
@@ -103,11 +101,13 @@ jobs:
           sed -i "s/^Version: .*/Version: 0.1.0.9000/" DESCRIPTION
           # ds-dependencies.R — both htmlDependency version strings
           sed -i "s/version = \"[0-9.]*\"/version = \"${VERSION}\"/g" R/ds-dependencies.R
-          # component-registry.yaml metadata                                                              sed -i "s/designsystemet_version: \"[0-9.]*\"/designsystemet_version: \"${VERSION}\"/" tools/component-registry.yaml      
-          # README badge                                                                                  sed -i "s/Designsystemet-[0-9.]*-blue/Designsystemet-${VERSION}-blue/" README.md
+          # component-registry.yaml metadata
+          sed -i "s/designsystemet_version: \"[0-9.]*\"/designsystemet_version: \"${VERSION}\"/" tools/component-registry.yaml
+          # README badge
+          sed -i "s/Designsystemet-[0-9.]*-blue/Designsystemet-${VERSION}-blue/" README.md
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@v6
         with:
           path: shinyds
           token: ${{ secrets.GITHUB_TOKEN }}
