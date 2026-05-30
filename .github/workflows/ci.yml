@@ -13,12 +13,14 @@ concurrency:
 
 jobs:
   ci:
+    runs-on: ubuntu-latest
+    steps:
     - name: Install
       uses: posit-dev/setup-air@v1
 
     - name: Check
       run: air format . --check
-  
+
     - name: Setup jarl
       uses: etiennebacher/setup-jarl@v0.1.1
 
