@@ -1,6 +1,8 @@
-# shinyds
+  <!-- badges: start -->
+  [![Codecov test coverage](https://codecov.io/gh/novica/shinyds/graph/badge.svg)](https://app.codecov.io/gh/novica/shinyds)
+  <!-- badges: end -->
 
-<img src="man/figures/shinyds.svg" alt="shinyds logo" width="200">
+# shinyds
 
 R wrappers for the [Designsystemet](https://designsystemet.no) component library.
 
@@ -13,7 +15,7 @@ remotes::install_github("novica/shinyds")
 
 ## Demo 
 
-[Old Faitful](https://novica-faitful.share.connect.posit.cloud/)
+[Old Faitful](https://novica.shinyapps.io/faithful/)
 
 ## Usage
 
@@ -108,3 +110,4 @@ Designsystemet components come from two upstream packages:
 | `ds-toggle-group` | `ds_toggle_group()` | none ⚠️ |
 | `ds-tooltip` | `ds_tooltip()` | none |
 | `ds-validation-message` | `ds_validation_message()` | none |
+

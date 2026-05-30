@@ -11,3 +11,4 @@
 ^jarl.toml$
 ^.release-plese-manifest.json$
 ^release-plese-config.json$
+^codecov\.yml$
