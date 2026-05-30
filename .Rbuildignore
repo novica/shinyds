@@ -7,3 +7,5 @@
 ^\.positai$
 ^\.claude$
 ^\.github$
+^air.toml$
+^jarl.toml$
