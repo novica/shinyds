@@ -9,3 +9,5 @@
 ^\.github$
 ^air.toml$
 ^jarl.toml$
+^.release-plese-manifest.json$
+^release-plese-config.json$
