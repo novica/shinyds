@@ -103,6 +103,8 @@ jobs:
           sed -i "s/^Version: .*/Version: 0.1.0.9000/" DESCRIPTION
           # ds-dependencies.R — both htmlDependency version strings
           sed -i "s/version = \"[0-9.]*\"/version = \"${VERSION}\"/g" R/ds-dependencies.R
+          # component-registry.yaml metadata                                                              sed -i "s/designsystemet_version: \"[0-9.]*\"/designsystemet_version: \"${VERSION}\"/" tools/component-registry.yaml      
+          # README badge                                                                                  sed -i "s/Designsystemet-[0-9.]*-blue/Designsystemet-${VERSION}-blue/" README.md
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
