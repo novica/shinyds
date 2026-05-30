@@ -27,7 +27,7 @@ pnpm build
 ```bash
 # From the shinyds package root:
 
-cp ../designsystemet/packages/css/dist/designsystemet.min.css \
+cp ../designsystemet/packages/css/dist/src/index.css \ 
    inst/www/css/designsystemet.min.css
 
 cp ../designsystemet/packages/web/dist/umd/index.js \
