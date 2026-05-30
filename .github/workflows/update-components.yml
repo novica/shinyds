@@ -89,10 +89,6 @@ jobs:
         working-directory: shinyds
         run: Rscript tools/bootstrap-registry.R
 
-      - name: Regenerate R wrappers and JS bindings
-        working-directory: shinyds
-        run: Rscript tools/generate.R --clean
-
       - name: Bump version strings
         working-directory: shinyds
         run: |
@@ -122,12 +118,11 @@ jobs:
 
             ## What changed
             - CSS and JS assets copied from `@digdir/designsystemet-css@${{ steps.version.outputs.version }}`
-            - R wrappers regenerated via `tools/generate.R --clean`
-            - JS bindings regenerated
-            - Version strings bumped in `DESCRIPTION` and `R/ds-dependencies.R`
+            - Version strings bumped in `DESCRIPTION`, `R/ds-dependencies.R`, `tools/component-registry.yaml`, and `README.md`
 
             ## Checklist
-            - [ ] Review `tools/bootstrap-registry.R` output — any new web components to add?
+            - [ ] Review `tools/bootstrap-registry.R` output in the Action log — any new web components to add?
+            - [ ] Review upstream changelog for API changes to existing components
             - [ ] Run `devtools::check()` locally
             - [ ] Run `NOT_CRAN=true devtools::test()` to exercise browser tests
             - [ ] Update `NEWS.md`
