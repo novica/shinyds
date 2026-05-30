@@ -140,7 +140,6 @@ jobs:
             ## Checklist
             - [ ] Review `tools/bootstrap-registry.R` output in the Action log — any new web components to add?
             - [ ] Review release notes above for API changes to existing R wrappers
-            - [ ] Run `devtools::check()` locally
+            - [ ] Run `R CMD check` worklow on the PR branch
             - [ ] Run `NOT_CRAN=true devtools::test()` to exercise browser tests
-            - [ ] Update `NEWS.md`
           labels: dependencies,automated

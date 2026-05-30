@@ -9,6 +9,6 @@
 ^\.github$
 ^air.toml$
 ^jarl.toml$
-^.release-plese-manifest.json$
-^release-plese-config.json$
+^.release-please-manifest.json$
+^release-please-config.json$
 ^codecov\.yml$

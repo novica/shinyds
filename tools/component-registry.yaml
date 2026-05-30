@@ -7,7 +7,7 @@ package:
   name: shinyds
   prefix: ds_
   version: "0.1.0"
-  designsystemet_version: "1.14.0"
+  designsystemet_version: "1.15.0"
 
 # Web components (from @digdir/designsystemet-web)
 # These have custom elements and are parsed from custom-elements.json
