@@ -89,20 +89,20 @@ jobs:
         working-directory: shinyds
         run: Rscript tools/bootstrap-registry.R
 
-      - name: Fetch upstream release notes
-        id: release_notes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          NOTES=$(gh api \
-            "repos/digdir/designsystemet/releases/tags/@digdir/designsystemet-css@${{ steps.version.outputs.version }}" \
-            --jq '.body' 2>/dev/null \
-            || echo "_Release notes not available for this tag._")
-          {
-            echo "notes<<EOF"
-            echo "$NOTES"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+      # - name: Fetch upstream release notes
+      #   id: release_notes
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     NOTES=$(gh api \
+      #       "repos/digdir/designsystemet/releases/tags/@digdir/designsystemet-css@${{ steps.version.outputs.version }}" \
+      #       --jq '.body' 2>/dev/null \
+      #       || echo "_Release notes not available for this tag._")
+      #     {
+      #       echo "notes<<EOF"
+      #       echo "$NOTES"
+      #       echo "EOF"
+      #     } >> "$GITHUB_OUTPUT"
 
       - name: Bump version strings
         working-directory: shinyds
