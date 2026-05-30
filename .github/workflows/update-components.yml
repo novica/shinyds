@@ -89,12 +89,25 @@ jobs:
         working-directory: shinyds
         run: Rscript tools/bootstrap-registry.R
 
+      - name: Fetch upstream release notes
+        id: release_notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NOTES=$(gh api \
+            "repos/digdir/designsystemet/releases/tags/@digdir/designsystemet-css@${{ steps.version.outputs.version }}" \
+            --jq '.body' 2>/dev/null \
+            || echo "_Release notes not available for this tag._")
+          {
+            echo "notes<<EOF"
+            echo "$NOTES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Bump version strings
         working-directory: shinyds
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          # DESCRIPTION
-          sed -i "s/^Version: .*/Version: 0.1.0.9000/" DESCRIPTION
           # ds-dependencies.R — both htmlDependency version strings
           sed -i "s/version = \"[0-9.]*\"/version = \"${VERSION}\"/g" R/ds-dependencies.R
           # component-registry.yaml metadata
@@ -120,9 +133,13 @@ jobs:
             - CSS and JS assets copied from `@digdir/designsystemet-css@${{ steps.version.outputs.version }}`
             - Version strings bumped in `DESCRIPTION`, `R/ds-dependencies.R`, `tools/component-registry.yaml`, and `README.md`
 
+            ## Upstream release notes
+
+            ${{ steps.release_notes.outputs.notes }}
+
             ## Checklist
             - [ ] Review `tools/bootstrap-registry.R` output in the Action log — any new web components to add?
-            - [ ] Review upstream changelog for API changes to existing components
+            - [ ] Review release notes above for API changes to existing R wrappers
             - [ ] Run `devtools::check()` locally
             - [ ] Run `NOT_CRAN=true devtools::test()` to exercise browser tests
             - [ ] Update `NEWS.md`
