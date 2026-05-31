@@ -32,9 +32,23 @@ library(shinyds)
 
 ui <- bslib::page_fluid(
   use_designsystemet(),
-  ds_heading("Hello", level = 1),
-  ds_button("Click me", inputId = "btn")
+  ds_heading("Hello Designsystemet!", level = 1),
+  ds_field(
+    ds_label("Your name", `for` = "name"),
+    ds_input("name", placeholder = "Enter your name")
+  ),
+  ds_button("Greet", inputId = "btn", variant = "primary"),
+  uiOutput("greeting")
 )
+
+server <- function(input, output, session) {
+  output$greeting <- renderUI({
+    req(input$btn, input$name)
+    ds_alert(paste("Hello,", input$name), variant = "success")
+  })
+}
+
+shinyApp(ui, server)
 ```
 
 `use_designsystemet()` must appear in the app's UI — it loads the CSS and JavaScript and activates the design token color scheme.

@@ -27,8 +27,10 @@ pnpm build
 ```bash
 # From the shinyds package root:
 
-cp ../designsystemet/packages/css/dist/src/index.css \ 
-   inst/www/css/designsystemet.min.css
+# Theme must be prepended — since 1.15.0 it lives in a separate file.
+cat ../designsystemet/packages/css/dist/theme/designsystemet.css \
+    ../designsystemet/packages/css/dist/src/index.css \
+    > inst/www/css/designsystemet.min.css
 
 cp ../designsystemet/packages/web/dist/umd/index.js \
    inst/www/js/designsystemet-web.umd.js

@@ -66,8 +66,11 @@ jobs:
       - name: Copy assets
         run: |
           mkdir -p shinyds/inst/www/css shinyds/inst/www/js
-          cp designsystemet/packages/css/dist/src/index.css \
-             shinyds/inst/www/css/designsystemet.min.css
+          # Theme must be prepended to component CSS — in 1.15.0 the theme layer
+          # was extracted to a separate file and is no longer bundled in index.css.
+          cat designsystemet/packages/css/dist/theme/designsystemet.css \
+              designsystemet/packages/css/dist/src/index.css \
+              > shinyds/inst/www/css/designsystemet.min.css
           cp designsystemet/packages/web/dist/umd/index.js \
              shinyds/inst/www/js/designsystemet-web.umd.js
 
@@ -84,6 +87,19 @@ jobs:
             yaml
             jsonlite
             whisker
+            any::shinytest2
+            any::chromote
+
+      - name: Install Chromium for shinytest2
+        run: chromote::install_chrome()
+        shell: Rscript {0}
+
+      - name: Run browser tests
+        working-directory: shinyds
+        env:
+          NOT_CRAN: true
+        run: |
+          Rscript -e "devtools::test(filter = 'shinytest')"
 
       - name: Check for new web components
         working-directory: shinyds
