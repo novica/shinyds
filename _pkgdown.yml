@@ -1,7 +1,0 @@
-url: https://novica.github.io/shinyds/
-destination: docs
-template:
-  bootstrap: 5
-  bootswatch: simplex
-development:
-  mode: auto
