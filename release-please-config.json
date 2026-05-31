@@ -2,7 +2,7 @@
   "packages": {
     ".": {
       "release-type": "r",
-      "package-name": "shinyds",
+      "package-name": "",
       "extra-files": ["DESCRIPTION"],
       "changelog-sections": [
         {"type": "feat",     "section": "New features"},

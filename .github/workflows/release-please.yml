@@ -38,8 +38,8 @@ jobs:
           git fetch origin "$PR_BRANCH"
           git checkout "$PR_BRANCH"
 
-          # ## [shinyds 0.2.0](https://…) (2025-01-01)  →  # shinyds 0.2.0
-          sed -i -E 's/^## \[([^]]+)\]\([^)]+\) \([0-9-]+\)/# \1/' NEWS.md
+          # ## [0.2.0](https://…) (2025-01-01)  →  # shinyds 0.2.0
+          sed -i -E \ 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\]\([^)]+\) \([0-9-]+\)/# shinyds \1/' \ NEWS.md 
 
           # ### New features  →  ## New features
           sed -i 's/^### /## /' NEWS.md
