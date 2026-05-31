@@ -6,7 +6,7 @@
   [![Designsystemet version](https://img.shields.io/badge/Designsystemet-1.15.0-blue)](https://github.com/digdir/designsystemet/releases)  
 <!-- badges: end -->
 
-# shinyds
+# shinyds - Designsystemet components for Shiny 
 
 <img src="man/figures/shinyds.svg" alt="shinyds logo" width="200">
 
