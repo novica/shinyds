@@ -15,3 +15,6 @@ A Shiny tag object
 \description{
 Create a table row.
 }
+\examples{
+ds_tr(ds_td("Cell 1"), ds_td("Cell 2"))
+}

@@ -62,6 +62,12 @@ ds_dialog <- function(..., id = NULL, class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_dropdown(
+#'   trigger = ds_button("Options"),
+#'   ds_list(ds_list_item("Edit"), ds_list_item("Delete"))
+#' )
 ds_dropdown <- function(trigger, ..., class = NULL) {
   tag <- htmltools::tag("div", list(
     class = .ds_classes("ds-dropdown", class),
@@ -119,6 +125,17 @@ ds_search <- function(inputId, value = "", placeholder = "Search...",
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' ds_toggle_group(
+#'   "view_mode",
+#'   tags$button(class = "ds-button", `data-variant` = "secondary",
+#'               `aria-pressed` = "true",  value = "list", "List"),
+#'   tags$button(class = "ds-button", `data-variant` = "secondary",
+#'               `aria-pressed` = "false", value = "grid", "Grid")
+#' )
+#' }
 ds_toggle_group <- function(inputId, ..., size = NULL, class = NULL) {
   tag <- htmltools::tag("div", list(
     id = inputId,

@@ -38,3 +38,6 @@ A Shiny tag object
 \description{
 Create a styled radio button using Designsystemet styles.
 }
+\examples{
+ds_radio("opt_a", label = "Option A", value = "a", name = "opts")
+}

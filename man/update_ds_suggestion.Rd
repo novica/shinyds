@@ -20,6 +20,14 @@ update_ds_suggestion(
 
 \item{choices}{New character vector of choices}
 }
+\value{
+Called for its side effect. Returns \code{NULL} invisibly.
+}
 \description{
 Change the value or choices from the server.
+}
+\examples{
+\dontrun{
+update_ds_suggestion(session, "fruit", value = "Apple")
+}
 }

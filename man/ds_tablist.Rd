@@ -17,3 +17,9 @@ A Shiny tag object
 \description{
 Container for tab buttons within ds_tabs.
 }
+\examples{
+ds_tablist(
+  ds_tab("First", value = "tab1", selected = TRUE),
+  ds_tab("Second", value = "tab2")
+)
+}

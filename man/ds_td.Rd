@@ -15,3 +15,6 @@ A Shiny tag object
 \description{
 Create a table data cell.
 }
+\examples{
+ds_td("Cell content")
+}

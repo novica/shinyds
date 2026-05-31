@@ -17,3 +17,10 @@ A Shiny tag object
 \description{
 Create a stack of avatars using Designsystemet styles.
 }
+\examples{
+ds_avatar_stack(
+  ds_avatar("AB"),
+  ds_avatar("CD"),
+  ds_avatar("EF")
+)
+}

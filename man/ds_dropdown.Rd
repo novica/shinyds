@@ -19,3 +19,9 @@ A Shiny tag object
 \description{
 Create a dropdown menu using Designsystemet styles.
 }
+\examples{
+ds_dropdown(
+  trigger = ds_button("Options"),
+  ds_list(ds_list_item("Edit"), ds_list_item("Delete"))
+)
+}

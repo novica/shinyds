@@ -17,3 +17,6 @@ A Shiny tag object
 \description{
 Create a table header cell.
 }
+\examples{
+ds_th("Column header")
+}

@@ -15,3 +15,6 @@ A Shiny tag object
 \description{
 Create a list item.
 }
+\examples{
+ds_list_item("First item")
+}

@@ -143,6 +143,10 @@ ds_tag <- function(..., color = NULL, variant = NULL, size = NULL,
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_chip("React")
+#' ds_chip("Vue", selected = TRUE)
 ds_chip <- function(..., variant = NULL, size = NULL,
                     selected = FALSE, class = NULL) {
   tag <- htmltools::tag("button", list(
@@ -223,6 +227,9 @@ ds_skeleton <- function(variant = "text", width = NULL, height = NULL,
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_avatar("AB", size = "md")
 ds_avatar <- function(..., variant = NULL, size = NULL, class = NULL) {
   tag <- htmltools::tag("span", list(
     class = .ds_classes("ds-avatar", class),
@@ -242,6 +249,13 @@ ds_avatar <- function(..., variant = NULL, size = NULL, class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_avatar_stack(
+#'   ds_avatar("AB"),
+#'   ds_avatar("CD"),
+#'   ds_avatar("EF")
+#' )
 ds_avatar_stack <- function(..., class = NULL) {
   tag <- htmltools::tag("div", list(
     class = .ds_classes("ds-avatar-stack", class),

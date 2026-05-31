@@ -41,3 +41,6 @@ A Shiny tag object
 \description{
 Create a styled textarea using Designsystemet styles.
 }
+\examples{
+ds_textarea("msg", placeholder = "Type here...", rows = 4)
+}

@@ -19,3 +19,6 @@ A Shiny tag object
 \description{
 Content panel for a tab.
 }
+\examples{
+ds_tabpanel(value = "overview", ds_paragraph("Content here."))
+}

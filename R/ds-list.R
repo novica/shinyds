@@ -32,6 +32,9 @@ ds_list <- function(..., ordered = FALSE, class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_list_item("First item")
 ds_list_item <- function(...) {
   htmltools::tag("li", list(...))
 }

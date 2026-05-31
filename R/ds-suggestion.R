@@ -70,7 +70,13 @@ ds_suggestion <- function(inputId, choices = NULL, value = "",
 #' @param value The new value
 #' @param choices New character vector of choices
 #'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_suggestion(session, "fruit", value = "Apple")
+#' }
 update_ds_suggestion <- function(session = shiny::getDefaultReactiveDomain(),
                                   inputId, value = NULL, choices = NULL) {
   message <- list(value = value, choices = choices)

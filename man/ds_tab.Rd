@@ -21,3 +21,6 @@ A Shiny tag object
 \description{
 A single tab button within ds_tablist.
 }
+\examples{
+ds_tab("Overview", value = "overview", selected = TRUE)
+}
