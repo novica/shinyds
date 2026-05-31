@@ -1,14 +1,14 @@
-## [0.3.0](https://github.com/novica/shinyds/compare/shinyds-v0.2.0...shinyds-v0.3.0) (2026-05-31)
+# 0.3.0
 
 
-### New features
+## New features
 
 * Add tools for auto-update and gh action. ([8de4669](https://github.com/novica/shinyds/commit/8de4669e1bacc63a36316cf9a8182f9f95f7b0c0))
 * Add tools for auto-update and gh action. ([367c5fb](https://github.com/novica/shinyds/commit/367c5fba952e1e79ae7f59253324bfbe95ac70a7))
 * Update Designsystemet to 1.15.0 ([#19](https://github.com/novica/shinyds/issues/19)) ([b19d971](https://github.com/novica/shinyds/commit/b19d9714a7b3332d4b6b7e2d9b8a658607f0fb5e))
 
 
-### Documentation
+## Documentation
 
 * add logo based on the official designsystemet logo ([26fac6e](https://github.com/novica/shinyds/commit/26fac6e86611f54e2b6bebb8f08d2f6c03334ce9))
 * add logo based on the official designsystemet logo ([eb4029a](https://github.com/novica/shinyds/commit/eb4029a1e2afb82ccba12a4bc5ddb4b92e81b649))
