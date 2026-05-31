@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout shinyds
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: shinyds
 
@@ -41,19 +41,19 @@ jobs:
           fi
 
       - name: Checkout designsystemet upstream
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: digdir/designsystemet
           ref: "@digdir/designsystemet-css@${{ steps.version.outputs.version }}"
           path: designsystemet
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "24"
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
         with:
           version: 9
 
@@ -132,7 +132,7 @@ jobs:
           sed -i "s/Designsystemet-[0-9.]*-blue/Designsystemet-${VERSION}-blue/" README.md
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           path: shinyds
           token: ${{ secrets.GITHUB_TOKEN }}
