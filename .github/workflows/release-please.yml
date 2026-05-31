@@ -19,17 +19,13 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-      # Only run when release-please created or updated a PR.
-      # Converts the default changelog format to R package NEWS.md conventions:
-      #   ## [0.2.0](link) (date)  →  # shinyds 0.2.0
-      #   ### New features          →  ## New features
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.pr }}
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Reformat NEWS.md for R package conventions
+      - name: Update NEWS.md from CHANGELOG.md
         if: ${{ steps.release.outputs.pr }}
         env:
           PR_JSON: ${{ steps.release.outputs.pr }}
@@ -38,15 +34,42 @@ jobs:
           git fetch origin "$PR_BRANCH"
           git checkout "$PR_BRANCH"
 
-          # ## [0.2.0](https://…) (2025-01-01)  →  # shinyds 0.2.0
-          sed -i -E \ 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\]\([^)]+\) \([0-9-]+\)/# shinyds \1/' \ NEWS.md 
+          python3 - <<'EOF'
+          import re, sys
+          from pathlib import Path
 
-          # ### New features  →  ## New features
-          sed -i 's/^### /## /' NEWS.md
+          pkg = Path("DESCRIPTION").read_text()
+          pkg = re.search(r"^Package:\s*(\S+)", pkg, re.MULTILINE).group(1)
+
+          changelog = Path("CHANGELOG.md").read_text()
+
+          # Extract the latest entry (first ## [...] block)
+          m = re.search(
+              r"^## \[([^\]]+)\][^\n]*\n(.*?)(?=^## \[|\Z)",
+              changelog, re.MULTILINE | re.DOTALL
+          )
+          if not m:
+              sys.exit(0)
+
+          version, body = m.group(1), m.group(2).strip()
+
+          # ### Section  →  ## Section
+          body = re.sub(r"^### ", "## ", body, flags=re.MULTILINE)
+
+          new_entry = f"# {pkg} {version}\n\n{body}\n"
+
+          news = Path("NEWS.md")
+          existing = news.read_text() if news.exists() else ""
+
+          if f"# {pkg} {version}" in existing:
+              sys.exit(0)
+
+          news.write_text(new_entry + "\n" + existing)
+          EOF
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add NEWS.md
           git diff --staged --quiet || \
-            git commit -m "style: reformat NEWS.md for R package conventions"
+            git commit -m "style: update NEWS.md from CHANGELOG.md"
           git push origin "$PR_BRANCH"

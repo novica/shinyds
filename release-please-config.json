@@ -3,6 +3,7 @@
     ".": {
       "release-type": "r",
       "package-name": "",
+      "changelog-path": "CHANGELOG.md",
       "extra-files": ["DESCRIPTION"],
       "changelog-sections": [
         {"type": "feat",     "section": "New features"},
