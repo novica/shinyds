@@ -37,6 +37,12 @@ ds_tabs <- function(inputId, ..., class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_tablist(
+#'   ds_tab("First", value = "tab1", selected = TRUE),
+#'   ds_tab("Second", value = "tab2")
+#' )
 ds_tablist <- function(..., class = NULL) {
   htmltools::tag("ds-tablist", list(
     class = class,
@@ -55,6 +61,9 @@ ds_tablist <- function(..., class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_tab("Overview", value = "overview", selected = TRUE)
 ds_tab <- function(label, value, selected = FALSE, ...) {
   htmltools::tag("ds-tab", list(
     `data-value` = value,
@@ -74,6 +83,9 @@ ds_tab <- function(label, value, selected = FALSE, ...) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_tabpanel(value = "overview", ds_paragraph("Content here."))
 ds_tabpanel <- function(..., value, class = NULL) {
   htmltools::tag("ds-tabpanel", list(
     `data-value` = value,
@@ -90,7 +102,13 @@ ds_tabpanel <- function(..., value, class = NULL) {
 #' @param inputId The input ID of the tabs component
 #' @param selected The value of the tab to select
 #'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_tabs(session, "my_tabs", selected = "overview")
+#' }
 update_ds_tabs <- function(session = shiny::getDefaultReactiveDomain(),
                            inputId, selected = NULL) {
   message <- list(selected = selected)

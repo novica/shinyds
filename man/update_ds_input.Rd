@@ -17,6 +17,14 @@ update_ds_input(
 
 \item{value}{The new value}
 }
+\value{
+Called for its side effect. Returns \code{NULL} invisibly.
+}
 \description{
 Change the value from the server.
+}
+\examples{
+\dontrun{
+update_ds_input(session, "name", value = "")
+}
 }

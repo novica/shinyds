@@ -21,3 +21,14 @@ A Shiny tag object
 \description{
 Create a toggle button group using Designsystemet styles.
 }
+\examples{
+\dontrun{
+ds_toggle_group(
+  "view_mode",
+  tags$button(class = "ds-button", `data-variant` = "secondary",
+              `aria-pressed` = "true",  value = "list", "List"),
+  tags$button(class = "ds-button", `data-variant` = "secondary",
+              `aria-pressed` = "false", value = "grid", "Grid")
+)
+}
+}

@@ -17,6 +17,14 @@ update_ds_checkbox(
 
 \item{value}{The new checked state (TRUE/FALSE)}
 }
+\value{
+Called for its side effect. Returns \code{NULL} invisibly.
+}
 \description{
 Change the checked state from the server.
+}
+\examples{
+\dontrun{
+update_ds_checkbox(session, "agree", value = FALSE)
+}
 }

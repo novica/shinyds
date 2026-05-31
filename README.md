@@ -1,8 +1,8 @@
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/novica/shinyds/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/novica/shinyds/actions/workflows/R-CMD-check.yml)
   [![Codecov test coverage](https://codecov.io/gh/novica/shinyds/graph/badge.svg)](https://app.codecov.io/gh/novica/shinyds)
-  [![CRAN status](https://www.r-pkg.org/badges/version/shinyds)](https://CRAN.R-project.org/package=shinyds)
-  [![CRAN downloads](https://cranlogs.r-pkg.org/badges/shinyds)](https://CRAN.R-project.org/package=shinyds)
+  <!-- [![CRAN status](https://www.r-pkg.org/badges/version/shinyds)](https://CRAN.R-project.org/package=shinyds)
+  [![CRAN downloads](https://cranlogs.r-pkg.org/badges/shinyds)](https://CRAN.R-project.org/package=shinyds) -->
   [![Designsystemet version](https://img.shields.io/badge/Designsystemet-1.15.0-blue)](https://github.com/digdir/designsystemet/releases)  
 <!-- badges: end -->
 
@@ -17,6 +17,14 @@
 Norwegian public sector applications are expected to follow Designsystemet's guidelines for visual consistency and accessibility. `shinyds` means you don't have to write CSS classes or HTML by hand: call `ds_button()`, `ds_alert()`, `ds_tabs()`, and the right markup, styles, and behaviour come with it. Components that carry Shiny reactivity return values through `input$id` just like native Shiny inputs.
 
 ## Installation
+
+### From CRAN
+
+```r
+install.packages("shinyds")
+```
+
+### From GitHub
 
 ```r
 # install.packages("remotes")

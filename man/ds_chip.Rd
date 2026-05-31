@@ -23,3 +23,7 @@ A Shiny tag object
 \description{
 Create an interactive chip using Designsystemet styles.
 }
+\examples{
+ds_chip("React")
+ds_chip("Vue", selected = TRUE)
+}

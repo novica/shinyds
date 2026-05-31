@@ -59,6 +59,9 @@ ds_input <- function(inputId, value = "", type = "text",
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_textarea("msg", placeholder = "Type here...", rows = 4)
 ds_textarea <- function(inputId, value = "", placeholder = NULL,
                         rows = 3, size = NULL,
                         readonly = FALSE, disabled = FALSE,
@@ -137,6 +140,9 @@ ds_checkbox <- function(inputId, label, value = FALSE,
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_radio("opt_a", label = "Option A", value = "a", name = "opts")
 ds_radio <- function(inputId, label, value, name,
                      checked = FALSE, size = NULL,
                      disabled = FALSE, ...) {
@@ -221,7 +227,13 @@ ds_select <- function(inputId, choices, selected = NULL,
 #' @param inputId The input ID
 #' @param value The new value
 #'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_input(session, "name", value = "")
+#' }
 update_ds_input <- function(session = shiny::getDefaultReactiveDomain(),
                             inputId, value = NULL) {
   message <- list(value = value)
@@ -237,7 +249,13 @@ update_ds_input <- function(session = shiny::getDefaultReactiveDomain(),
 #' @param inputId The input ID
 #' @param value The new checked state (TRUE/FALSE)
 #'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_checkbox(session, "agree", value = FALSE)
+#' }
 update_ds_checkbox <- function(session = shiny::getDefaultReactiveDomain(),
                                inputId, value = NULL) {
   message <- list(value = value)
@@ -254,7 +272,13 @@ update_ds_checkbox <- function(session = shiny::getDefaultReactiveDomain(),
 #' @param value The new selected value
 #' @param choices New named vector of choices
 #'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_select(session, "country", value = "no")
+#' }
 update_ds_select <- function(session = shiny::getDefaultReactiveDomain(),
                              inputId, value = NULL, choices = NULL) {
   message <- list(value = value, choices = choices)

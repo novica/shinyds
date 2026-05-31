@@ -41,6 +41,9 @@ ds_table <- function(..., size = NULL, class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_thead(ds_tr(ds_th("Name"), ds_th("Email")))
 ds_thead <- function(...) {
   htmltools::tag("thead", list(...))
 }
@@ -53,6 +56,9 @@ ds_thead <- function(...) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_tbody(ds_tr(ds_td("John"), ds_td("john@example.com")))
 ds_tbody <- function(...) {
   htmltools::tag("tbody", list(...))
 }
@@ -65,6 +71,9 @@ ds_tbody <- function(...) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_tr(ds_td("Cell 1"), ds_td("Cell 2"))
 ds_tr <- function(...) {
   htmltools::tag("tr", list(...))
 }
@@ -78,6 +87,9 @@ ds_tr <- function(...) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_th("Column header")
 ds_th <- function(..., scope = "col") {
   htmltools::tag("th", list(scope = scope, ...))
 }
@@ -90,6 +102,9 @@ ds_th <- function(..., scope = "col") {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_td("Cell content")
 ds_td <- function(...) {
   htmltools::tag("td", list(...))
 }

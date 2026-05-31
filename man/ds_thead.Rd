@@ -15,3 +15,6 @@ A Shiny tag object
 \description{
 Create a table header section.
 }
+\examples{
+ds_thead(ds_tr(ds_th("Name"), ds_th("Email")))
+}

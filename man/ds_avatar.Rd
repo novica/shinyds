@@ -21,3 +21,6 @@ A Shiny tag object
 \description{
 Create an avatar using Designsystemet styles.
 }
+\examples{
+ds_avatar("AB", size = "md")
+}

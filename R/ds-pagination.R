@@ -38,7 +38,13 @@ ds_pagination <- function(inputId, current = 1, total,
 #' @param current The new current page number
 #' @param total The new total number of pages
 #'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_pagination(session, "pager", current = 1)
+#' }
 update_ds_pagination <- function(session = shiny::getDefaultReactiveDomain(),
                                   inputId, current = NULL, total = NULL) {
   message <- list(current = current, total = total)

@@ -1,11 +1,11 @@
 Package: shinyds
-Title: Shiny Bindings for Designsystemet Components
+Title: 'Shiny' Bindings for Designsystemet Components
 Version: 0.2.2
 Authors@R: c(
-    person("Novica", "Nakov", , "nnovica@gmail.com", role = c("aut", "cre"),
+    person("Novica", "Nakov", , "nnovica@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0005-7773-7718")))
-Description: Provides R wrappers for the Designsystemet component library
-    (designsystemet.no), enabling use of Norwegian government design system
+Description: Provides 'R' wrappers for the Designsystemet component library
+    <https://designsystemet.no>, enabling use of Norwegian government design system
     components in Shiny applications. Includes web components and CSS-based
     HTML components with full Shiny input binding support.
 License: MIT + file LICENSE
@@ -27,3 +27,5 @@ VignetteBuilder: quarto
 Config/testthat/edition: 3
 Config/roxygen2/markdown: TRUE
 Config/roxygen2/version: 8.0.0
+URL: https://github.com/novica/shinyds
+BugReports: https://github.com/novica/shinyds/issues

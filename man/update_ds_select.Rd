@@ -20,6 +20,14 @@ update_ds_select(
 
 \item{choices}{New named vector of choices}
 }
+\value{
+Called for its side effect. Returns \code{NULL} invisibly.
+}
 \description{
 Change the selected value or choices from the server.
+}
+\examples{
+\dontrun{
+update_ds_select(session, "country", value = "no")
+}
 }

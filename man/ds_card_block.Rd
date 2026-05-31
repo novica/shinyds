@@ -17,3 +17,6 @@ A Shiny tag object
 \description{
 A block section within a card with proper padding.
 }
+\examples{
+ds_card_block(ds_paragraph("Card content."))
+}

@@ -20,6 +20,14 @@ update_ds_pagination(
 
 \item{total}{The new total number of pages}
 }
+\value{
+Called for its side effect. Returns \code{NULL} invisibly.
+}
 \description{
 Change the current page or total pages from the server.
+}
+\examples{
+\dontrun{
+update_ds_pagination(session, "pager", current = 1)
+}
 }

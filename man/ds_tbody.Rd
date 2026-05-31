@@ -15,3 +15,6 @@ A Shiny tag object
 \description{
 Create a table body section.
 }
+\examples{
+ds_tbody(ds_tr(ds_td("John"), ds_td("john@example.com")))
+}

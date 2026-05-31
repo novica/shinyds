@@ -34,6 +34,9 @@ ds_card <- function(..., variant = NULL, class = NULL) {
 #'
 #' @return A Shiny tag object
 #' @export
+#'
+#' @examples
+#' ds_card_block(ds_paragraph("Card content."))
 ds_card_block <- function(..., class = NULL) {
   htmltools::tag("div", list(
     class = .ds_classes("ds-card__block", class),

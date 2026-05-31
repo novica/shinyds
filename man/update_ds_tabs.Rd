@@ -17,6 +17,14 @@ update_ds_tabs(
 
 \item{selected}{The value of the tab to select}
 }
+\value{
+Called for its side effect. Returns \code{NULL} invisibly.
+}
 \description{
 Change the selected tab from the server.
+}
+\examples{
+\dontrun{
+update_ds_tabs(session, "my_tabs", selected = "overview")
+}
 }
