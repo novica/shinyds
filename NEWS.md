@@ -1,3 +1,9 @@
+# shinyds 0.2.2
+
+## Bug fixes
+
+* missing css from upstream ([444d2e1](https://github.com/novica/shinyds/commit/444d2e12a76bd422c7e8645cded8b4d356140dca))
+
 # shinyds 0.2.1
 
 ## Bug fixes
