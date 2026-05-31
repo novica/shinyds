@@ -226,6 +226,45 @@ observeEvent(input$notif_prefs, {
 })
 ```
 
+## Dropdown
+
+`ds_dropdown()` combines a trigger element and a content panel but has no built-in Shiny
+reactivity. To react to the dropdown opening or closing, listen for a `click` on the trigger
+and track state yourself:
+
+```{r}
+#| eval: false
+# UI
+ds_dropdown(
+  trigger = ds_button("Options", inputId = "btn_options", variant = "secondary"),
+  ds_list(
+    ds_list_item(ds_link("Edit",   href = "#")),
+    ds_list_item(ds_link("Delete", href = "#"))
+  )
+)
+
+tags$script(HTML("
+  (function() {
+    var open = false;
+    document.getElementById('btn_options').addEventListener('click', function() {
+      open = !open;
+      Shiny.setInputValue('options_open', open, {priority: 'event'});
+    });
+  })();
+"))
+
+# Server
+observeEvent(input$options_open, {
+  if (isTRUE(input$options_open)) {
+    # dropdown was opened — lazy-load data, log analytics, etc.
+  }
+})
+```
+
+If you only need to react to which menu item was chosen, it is often simpler to give each
+item a `ds_button()` with its own `inputId` and handle them individually with
+`observeEvent()`, without tracking open/close state at all.
+
 ## Phantom input suppression
 
 The Designsystemet JavaScript bundle's `useId` utility auto-generates IDs like `:ds:1`,
@@ -258,3 +297,4 @@ to elements that an existing binding might pick up.
 | `ds_dialog()` | `close` event → `setInputValue` | `returnValue` carries which button |
 | `ds_popover()` | `toggle` event → `setInputValue` | `e.newState === 'open'` |
 | `ds_fieldset()` | `change` event → `setInputValue` | collect checked inputs manually |
+| `ds_dropdown()` | `click` on trigger → `setInputValue` | track open/close state manually |

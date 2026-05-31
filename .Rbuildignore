@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^_pkgdown\.yml$
+^pkgdown$
 ^docs$
 ^pkgdown$
 ^LICENSE\.md$
@@ -12,3 +12,4 @@
 ^.release-please-manifest.json$
 ^release-please-config.json$
 ^codecov\.yml$
+^tools$

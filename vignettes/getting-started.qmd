@@ -179,6 +179,59 @@ ds_field(
 )
 ```
 
+`ds_suggestion()` includes built-in keyboard navigation and filtering. If you need a fully
+custom autocomplete — for example, with server-side filtering or custom option rendering —
+use `ds_combobox()` instead. It provides the CSS container only; keyboard navigation and
+dropdown behaviour are the caller's responsibility.
+
+### Form validation
+
+Use `ds_validation_message()` on individual fields to show inline errors, and
+`ds_error_summary()` at the top of the form to collect all errors in one place. Render both
+conditionally from the server:
+
+```{r}
+#| eval: false
+ui <- bslib::page_fluid(
+  use_designsystemet(),
+  uiOutput("error_summary"),
+  ds_field(
+    ds_label("Email", `for` = "email"),
+    ds_input("email", placeholder = "you@example.com"),
+    uiOutput("email_error")
+  ),
+  ds_button("Submit", inputId = "submit", variant = "primary")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$submit, {
+    errors <- list()
+
+    if (!nzchar(trimws(input$email %||% ""))) {
+      errors$email <- "Email is required"
+    } else if (!grepl("@", input$email, fixed = TRUE)) {
+      errors$email <- "Must be a valid email address"
+    }
+
+    output$email_error <- renderUI({
+      if (!is.null(errors$email))
+        ds_validation_message(errors$email, variant = "error")
+    })
+
+    output$error_summary <- renderUI({
+      if (length(errors) > 0)
+        ds_error_summary(
+          heading = "Please fix the following errors",
+          tags$li(ds_link(errors$email, href = "#email"))
+        )
+    })
+  })
+}
+```
+
+Link each item in `ds_error_summary()` to the corresponding field's `id` so keyboard users
+can jump directly to the problem field.
+
 ## Typography
 
 ```{r}
@@ -265,6 +318,45 @@ ds_pagination("pager", current = 1, total = 10)
 # In server: input$pager returns the current page number (integer)
 ```
 
+## Navigation
+
+### Breadcrumbs
+
+Show the current location within a multi-level structure:
+
+```{r}
+#| eval: false
+ds_breadcrumbs(
+  tags$ol(
+    tags$li(ds_link("Home",     href = "/")),
+    tags$li(ds_link("Reports",  href = "/reports")),
+    tags$li(tags$span("Annual summary"))  # current page — plain text, no link
+  )
+)
+```
+
+The last item should be plain text rather than a link, since it represents the current page.
+
+### Skip link
+
+Place a skip link at the very top of the page so keyboard users can jump past navigation
+directly to the main content:
+
+```{r}
+#| eval: false
+ui <- bslib::page_fluid(
+  use_designsystemet(),
+  ds_skip_link("Skip to main content", href = "#main"),
+  # ... navigation ...
+  tags$main(id = "main",
+    # ... page content ...
+  )
+)
+```
+
+`ds_skip_link()` renders as a visually hidden link that becomes visible when it receives
+keyboard focus. It should be the first focusable element on the page.
+
 ## Feedback components
 
 ```{r}
@@ -283,6 +375,70 @@ ds_skeleton(variant = "rectangle", width = "200px", height = "80px")
 ds_badge_position(
   ds_button("Inbox", variant = "secondary"),
   ds_badge(count = 4, color = "danger")
+)
+```
+
+## Display components
+
+### Avatar
+
+Display user initials or a profile image:
+
+```{r}
+#| eval: false
+# Initials
+ds_avatar("AB", size = "sm")
+ds_avatar("CD", size = "md")
+ds_avatar("EF", size = "lg")
+
+# Image
+ds_avatar(
+  tags$img(src = "profile.jpg", alt = "Alice B."),
+  size = "lg"
+)
+
+# Group several avatars in a stack
+ds_avatar_stack(
+  ds_avatar("AB"),
+  ds_avatar("CD"),
+  ds_avatar("EF"),
+  ds_avatar("GH")
+)
+```
+
+### Chip
+
+A toggleable filter chip with an `aria-pressed` state:
+
+```{r}
+#| eval: false
+ds_chip("React",      selected = TRUE)
+ds_chip("Vue")
+ds_chip("Angular")
+ds_chip("Svelte")
+```
+
+`ds_chip()` renders as a `<button>`. To make chips reactive, attach a click listener and
+call `Shiny.setInputValue()` — the same pattern used for `ds_toggle_group()` in the
+*Reactivity Patterns* vignette applies here.
+
+### Tooltip
+
+`ds_tooltip()` wraps any element and attaches a tooltip via `data-tooltip` attributes.
+Unlike other components it does not create a new element — it modifies the element you
+pass in:
+
+```{r}
+#| eval: false
+ds_tooltip(
+  ds_button("Delete", variant = "danger"),
+  text      = "Permanently removes the record",
+  placement = "top"    # "top", "bottom", "left", "right"
+)
+
+ds_tooltip(
+  ds_badge(count = 12),
+  text = "Unread notifications"
 )
 ```
 
@@ -359,7 +515,7 @@ shiny::runApp(system.file("examples/showcase", package = "shinyds"))
 ## Next steps
 
 - **Reactivity Patterns** — how to add Shiny reactivity to behaviour-only module components
-  (toggle group, details, dialog, popover, fieldset):
+  (toggle group, details, dialog, popover, fieldset, dropdown):
   `vignette("reactivity-patterns", package = "shinyds")`
 - [Designsystemet documentation](https://designsystemet.no)
 - [Shiny documentation](https://shiny.posit.co)

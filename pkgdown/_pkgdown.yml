@@ -1,0 +1,130 @@
+url: https://novica.github.io/shinyds/
+destination: docs
+template:
+  bootstrap: 5
+  bootswatch: simplex
+development:
+  mode: auto
+
+home:
+  strip_header: true
+  links:
+  - text: <i class="fas fa-question-circle"></i> Help and discussions
+    href: https://github.com/novica/shinyds/discussions
+
+navbar:
+  structure:
+    left:  [intro, articles, reference, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/getting-started.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/novica/shinyds
+      aria-label: GitHub
+
+articles:
+- title: Guides
+  desc: ~
+  contents:
+  - getting-started
+  - reactivity-patterns
+
+reference:
+- title: Setup
+  desc: Load the Designsystemet CSS, JavaScript, and design tokens into your app.
+  contents:
+  - use_designsystemet
+  - ds_dependencies
+
+- title: Form inputs
+  desc: >
+    Components with an `inputId` that return a value via `input$id`.
+    `ds_toggle_group()` uses `Shiny.setInputValue()` rather than a standard
+    input binding — see the Reactivity Patterns vignette.
+  contents:
+  - ds_button
+  - ds_input
+  - ds_checkbox
+  - ds_radio
+  - ds_select
+  - ds_textarea
+  - ds_search
+  - ds_suggestion
+  - ds_combobox
+  - ds_toggle_group
+
+- title: Form structure
+  desc: Container and labelling helpers for building accessible forms.
+  contents:
+  - ds_field
+  - ds_label
+  - ds_fieldset
+  - ds_validation_message
+  - ds_error_summary
+
+- title: Update inputs
+  desc: Server-side functions to update input values programmatically.
+  contents:
+  - starts_with("update_ds_")
+
+- title: Layout
+  desc: Structural components for organising page content.
+  contents:
+  - ds_card
+  - ds_card_block
+  - ds_tabs
+  - ds_tablist
+  - ds_tab
+  - ds_tabpanel
+  - ds_pagination
+  - ds_table
+  - ds_thead
+  - ds_tbody
+  - ds_tr
+  - ds_th
+  - ds_td
+
+- title: Typography
+  contents:
+  - ds_heading
+  - ds_paragraph
+  - ds_link
+  - ds_list
+  - ds_list_item
+
+- title: Navigation
+  contents:
+  - ds_breadcrumbs
+  - ds_skip_link
+
+- title: Feedback
+  desc: Status and loading indicators.
+  contents:
+  - ds_alert
+  - ds_spinner
+  - ds_skeleton
+  - ds_badge
+  - ds_badge_position
+
+- title: Display
+  desc: Visual and decorative components.
+  contents:
+  - ds_avatar
+  - ds_avatar_stack
+  - ds_chip
+  - ds_tag
+  - ds_divider
+
+- title: Overlays
+  desc: >
+    Components that float above the page. Reactivity for these components uses
+    `Shiny.setInputValue()` — see the Reactivity Patterns vignette.
+  contents:
+  - ds_tooltip
+  - ds_popover
+  - ds_dropdown
+  - ds_dialog
+  - ds_details
