@@ -7,7 +7,7 @@
 ds_search(
   inputId,
   value = "",
-  placeholder = "Search...",
+  placeholder = NULL,
   size = NULL,
   class = NULL,
   ...
@@ -33,5 +33,5 @@ A Shiny tag object
 Create a search input using Designsystemet styles.
 }
 \examples{
-ds_search("search", placeholder = "Search...")
+ds_search("search", placeholder = "Search…")
 }

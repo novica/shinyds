@@ -71,6 +71,34 @@ shinyApp(ui, server)
 `bslib::page_fluid()` is the recommended page function — it provides Bootstrap 5 and works
 cleanly alongside Designsystemet's own CSS tokens.
 
+## Theming
+
+Use `ds_theme()` alongside `use_designsystemet()` to override colors, typography, and
+spacing without writing CSS manually:
+
+```{r}
+#| eval: false
+ui <- bslib::page_fluid(
+  use_designsystemet(),
+  ds_theme(
+    color          = "brand1",       # global color context
+    border_radius  = "2px",          # tighter corners
+    button_padding = "0.3rem 0.8rem" # compact buttons
+  ),
+  # ... components
+)
+```
+
+Pass arbitrary Designsystemet CSS token overrides via `...`:
+
+```{r}
+#| eval: false
+ds_theme(`--ds-border-width-focus` = "3px")
+```
+
+Available color contexts: `"default"`, `"brand1"`, `"brand2"`, `"neutral"`, `"success"`,
+`"warning"`, `"danger"`, `"info"`.
+
 ## Form controls
 
 ### Button
@@ -93,6 +121,15 @@ ds_button("Loading",  variant = "secondary", loading = TRUE)
 ```
 
 `input$btn1` starts at `0` and increments by 1 on each click.
+
+`ds_action_button(inputId, label, ...)` is a drop-in replacement for
+`shiny::actionButton()` with the same argument order:
+
+```{r}
+#| eval: false
+# equivalent to shiny::actionButton("go", "Submit")
+ds_action_button("go", "Submit", variant = "primary")
+```
 
 ### Text inputs
 
@@ -457,6 +494,30 @@ server <- function(input, output, session) {
     update_ds_pagination(session, "pager", current = 1)
   })
 }
+```
+
+### Opening and closing dialogs
+
+`ds_dialog()` must be placed in the UI. Open and close it from the server:
+
+```{r}
+#| eval: false
+# UI
+ds_button("Open", inputId = "open_dlg")
+ds_dialog(
+  id = "my-dialog",
+  ds_paragraph("Are you sure?"),
+  ds_button("Confirm", inputId = "btn_confirm"),
+  ds_button("Cancel",  inputId = "btn_cancel", variant = "secondary")
+)
+
+# Server
+observeEvent(input$open_dlg,   show_ds_dialog("my-dialog"))
+observeEvent(input$btn_cancel, hide_ds_dialog("my-dialog"))
+observeEvent(input$btn_confirm, {
+  hide_ds_dialog("my-dialog")
+  # act on confirmation
+})
 ```
 
 ## Using bslib layout primitives

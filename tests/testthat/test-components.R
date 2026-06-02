@@ -1,5 +1,39 @@
 # Tests for Designsystemet component wrappers
 
+`%||%` <- function(a, b) if (is.null(a)) b else a
+
+has_class <- function(tag, cls) {
+  cls %in% strsplit(tag$attribs$class %||% "", " ")[[1]]
+}
+
+# ── ds_action_button ─────────────────────────────────────────────────────────
+
+test_that("ds_action_button produces same tag as ds_button with args swapped", {
+  via_alias  <- ds_action_button("btn1", "Click me")
+  via_button <- ds_button("Click me", inputId = "btn1")
+  expect_equal(as.character(via_alias), as.character(via_button))
+})
+
+test_that("ds_action_button sets id and action class", {
+  btn <- ds_action_button("my_btn", "Go")
+  expect_equal(btn$attribs$id, "my_btn")
+  expect_true(has_class(btn, "ds-action-button"))
+})
+
+test_that("ds_action_button forwards extra args to ds_button", {
+  btn <- ds_action_button("btn2", "Save", variant = "secondary", size = "sm")
+  expect_equal(btn$attribs$`data-variant`, "secondary")
+  expect_equal(btn$attribs$`data-size`, "sm")
+})
+
+test_that("ds_action_button inputId first matches shiny::actionButton signature", {
+  btn <- ds_action_button("pos_id", "Positional label")
+  expect_equal(btn$attribs$id, "pos_id")
+  expect_match(as.character(btn), "Positional label")
+})
+
+# ── ds_button ─────────────────────────────────────────────────────────────────
+
 test_that("ds_button creates correct HTML structure", {
   btn <- ds_button("Click me", inputId = "test_btn")
 

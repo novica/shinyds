@@ -4,20 +4,21 @@
 \alias{ds_tooltip}
 \title{Tooltip}
 \usage{
-ds_tooltip(element, text, placement = "top")
+ds_tooltip(tag, text, placement = "top")
 }
 \arguments{
-\item{element}{The element to attach the tooltip to}
+\item{tag}{The element to attach the tooltip to.}
 
-\item{text}{The tooltip text}
+\item{text}{The tooltip text.}
 
-\item{placement}{Tooltip placement ("top", "bottom", "left", "right")}
+\item{placement}{Tooltip placement: \code{"top"}, \code{"bottom"}, \code{"left"},
+or \code{"right"}.}
 }
 \value{
-The element with tooltip attributes added
+The element with tooltip attributes added.
 }
 \description{
-Add a tooltip to an element using the data-tooltip attribute.
+Add a tooltip to an element by attaching \code{data-tooltip} attributes.
 }
 \examples{
 ds_tooltip(

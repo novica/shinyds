@@ -9,7 +9,7 @@ ds_dialog(..., id = NULL, class = NULL)
 \arguments{
 \item{...}{Dialog content}
 
-\item{id}{Dialog ID for opening/closing}
+\item{id}{Dialog ID for opening/closing via \code{\link[=show_ds_dialog]{show_ds_dialog()}}}
 
 \item{class}{Additional CSS classes}
 }
@@ -17,7 +17,9 @@ ds_dialog(..., id = NULL, class = NULL)
 A Shiny tag object
 }
 \description{
-Create a modal dialog using Designsystemet styles.
+Create a modal dialog using Designsystemet styles. Place \code{ds_dialog()} in
+your UI and open/close it from the server with \code{\link[=show_ds_dialog]{show_ds_dialog()}} and
+\code{\link[=hide_ds_dialog]{hide_ds_dialog()}}.
 }
 \examples{
 ds_dialog(
