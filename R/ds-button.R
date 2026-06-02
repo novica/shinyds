@@ -1,19 +1,21 @@
 #' Button Component
 #'
-#' Create a styled button using Designsystemet styles.
+#' Create a styled button using Designsystemet styles. `ds_action_button()` is
+#' a drop-in replacement for `shiny::actionButton()` with the same
+#' `(inputId, label, ...)` argument order.
 #'
-#' @param label The button label
-#' @param inputId Optional input ID for Shiny reactivity (creates action button)
-#' @param variant Button variant ("primary", "secondary", "tertiary")
-#' @param size Size variant ("sm", "md", "lg")
-#' @param icon If TRUE, creates an icon-only button
-#' @param loading If TRUE, shows loading state
-#' @param disabled If TRUE, disables the button
-#' @param fullwidth If TRUE, makes the button full width
-#' @param type Button type ("button", "submit", "reset")
-#' @param ... Additional attributes
+#' @param label The button label.
+#' @param inputId Optional input ID for Shiny reactivity (creates action button).
+#' @param variant Button variant: `"primary"`, `"secondary"`, or `"tertiary"`.
+#' @param size Size variant: `"sm"`, `"md"`, or `"lg"`.
+#' @param icon If `TRUE`, creates an icon-only button.
+#' @param loading If `TRUE`, shows loading state.
+#' @param disabled If `TRUE`, disables the button.
+#' @param fullwidth If `TRUE`, makes the button full width.
+#' @param type Button type: `"button"`, `"submit"`, or `"reset"`.
+#' @param ... Additional attributes.
 #'
-#' @return A Shiny tag object
+#' @return A Shiny tag object.
 #' @export
 #'
 #' @examples
@@ -45,4 +47,14 @@ ds_button <- function(label, inputId = NULL,
 
   tag <- htmltools::tag("button", c(attribs, list(label)))
   htmltools::attachDependencies(tag, ds_dependencies())
+}
+
+#' @rdname ds_button
+#' @param inputId Input ID (first argument, matching `shiny::actionButton`).
+#' @export
+#'
+#' @examples
+#' ds_action_button("btn", "Click me")
+ds_action_button <- function(inputId, label, ...) {
+  ds_button(label = label, inputId = inputId, ...)
 }

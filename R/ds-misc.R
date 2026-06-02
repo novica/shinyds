@@ -43,15 +43,16 @@ ds_divider <- function(class = NULL) {
 #' @export
 #'
 #' @examples
-#' # Count badge on a button (typical use)
-#' htmltools::tags$span(
-#'   class = "ds-badge--position",
+#' # Standalone dot with no count
+#' ds_badge(color = "success")
+#'
+#' # Count badge on a button (typical use — see ds_badge_position())
+#' \dontrun{
+#' ds_badge_position(
 #'   ds_button("Inbox"),
 #'   ds_badge(count = 4, color = "danger")
 #' )
-#'
-#' # Standalone dot with no count
-#' ds_badge(color = "success")
+#' }
 ds_badge <- function(count = NULL, color = NULL, variant = NULL,
                      size = NULL, class = NULL, ...) {
   tag <- htmltools::tag("span", list(
