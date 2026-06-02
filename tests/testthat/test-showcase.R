@@ -12,8 +12,6 @@ has_class <- function(tag, cls) {
   cls %in% classes
 }
 
-`%||%` <- function(a, b) if (is.null(a)) b else a
-
 # Source the showcase once at file load so all tests share the same env.
 showcase_env <- local({
   e <- new.env(parent = globalenv())

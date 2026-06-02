@@ -1,7 +1,5 @@
 # Tests for Designsystemet component wrappers
 
-`%||%` <- function(a, b) if (is.null(a)) b else a
-
 has_class <- function(tag, cls) {
   cls %in% strsplit(tag$attribs$class %||% "", " ")[[1]]
 }
