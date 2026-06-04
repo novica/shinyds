@@ -13,6 +13,14 @@ government services. Components are accessible, consistently styled, and work wi
 
 ### Installation
 
+#### From CRAN
+
+```r
+install.packages("shinyds")
+```
+
+#### From GitHub
+
 ```r
 remotes::install_github("novica/shinyds")
 ```
