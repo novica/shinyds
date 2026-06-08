@@ -449,15 +449,36 @@ A toggleable filter chip with an `aria-pressed` state:
 
 ```{r}
 #| eval: false
-ds_chip("React",      selected = TRUE)
+ds_chip("React", selected = TRUE)
 ds_chip("Vue")
 ds_chip("Angular")
 ds_chip("Svelte")
 ```
 
-`ds_chip()` renders as a `<button>`. To make chips reactive, attach a click listener and
-call `Shiny.setInputValue()` — the same pattern used for `ds_toggle_group()` in the
-*Reactivity Patterns* vignette applies here.
+`ds_chip()` renders as a `<button>` and is display-only on its own.
+
+For reactive multi-select filtering, wrap chips in `ds_chip_group()`. Selected chip
+values are reported to Shiny as a character vector via `input[[inputId]]`:
+
+```{r}
+#| eval: false
+# UI
+ds_chip_group(
+  "languages",
+  ds_chip("R",      value = "r",      selected = TRUE),
+  ds_chip("Python", value = "python"),
+  ds_chip("Julia",  value = "julia")
+)
+
+# Server
+observeEvent(input$languages, {
+  cat("Selected:", paste(input$languages, collapse = ", "), "\n")
+})
+```
+
+Each chip needs a `value` attribute (passed via `...`) that becomes the reported value.
+If `value` is omitted, the chip's text content is used instead. Disabled chips are
+excluded from click handling automatically.
 
 ### Tooltip
 

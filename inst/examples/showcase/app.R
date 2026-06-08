@@ -473,15 +473,16 @@ ui <- bslib::page_fluid(
                 )
               ),
 
-              demo_card("Chip", list("ds_chip()"),
-                ds_paragraph("Toggle-style filter chips."),
-                flex_row(
-                  ds_chip("React",    selected = TRUE),
-                  ds_chip("Vue"),
-                  ds_chip("Angular"),
-                  ds_chip("Svelte"),
-                  ds_chip("Disabled", disabled = TRUE)
-                )
+              demo_card("Chip", list("ds_chip()", "ds_chip_group()"),
+                ds_paragraph("Toggle-style filter chips. Selected values reported to Shiny."),
+                ds_chip_group("showcase_chips",
+                  ds_chip("React",    value = "react",   selected = TRUE),
+                  ds_chip("Vue",      value = "vue"),
+                  ds_chip("Angular",  value = "angular"),
+                  ds_chip("Svelte",   value = "svelte"),
+                  ds_chip("Disabled", value = "disabled", disabled = TRUE)
+                ),
+                shiny::verbatimTextOutput("chip_out")
               ),
 
               demo_card("Spinner", list("ds_spinner()"),
@@ -790,6 +791,11 @@ server <- function(input, output, session) {
   observeEvent(input$btn_dialog_cancel, hide_ds_dialog("demo-dialog"))
   observeEvent(input$btn_dialog_confirm, {
     hide_ds_dialog("demo-dialog")
+  })
+
+  output$chip_out <- shiny::renderText({
+    chips <- input$showcase_chips %||% character(0)
+    if (length(chips) == 0) "None selected" else paste("Selected:", paste(chips, collapse = ", "))
   })
 
   output$values <- renderPrint({

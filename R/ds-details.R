@@ -100,7 +100,8 @@ hide_ds_dialog <- function(id, session = shiny::getDefaultReactiveDomain()) {
 #' Create a dropdown menu using Designsystemet styles.
 #'
 #' @param trigger The trigger element (usually a button)
-#' @param ... Dropdown content
+#' @param ... Dropdown panel content
+#' @param id Optional ID for the dropdown panel. Auto-generated if omitted.
 #' @param class Additional CSS classes
 #'
 #' @return A Shiny tag object
@@ -111,16 +112,17 @@ hide_ds_dialog <- function(id, session = shiny::getDefaultReactiveDomain()) {
 #'   trigger = ds_button("Options"),
 #'   ds_list(ds_list_item("Edit"), ds_list_item("Delete"))
 #' )
-ds_dropdown <- function(trigger, ..., class = NULL) {
-  tag <- htmltools::tag("div", list(
+ds_dropdown <- function(trigger, ..., id = NULL, class = NULL) {
+  panel_id <- id %||% paste0("ds-dropdown-", sample.int(1e6, 1))
+  trigger_out <- htmltools::tagAppendAttributes(trigger, popovertarget = panel_id)
+  panel <- htmltools::tag("div", list(
+    id = panel_id,
     class = .ds_classes("ds-dropdown", class),
-    trigger,
-    htmltools::tag("div", list(
-      class = "ds-dropdown__content",
-      ...
-    ))
+    popover = NA,
+    ...
   ))
-  htmltools::attachDependencies(tag, ds_dependencies())
+  result <- htmltools::tagList(trigger_out, panel)
+  htmltools::attachDependencies(result, ds_dependencies())
 }
 
 #' Search Component
