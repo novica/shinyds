@@ -1,3 +1,9 @@
+# shinyds 0.3.0
+
+## New features
+
+* added ds_chip_group() for reactive chip selection ([48513eb](https://github.com/novica/shinyds/commit/48513eb62791794d642d2d1c4741b5281004bff4))
+
 # shinyds 0.2.2
 
 ## Bug fixes

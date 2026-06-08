@@ -1,3 +1,10 @@
+## [0.3.0](https://github.com/novica/shinyds/compare/v0.2.2...v0.3.0) (2026-06-08)
+
+
+### New features
+
+* added ds_chip_group() for reactive chip selection ([48513eb](https://github.com/novica/shinyds/commit/48513eb62791794d642d2d1c4741b5281004bff4))
+
 ## [0.2.2](https://github.com/novica/shinyds/compare/v0.2.1...v0.2.2) (2026-05-31)
 
 
