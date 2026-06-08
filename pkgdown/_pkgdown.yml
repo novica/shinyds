@@ -38,6 +38,7 @@ reference:
   contents:
   - use_designsystemet
   - ds_dependencies
+  - ds_theme
 
 - title: Form inputs
   desc: >
@@ -115,6 +116,7 @@ reference:
   - ds_avatar
   - ds_avatar_stack
   - ds_chip
+  - ds_chip_group
   - ds_tag
   - ds_divider
 
@@ -127,4 +129,6 @@ reference:
   - ds_popover
   - ds_dropdown
   - ds_dialog
+  - show_ds_dialog
+  - hide_ds_dialog
   - ds_details
