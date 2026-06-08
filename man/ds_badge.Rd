@@ -46,13 +46,14 @@ The circle text comes from \code{count}; \code{...} is the accessible label
 for the element being badged (rendered as invisible span text).
 }
 \examples{
-# Count badge on a button (typical use)
-htmltools::tags$span(
-  class = "ds-badge--position",
+# Standalone dot with no count
+ds_badge(color = "success")
+
+# Count badge on a button (typical use — see ds_badge_position())
+\dontrun{
+ds_badge_position(
   ds_button("Inbox"),
   ds_badge(count = 4, color = "danger")
 )
-
-# Standalone dot with no count
-ds_badge(color = "success")
+}
 }

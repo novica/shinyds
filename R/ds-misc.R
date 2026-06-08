@@ -43,15 +43,16 @@ ds_divider <- function(class = NULL) {
 #' @export
 #'
 #' @examples
-#' # Count badge on a button (typical use)
-#' htmltools::tags$span(
-#'   class = "ds-badge--position",
+#' # Standalone dot with no count
+#' ds_badge(color = "success")
+#'
+#' # Count badge on a button (typical use — see ds_badge_position())
+#' \dontrun{
+#' ds_badge_position(
 #'   ds_button("Inbox"),
 #'   ds_badge(count = 4, color = "danger")
 #' )
-#'
-#' # Standalone dot with no count
-#' ds_badge(color = "success")
+#' }
 ds_badge <- function(count = NULL, color = NULL, variant = NULL,
                      size = NULL, class = NULL, ...) {
   tag <- htmltools::tag("span", list(
@@ -157,6 +158,61 @@ ds_chip <- function(..., variant = NULL, size = NULL,
     ...
   ))
   htmltools::attachDependencies(tag, ds_dependencies())
+}
+
+#' Chip Group Component
+#'
+#' Create a reactive group of toggle chips. Selected chip values are reported
+#' to Shiny as a character vector via `input[[inputId]]`.
+#'
+#' @param inputId Shiny input ID
+#' @param ... `ds_chip()` elements
+#' @param class Additional CSS classes
+#'
+#' @return A Shiny tag object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' ds_chip_group(
+#'   "languages",
+#'   ds_chip("R",      value = "r",      selected = TRUE),
+#'   ds_chip("Python", value = "python"),
+#'   ds_chip("Julia",  value = "julia")
+#' )
+#' }
+ds_chip_group <- function(inputId, ..., class = NULL) {
+  container <- htmltools::tag("div", list(
+    id    = inputId,
+    class = .ds_classes("ds-chip-group", class),
+    style = "display:flex; flex-wrap:wrap; gap:0.5rem;",
+    ...
+  ))
+
+  script <- htmltools::tags$script(htmltools::HTML(sprintf(
+    '(function() {
+      function selectedValues(el) {
+        return Array.from(el.querySelectorAll(".ds-chip[aria-pressed=\'true\']"))
+          .map(function(c) { return c.value || c.textContent.trim(); });
+      }
+      document.addEventListener("shiny:sessioninitialized", function() {
+        var el = document.getElementById("%1$s");
+        if (el) Shiny.setInputValue("%1$s", selectedValues(el));
+      });
+      document.addEventListener("click", function(e) {
+        var chip = e.target.closest("#%1$s .ds-chip");
+        if (!chip || chip.disabled) return;
+        var pressed = chip.getAttribute("aria-pressed") === "true";
+        chip.setAttribute("aria-pressed", pressed ? "false" : "true");
+        var el = document.getElementById("%1$s");
+        Shiny.setInputValue("%1$s", selectedValues(el));
+      });
+    })();',
+    inputId
+  )))
+
+  result <- htmltools::tagList(container, script)
+  htmltools::attachDependencies(result, ds_dependencies())
 }
 
 #' Spinner Component

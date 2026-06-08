@@ -12,8 +12,6 @@ has_class <- function(tag, cls) {
   cls %in% classes
 }
 
-`%||%` <- function(a, b) if (is.null(a)) b else a
-
 # Source the showcase once at file load so all tests share the same env.
 showcase_env <- local({
   e <- new.env(parent = globalenv())
@@ -234,17 +232,32 @@ test_that("ds_dialog creates a dialog element", {
 
 # ── ds_dropdown ─────────────────────────────────────────────────────────────
 
-test_that("ds_dropdown creates a div with trigger and content", {
+test_that("ds_dropdown renders trigger with popovertarget and panel with popover attr", {
   dd <- ds_dropdown(
     trigger = ds_button("Open Menu"),
     shiny::tags$p("item 1"),
     shiny::tags$p("item 2")
   )
-  expect_s3_class(dd, "shiny.tag")
-  expect_equal(dd$name, "div")
-  expect_true(has_class(dd, "ds-dropdown"))
   html <- as.character(dd)
-  expect_match(html, "ds-dropdown__content")
+  # trigger button gets popovertarget
+  expect_match(html, 'popovertarget="ds-dropdown-')
+  # panel has ds-dropdown class and popover attribute
+  expect_match(html, 'class="ds-dropdown"')
+  expect_match(html, "popover")
+  # content is in the panel
+  expect_match(html, "item 1")
+  expect_match(html, "item 2")
+})
+
+test_that("ds_dropdown respects explicit id", {
+  dd <- ds_dropdown(
+    trigger = ds_button("Open Menu"),
+    id = "my-menu",
+    shiny::tags$p("item")
+  )
+  html <- as.character(dd)
+  expect_match(html, 'popovertarget="my-menu"')
+  expect_match(html, 'id="my-menu"')
 })
 
 # ── ds_popover ──────────────────────────────────────────────────────────────

@@ -2,6 +2,7 @@
 % Please edit documentation in R/ds-button.R
 \name{ds_button}
 \alias{ds_button}
+\alias{ds_action_button}
 \title{Button Component}
 \usage{
 ds_button(
@@ -16,36 +17,41 @@ ds_button(
   type = "button",
   ...
 )
+
+ds_action_button(inputId, label, ...)
 }
 \arguments{
-\item{label}{The button label}
+\item{label}{The button label.}
 
-\item{inputId}{Optional input ID for Shiny reactivity (creates action button)}
+\item{inputId}{Input ID (first argument, matching \code{shiny::actionButton}).}
 
-\item{variant}{Button variant ("primary", "secondary", "tertiary")}
+\item{variant}{Button variant: \code{"primary"}, \code{"secondary"}, or \code{"tertiary"}.}
 
-\item{size}{Size variant ("sm", "md", "lg")}
+\item{size}{Size variant: \code{"sm"}, \code{"md"}, or \code{"lg"}.}
 
-\item{icon}{If TRUE, creates an icon-only button}
+\item{icon}{If \code{TRUE}, creates an icon-only button.}
 
-\item{loading}{If TRUE, shows loading state}
+\item{loading}{If \code{TRUE}, shows loading state.}
 
-\item{disabled}{If TRUE, disables the button}
+\item{disabled}{If \code{TRUE}, disables the button.}
 
-\item{fullwidth}{If TRUE, makes the button full width}
+\item{fullwidth}{If \code{TRUE}, makes the button full width.}
 
-\item{type}{Button type ("button", "submit", "reset")}
+\item{type}{Button type: \code{"button"}, \code{"submit"}, or \code{"reset"}.}
 
-\item{...}{Additional attributes}
+\item{...}{Additional attributes.}
 }
 \value{
-A Shiny tag object
+A Shiny tag object.
 }
 \description{
-Create a styled button using Designsystemet styles.
+Create a styled button using Designsystemet styles. \code{ds_action_button()} is
+a drop-in replacement for \code{shiny::actionButton()} with the same
+\verb{(inputId, label, ...)} argument order.
 }
 \examples{
 ds_button("Click me", inputId = "btn")
 ds_button("Submit", variant = "primary", type = "submit")
 ds_button("Cancel", variant = "secondary")
+ds_action_button("btn", "Click me")
 }

@@ -200,7 +200,4 @@ server <- function(input, output, session) {
   outputOptions(output, "correlation",       suspendWhenHidden = FALSE)
 }
 
-# Null coalescing for base R
-`%||%` <- function(a, b) if (is.null(a) || length(a) == 0) b else a
-
 shinyApp(ui, server)

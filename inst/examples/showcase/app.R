@@ -131,7 +131,7 @@ ui <- bslib::page_fluid(
             value = "inputs",
             tags$div(style = "padding:1.25rem 0;",
 
-              demo_card("Button", list("ds_button()"),
+              demo_card("Button", list("ds_button()", "ds_action_button()"),
                 ds_paragraph("Three variants, three sizes, plus disabled and loading states."),
                 row_sep,
                 tags$p(ds_label("Variants")),
@@ -151,9 +151,15 @@ ui <- bslib::page_fluid(
                 tags$p(ds_label("States")),
                 flex_row(
                   ds_button("Disabled",   variant = "primary",   disabled  = TRUE),
-                  ds_button("Loading…", variant = "secondary", loading = TRUE),
+                  ds_button("Loading…",   variant = "secondary", loading   = TRUE),
                   ds_button("Full width", inputId = "btn_full",
                             variant = "secondary", fullwidth = TRUE)
+                ),
+                row_sep,
+                tags$p(ds_label("ds_action_button() — inputId-first, drop-in for actionButton()")),
+                flex_row(
+                  ds_action_button("action_btn", "Click me", variant = "primary"),
+                  ds_action_button("action_btn2", "Secondary", variant = "secondary")
                 )
               ),
 
@@ -467,15 +473,16 @@ ui <- bslib::page_fluid(
                 )
               ),
 
-              demo_card("Chip", list("ds_chip()"),
-                ds_paragraph("Toggle-style filter chips."),
-                flex_row(
-                  ds_chip("React",    selected = TRUE),
-                  ds_chip("Vue"),
-                  ds_chip("Angular"),
-                  ds_chip("Svelte"),
-                  ds_chip("Disabled", disabled = TRUE)
-                )
+              demo_card("Chip", list("ds_chip()", "ds_chip_group()"),
+                ds_paragraph("Toggle-style filter chips. Selected values reported to Shiny."),
+                ds_chip_group("showcase_chips",
+                  ds_chip("React",    value = "react",   selected = TRUE),
+                  ds_chip("Vue",      value = "vue"),
+                  ds_chip("Angular",  value = "angular"),
+                  ds_chip("Svelte",   value = "svelte"),
+                  ds_chip("Disabled", value = "disabled", disabled = TRUE)
+                ),
+                shiny::verbatimTextOutput("chip_out")
               ),
 
               demo_card("Spinner", list("ds_spinner()"),
@@ -622,6 +629,28 @@ ui <- bslib::page_fluid(
                 )
               ),
 
+              demo_card("Theme", list("ds_theme()"),
+                ds_paragraph(
+                  "Override Designsystemet CSS tokens without writing CSS.",
+                  " Changes below apply only to this card's container."
+                ),
+                row_sep,
+                tags$div(
+                  `data-color` = "brand2",
+                  style = "padding:1rem; border-radius:4px;",
+                  tags$p(ds_label("data-color=\"brand2\" container")),
+                  flex_row(
+                    ds_button("Brand2 primary",   inputId = "btn_brand2"),
+                    ds_button("Brand2 secondary", variant = "secondary")
+                  )
+                ),
+                row_sep,
+                ds_paragraph(
+                  "Global token overrides via ds_theme(): color=, border_radius=,",
+                  " button_padding=, or any --ds-* custom property."
+                )
+              ),
+
               demo_card("Skip Link", list("ds_skip_link()"),
                 ds_paragraph(
                   "Renders as a visually-hidden link that becomes visible on keyboard focus.",
@@ -711,31 +740,23 @@ ui <- bslib::page_fluid(
                 )
               ),
 
-              demo_card("Dialog", list("ds_dialog()"), warn = TRUE,
-                tags$button(
-                  class = "ds-button", `data-variant` = "primary",
-                  onclick = "document.getElementById('demo-dialog').showModal()",
-                  "Open dialog"
+              demo_card("Dialog", list("ds_dialog()", "show_ds_dialog()", "hide_ds_dialog()"), warn = TRUE,
+                ds_paragraph(
+                  "Dialog lives in the UI. Open and close it from the server with",
+                  " show_ds_dialog() and hide_ds_dialog() — no inline JavaScript needed."
                 ),
+                ds_button("Open dialog", inputId = "btn_open_dialog", variant = "primary"),
                 ds_dialog(
                   id = "demo-dialog",
                   ds_heading("Dialog Title", level = 2, size = "md"),
                   ds_paragraph(
-                    "This is the dialog content.",
+                    "Opened via show_ds_dialog() from the server.",
                     " Press Escape or a button below to close."
                   ),
                   tags$div(
                     style = "display:flex; gap:0.75rem; margin-top:1rem;",
-                    tags$button(
-                      class = "ds-button", `data-variant` = "primary",
-                      onclick = "document.getElementById('demo-dialog').close()",
-                      "Confirm"
-                    ),
-                    tags$button(
-                      class = "ds-button", `data-variant` = "secondary",
-                      onclick = "document.getElementById('demo-dialog').close()",
-                      "Cancel"
-                    )
+                    ds_button("Confirm", inputId = "btn_dialog_confirm", variant = "primary"),
+                    ds_button("Cancel",  inputId = "btn_dialog_cancel",  variant = "secondary")
                   )
                 )
               ),
@@ -764,15 +785,29 @@ ui <- bslib::page_fluid(
 # ---------------------------------------------------------------------------
 
 server <- function(input, output, session) {
+
+  # Dialog — server-side open/close
+  observeEvent(input$btn_open_dialog,   show_ds_dialog("demo-dialog"))
+  observeEvent(input$btn_dialog_cancel, hide_ds_dialog("demo-dialog"))
+  observeEvent(input$btn_dialog_confirm, {
+    hide_ds_dialog("demo-dialog")
+  })
+
+  output$chip_out <- shiny::renderText({
+    chips <- input$showcase_chips %||% character(0)
+    if (length(chips) == 0) "None selected" else paste("Selected:", paste(chips, collapse = ", "))
+  })
+
   output$values <- renderPrint({
     tab <- input$main_tabs %||% "inputs"
 
     switch(tab,
       inputs = list(
         buttons = list(
-          primary   = input$btn_primary,
-          secondary = input$btn_secondary,
-          tertiary  = input$btn_tertiary
+          primary    = input$btn_primary,
+          secondary  = input$btn_secondary,
+          tertiary   = input$btn_tertiary,
+          action_btn = input$action_btn
         ),
         text = list(
           text    = input$inp_text,

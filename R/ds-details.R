@@ -27,10 +27,12 @@ ds_details <- function(summary, ..., open = FALSE, class = NULL) {
 
 #' Dialog Component
 #'
-#' Create a modal dialog using Designsystemet styles.
+#' Create a modal dialog using Designsystemet styles. Place `ds_dialog()` in
+#' your UI and open/close it from the server with [show_ds_dialog()] and
+#' [hide_ds_dialog()].
 #'
 #' @param ... Dialog content
-#' @param id Dialog ID for opening/closing
+#' @param id Dialog ID for opening/closing via [show_ds_dialog()]
 #' @param class Additional CSS classes
 #'
 #' @return A Shiny tag object
@@ -52,12 +54,54 @@ ds_dialog <- function(..., id = NULL, class = NULL) {
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
+#' Open a dialog from the server
+#'
+#' Sends a message to the browser to call `showModal()` on a `ds_dialog()`
+#' element already present in the UI.
+#'
+#' @param id The `id` of the `ds_dialog()` to open.
+#' @param session Shiny session object.
+#'
+#' @return Called for side effects.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' observeEvent(input$open_btn, {
+#'   show_ds_dialog("confirm-dialog")
+#' })
+#' }
+show_ds_dialog <- function(id, session = shiny::getDefaultReactiveDomain()) {
+  session$sendCustomMessage("ds_dialog_show", list(id = id))
+}
+
+#' Close a dialog from the server
+#'
+#' Sends a message to the browser to call `close()` on a `ds_dialog()` element.
+#'
+#' @param id The `id` of the `ds_dialog()` to close.
+#' @param session Shiny session object.
+#'
+#' @return Called for side effects.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' observeEvent(input$cancel_btn, {
+#'   hide_ds_dialog("confirm-dialog")
+#' })
+#' }
+hide_ds_dialog <- function(id, session = shiny::getDefaultReactiveDomain()) {
+  session$sendCustomMessage("ds_dialog_hide", list(id = id))
+}
+
 #' Dropdown Component
 #'
 #' Create a dropdown menu using Designsystemet styles.
 #'
 #' @param trigger The trigger element (usually a button)
-#' @param ... Dropdown content
+#' @param ... Dropdown panel content
+#' @param id Optional ID for the dropdown panel. Auto-generated if omitted.
 #' @param class Additional CSS classes
 #'
 #' @return A Shiny tag object
@@ -68,16 +112,17 @@ ds_dialog <- function(..., id = NULL, class = NULL) {
 #'   trigger = ds_button("Options"),
 #'   ds_list(ds_list_item("Edit"), ds_list_item("Delete"))
 #' )
-ds_dropdown <- function(trigger, ..., class = NULL) {
-  tag <- htmltools::tag("div", list(
+ds_dropdown <- function(trigger, ..., id = NULL, class = NULL) {
+  panel_id <- id %||% paste0("ds-dropdown-", sample.int(1e6, 1))
+  trigger_out <- htmltools::tagAppendAttributes(trigger, popovertarget = panel_id)
+  panel <- htmltools::tag("div", list(
+    id = panel_id,
     class = .ds_classes("ds-dropdown", class),
-    trigger,
-    htmltools::tag("div", list(
-      class = "ds-dropdown__content",
-      ...
-    ))
+    popover = NA,
+    ...
   ))
-  htmltools::attachDependencies(tag, ds_dependencies())
+  result <- htmltools::tagList(trigger_out, panel)
+  htmltools::attachDependencies(result, ds_dependencies())
 }
 
 #' Search Component
@@ -95,8 +140,8 @@ ds_dropdown <- function(trigger, ..., class = NULL) {
 #' @export
 #'
 #' @examples
-#' ds_search("search", placeholder = "Search...")
-ds_search <- function(inputId, value = "", placeholder = "Search...",
+#' ds_search("search", placeholder = "Search…")
+ds_search <- function(inputId, value = "", placeholder = NULL,
                       size = NULL, class = NULL, ...) {
   tag <- htmltools::tag("div", list(
     class = .ds_classes("ds-search", class),

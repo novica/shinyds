@@ -4,12 +4,14 @@
 \alias{ds_dropdown}
 \title{Dropdown Component}
 \usage{
-ds_dropdown(trigger, ..., class = NULL)
+ds_dropdown(trigger, ..., id = NULL, class = NULL)
 }
 \arguments{
 \item{trigger}{The trigger element (usually a button)}
 
-\item{...}{Dropdown content}
+\item{...}{Dropdown panel content}
+
+\item{id}{Optional ID for the dropdown panel. Auto-generated if omitted.}
 
 \item{class}{Additional CSS classes}
 }

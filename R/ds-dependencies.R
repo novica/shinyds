@@ -25,7 +25,8 @@ ds_dependencies <- function() {
       script = "designsystemet-web.umd.js"
     ),
 
-    # Shiny input bindings
+    # Shiny input bindings (hand-written)
+    # ds-bindings-generated.js not loaded — conflicts with hand-written bindings until audited.
     htmltools::htmlDependency(
       name = "designsystemet-bindings",
       version = utils::packageVersion("shinyds"),
@@ -60,4 +61,65 @@ use_designsystemet <- function(color_scheme = "light") {
       color_scheme
     )))
   )
+}
+
+#' Designsystemet Theme
+#'
+#' Override Designsystemet CSS tokens for color, typography, and spacing.
+#' Call inside your UI alongside [use_designsystemet()].
+#'
+#' Color palette tokens follow the Designsystemet naming convention. Use
+#' `data-color="brand2"` on a container to switch its color context, or set
+#' `color` here to change the global default.
+#'
+#' @param color Global color context. One of `"default"`, `"brand1"`,
+#'   `"brand2"`, `"neutral"`, `"success"`, `"warning"`, `"danger"`, `"info"`.
+#'   Sets `data-color` on `<html>`.
+#' @param font_size Base font size as a CSS value (e.g. `"16px"`, `"1rem"`).
+#'   Overrides `--ds-font-size-base` on `:root`.
+#' @param border_radius Border radius as a CSS value (e.g. `"4px"`, `"0"`).
+#'   Overrides `--ds-border-radius-md` on `:root`.
+#' @param button_padding Padding for buttons as a CSS shorthand
+#'   (e.g. `"0.4rem 0.9rem"`). Overrides `--dsc-button-padding` on `:root`.
+#' @param ... Named CSS custom property overrides in the form
+#'   `"--ds-token-name" = "value"`. Applied to `:root`.
+#'
+#' @return A `<style>` tag applied to `:root` and optionally a JS snippet to
+#'   set `data-color` on `<html>`.
+#' @export
+#'
+#' @examples
+#' ui <- bslib::page_fluid(
+#'   use_designsystemet(),
+#'   ds_theme(color = "brand1", border_radius = "2px", button_padding = "0.3rem 0.8rem"),
+#'   ds_button("Click me", inputId = "btn")
+#' )
+ds_theme <- function(color = NULL,
+                     font_size = NULL,
+                     border_radius = NULL,
+                     button_padding = NULL,
+                     ...) {
+  tokens <- list(...)
+
+  if (!is.null(font_size))     tokens[["--ds-font-size-base"]]    <- font_size
+  if (!is.null(border_radius)) tokens[["--ds-border-radius-md"]]  <- border_radius
+  if (!is.null(button_padding)) tokens[["--dsc-button-padding"]]  <- button_padding
+
+  tags <- list()
+
+  if (length(tokens) > 0) {
+    props <- paste(
+      sprintf("  %s: %s;", names(tokens), unlist(tokens)),
+      collapse = "\n"
+    )
+    css <- sprintf(":root {\n%s\n}", props)
+    tags <- c(tags, list(htmltools::tags$style(htmltools::HTML(css))))
+  }
+
+  if (!is.null(color)) {
+    js <- sprintf('document.documentElement.setAttribute("data-color", "%s");', color)
+    tags <- c(tags, list(htmltools::tags$script(htmltools::HTML(js))))
+  }
+
+  do.call(htmltools::tagList, tags)
 }

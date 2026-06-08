@@ -280,3 +280,15 @@ Shiny.inputBindings.register(dsSelectBinding, 'designsystemet.select', true);
 
 // Toggle group reactivity is handled via Shiny.setInputValue() in an inline
 // script emitted by ds_toggle_group() — no InputBinding needed.
+
+// ============= Dialog server-side control =============
+
+Shiny.addCustomMessageHandler('ds_dialog_show', function(msg) {
+  var el = document.getElementById(msg.id);
+  if (el) el.showModal();
+});
+
+Shiny.addCustomMessageHandler('ds_dialog_hide', function(msg) {
+  var el = document.getElementById(msg.id);
+  if (el) el.close();
+});

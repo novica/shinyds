@@ -127,8 +127,6 @@ build_yaml_entry <- function(tag, attrs) {
 # Main
 # ---------------------------------------------------------------------------
 
-`%||%` <- function(a, b) if (is.null(a)) b else a
-
 args      <- commandArgs(trailingOnly = TRUE)
 do_write  <- "--write" %in% args
 

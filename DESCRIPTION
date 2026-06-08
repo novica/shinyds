@@ -6,8 +6,8 @@ Authors@R: c(
            comment = c(ORCID = "0009-0005-7773-7718")))
 Description: Provides 'R' wrappers for the Designsystemet component library
     <https://designsystemet.no>, enabling use of Norwegian government design system
-    components in Shiny applications. Includes web components and CSS-based
-    HTML components with full Shiny input binding support.
+    components in 'Shiny' applications. Includes web components and CSS-based
+    HTML components with full 'Shiny' input binding support.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

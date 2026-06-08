@@ -18,7 +18,7 @@ test_that("use_designsystemet returns tagList with dependencies", {
 })
 
 test_that("components have dependencies attached", {
-  btn <- ds_button("btn", "Test")
+  btn <- ds_button("Test", inputId = "btn")
   deps <- htmltools::htmlDependencies(btn)
 
   expect_true(length(deps) > 0)
