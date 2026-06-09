@@ -63,7 +63,7 @@ shinyApp(ui, server)
 
 ## Demo
 
-[Old Faithful](https://novica.shinyapps.io/faithful/)
+[Old Faithful](https://novica-faitful.share.connect.posit.cloud)
 
 ## Example apps
 
