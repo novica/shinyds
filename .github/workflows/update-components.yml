@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout shinyds
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: shinyds
 
@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Checkout designsystemet upstream
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: digdir/designsystemet
           ref: "@digdir/designsystemet-css@${{ steps.version.outputs.version }}"
