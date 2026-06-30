@@ -38,6 +38,7 @@ $.extend(dsTabsBinding, {
     panels.forEach(function(panel) {
       var isActive = panel.getAttribute('data-value') === value;
       panel.hidden = !isActive;
+      if (isActive) $(panel).trigger('shown.bs.tab');
     });
   },
   subscribe: function(el, callback) {
