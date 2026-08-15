@@ -263,3 +263,29 @@ test_that("reactive output updates when a button is clicked", {
   expect_match(output_text, "secondary")
   expect_match(output_text, "\\[1\\] 1")
 })
+
+# ── 10. Radio group binding ─────────────────────────────────────────────────
+
+test_that("radio group reports its pre-selected value on load", {
+  app <- new_app("init-radio-group")
+  withr::defer(app$stop())
+  app$wait_for_idle()
+
+  # ds_radio_group("radio_grp", ..., selected = "a") in the showcase
+  expect_equal(app$get_value(input = "radio_grp"), "a")
+})
+
+test_that("clicking a different radio updates the group's Shiny value", {
+  app <- new_app("radio-group-click")
+  withr::defer(app$stop())
+  app$wait_for_idle()
+
+  js_click(app, "#radio_grp_b")
+  app$wait_for_idle()
+
+  expect_equal(app$get_value(input = "radio_grp"), "b")
+
+  output_text <- app$get_value(output = "values")
+  expect_match(output_text, "radio_grp")
+  expect_match(output_text, '"b"', fixed = TRUE)
+})

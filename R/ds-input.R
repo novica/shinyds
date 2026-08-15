@@ -127,9 +127,12 @@ ds_checkbox <- function(inputId, label, value = FALSE,
 
 #' Radio Button Component
 #'
-#' Create a styled radio button using Designsystemet styles.
+#' Create a single styled radio button using Designsystemet styles. This is
+#' the building block used by [ds_radio_group()] — a standalone `ds_radio()`
+#' is not reactive on its own. To get a Shiny input value out of a group of
+#' radio buttons, use [ds_radio_group()] instead.
 #'
-#' @param inputId The input slot for Shiny reactivity
+#' @param inputId The `id`/`for` pair linking this radio to its label
 #' @param label The radio button label
 #' @param value The value for this radio button
 #' @param name The name grouping radio buttons together
@@ -165,6 +168,65 @@ ds_radio <- function(inputId, label, value, name,
   ))
 
   htmltools::tagList(input_el, label_el)
+}
+
+#' Radio Group Component
+#'
+#' Create a reactive group of radio buttons. The value of whichever
+#' [ds_radio()] is checked is reported to Shiny as a single value via
+#' `input[[inputId]]` — mirroring how Shiny's own `radioButtons()` works.
+#'
+#' @param inputId Shiny input ID
+#' @param label The legend text for the group
+#' @param choices Named vector of choices (names are labels, values are values)
+#' @param selected Initially selected value. Defaults to the first choice.
+#' @param size Size variant ("sm", "md", "lg")
+#' @param disabled If TRUE, disables every radio button in the group
+#' @param class Additional CSS classes
+#'
+#' @return A Shiny tag object
+#' @export
+#'
+#' @examples
+#' ds_radio_group("opts",
+#'   label = "Choose one",
+#'   choices = c("Choice A" = "a", "Choice B" = "b", "Choice C" = "c"),
+#'   selected = "a"
+#' )
+ds_radio_group <- function(inputId, label, choices, selected = NULL,
+                           size = NULL, disabled = FALSE, class = NULL) {
+
+  # Handle both named and unnamed vectors
+  if (is.null(names(choices))) {
+    names(choices) <- choices
+  }
+
+  if (is.null(selected)) selected <- choices[[1]]
+
+  radios <- lapply(seq_along(choices), function(i) {
+    val <- choices[[i]]
+    lbl <- names(choices)[i]
+    ds_radio(
+      inputId  = paste0(inputId, "_", make.names(val)),
+      label    = lbl,
+      value    = val,
+      name     = inputId,
+      checked  = identical(val, selected),
+      size     = size,
+      disabled = disabled
+    )
+  })
+
+  tag <- htmltools::tag("fieldset", c(
+    list(
+      id = inputId,
+      class = .ds_classes("ds-fieldset", "ds-shiny-input", class),
+      htmltools::tag("legend", list(label))
+    ),
+    radios
+  ))
+
+  htmltools::attachDependencies(tag, ds_dependencies())
 }
 
 #' Select Component
@@ -282,6 +344,28 @@ update_ds_checkbox <- function(session = shiny::getDefaultReactiveDomain(),
 update_ds_select <- function(session = shiny::getDefaultReactiveDomain(),
                              inputId, value = NULL, choices = NULL) {
   message <- list(value = value, choices = choices)
+  message <- Filter(Negate(is.null), message)
+  session$sendInputMessage(inputId, message)
+}
+
+#' Update Radio Group
+#'
+#' Change the selected value of a [ds_radio_group()] from the server.
+#'
+#' @param session The Shiny session object
+#' @param inputId The input ID
+#' @param value The new selected value
+#'
+#' @return Called for its side effect. Returns \code{NULL} invisibly.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' update_ds_radio_group(session, "opts", value = "b")
+#' }
+update_ds_radio_group <- function(session = shiny::getDefaultReactiveDomain(),
+                                  inputId, value = NULL) {
+  message <- list(value = value)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)
 }

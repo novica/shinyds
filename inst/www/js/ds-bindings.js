@@ -245,6 +245,45 @@ $.extend(dsCheckboxBinding, {
 });
 Shiny.inputBindings.register(dsCheckboxBinding, 'designsystemet.checkbox', true);
 
+// Radio group binding — attaches to the <fieldset> container built by
+// ds_radio_group(), not to the individual radio <input> elements, so one
+// Shiny input value is reported per group (mirroring Shiny's own
+// radioButtons()).
+var dsRadioGroupBinding = new Shiny.InputBinding();
+$.extend(dsRadioGroupBinding, {
+  find: function(scope) {
+    return $(scope).find('fieldset.ds-shiny-input');
+  },
+  getId: function(el) {
+    return el.id;
+  },
+  getValue: function(el) {
+    var checked = el.querySelector('input[type="radio"]:checked');
+    return checked ? checked.value : null;
+  },
+  setValue: function(el, value) {
+    var radios = el.querySelectorAll('input[type="radio"]');
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].checked = (radios[i].value === value);
+    }
+  },
+  subscribe: function(el, callback) {
+    $(el).on('change.dsRadioGroupBinding', 'input[type="radio"]', function() {
+      callback(true);
+    });
+  },
+  unsubscribe: function(el) {
+    $(el).off('.dsRadioGroupBinding');
+  },
+  receiveMessage: function(el, data) {
+    if (data.value !== undefined) {
+      this.setValue(el, data.value);
+      $(el).find('input[type="radio"]:checked').trigger('change');
+    }
+  }
+});
+Shiny.inputBindings.register(dsRadioGroupBinding, 'designsystemet.radioGroup', true);
+
 // Select binding
 var dsSelectBinding = new Shiny.InputBinding();
 $.extend(dsSelectBinding, {

@@ -195,7 +195,7 @@ ui <- bslib::page_fluid(
                 )
               ),
 
-              demo_card("Checkbox & Radio", list("ds_checkbox()", "ds_radio()"),
+              demo_card("Checkbox & Radio", list("ds_checkbox()", "ds_radio_group()"),
                 bslib::layout_column_wrap(
                   width = "180px",
                   tags$div(
@@ -206,16 +206,10 @@ ui <- bslib::page_fluid(
                       ds_checkbox("chk3", label = "Disabled", disabled = TRUE)
                     )
                   ),
-                  tags$div(
-                    ds_label("Radio group"),
-                    tags$div(style = "margin-top:0.25rem;",
-                      ds_radio("radio_a", label = "Choice A", value = "a",
-                               name = "radio_grp", checked = TRUE),
-                      ds_radio("radio_b", label = "Choice B", value = "b",
-                               name = "radio_grp"),
-                      ds_radio("radio_c", label = "Choice C (disabled)", value = "c",
-                               name = "radio_grp", disabled = TRUE)
-                    )
+                  ds_radio_group("radio_grp",
+                    label   = "Radio group",
+                    choices = c("Choice A" = "a", "Choice B" = "b", "Choice C" = "c"),
+                    selected = "a"
                   )
                 )
               ),
@@ -820,6 +814,7 @@ server <- function(input, output, session) {
         selection = list(
           chk_a        = input$chk1,
           chk_b        = input$chk2,
+          radio_grp    = input$radio_grp,
           notif_email  = input$notif_email,
           notif_sms    = input$notif_sms,
           notif_push   = input$notif_push,
