@@ -14,5 +14,6 @@
 ^codecov\.yml$
 ^tools$
 ^CHANGELOG.md$
+^AGENTS\.md$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
