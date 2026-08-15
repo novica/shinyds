@@ -85,6 +85,50 @@ test_that("ds_select creates correct HTML structure", {
   expect_true("ds-input" %in% strsplit(sel$attribs$class, " ")[[1]])
 })
 
+test_that("ds_radio_group creates a fieldset with ds-shiny-input", {
+  grp <- ds_radio_group("test_grp",
+    label = "Pick one",
+    choices = c("A" = "a", "B" = "b", "C" = "c")
+  )
+
+  expect_s3_class(grp, "shiny.tag")
+  expect_equal(grp$name, "fieldset")
+  expect_equal(grp$attribs$id, "test_grp")
+  expect_true("ds-shiny-input" %in% strsplit(grp$attribs$class, " ")[[1]])
+
+  html <- as.character(grp)
+  radios <- gregexpr('type="radio"', html)[[1]]
+  expect_equal(length(radios), if (radios[1] == -1) 0 else 3)
+  expect_match(html, "<legend>Pick one</legend>", fixed = TRUE)
+})
+
+test_that("ds_radio_group shares one `name` across radios and checks the selected value", {
+  grp <- ds_radio_group("test_grp2",
+    label = "Pick one",
+    choices = c("A" = "a", "B" = "b", "C" = "c"),
+    selected = "b"
+  )
+  html <- as.character(grp)
+
+  name_matches <- gregexpr('name="test_grp2"', html)[[1]]
+  expect_equal(length(name_matches), 3)
+
+  # Only the radio with value "b" should be checked
+  expect_match(html, 'value="b" checked', fixed = TRUE)
+  expect_no_match(html, 'value="a" checked', fixed = TRUE)
+  expect_no_match(html, 'value="c" checked', fixed = TRUE)
+})
+
+test_that("ds_radio_group defaults `selected` to the first choice", {
+  grp <- ds_radio_group("test_grp3",
+    label = "Pick one",
+    choices = c("A" = "a", "B" = "b")
+  )
+  html <- as.character(grp)
+
+  expect_match(html, 'value="a" checked', fixed = TRUE)
+})
+
 test_that("ds_card creates correct HTML structure", {
   card <- ds_card(ds_card_block("Content"))
 

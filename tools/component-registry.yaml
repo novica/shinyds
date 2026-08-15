@@ -191,7 +191,7 @@ css_components:
     html_tag: input
     html_type: radio
     css_class: ds-input
-    binding: none  # Handled at group level
+    binding: none  # A single radio isn't reactive on its own; see radio_group
     with_label: true
     attributes:
       - name: value
@@ -209,6 +209,13 @@ css_components:
         r_param: size
         type: enum
         values: [sm, md, lg]
+
+  # radio_group is not in this registry / not generator-produced: it's
+  # hand-written in R/ds-input.R (ds_radio_group()) with a matching
+  # dsRadioGroupBinding in inst/www/js/ds-bindings.js. It composes several
+  # `radio` entries above under one <fieldset class="ds-shiny-input">, and
+  # is the reactive entry point — a bare `radio` never reports a value on
+  # its own.
 
   select:
     html_tag: select

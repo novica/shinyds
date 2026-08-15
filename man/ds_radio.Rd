@@ -16,7 +16,7 @@ ds_radio(
 )
 }
 \arguments{
-\item{inputId}{The input slot for Shiny reactivity}
+\item{inputId}{The \code{id}/\code{for} pair linking this radio to its label}
 
 \item{label}{The radio button label}
 
@@ -36,7 +36,10 @@ ds_radio(
 A Shiny tag object
 }
 \description{
-Create a styled radio button using Designsystemet styles.
+Create a single styled radio button using Designsystemet styles. This is
+the building block used by \code{\link[=ds_radio_group]{ds_radio_group()}} — a standalone \code{ds_radio()}
+is not reactive on its own. To get a Shiny input value out of a group of
+radio buttons, use \code{\link[=ds_radio_group]{ds_radio_group()}} instead.
 }
 \examples{
 ds_radio("opt_a", label = "Option A", value = "a", name = "opts")
