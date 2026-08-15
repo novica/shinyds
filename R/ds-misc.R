@@ -195,7 +195,7 @@ ds_chip_group <- function(inputId, ..., class = NULL) {
         return Array.from(el.querySelectorAll(".ds-chip[aria-pressed=\'true\']"))
           .map(function(c) { return c.value || c.textContent.trim(); });
       }
-      document.addEventListener("shiny:sessioninitialized", function() {
+      $(document).on("shiny:sessioninitialized", function() {
         var el = document.getElementById("%1$s");
         if (el) Shiny.setInputValue("%1$s", selectedValues(el));
       });
