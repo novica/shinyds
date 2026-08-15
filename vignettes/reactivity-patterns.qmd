@@ -29,12 +29,32 @@ exactly like native Shiny inputs:
 | Text input | `ds_input()` | character string |
 | Textarea | `ds_textarea()` | character string |
 | Checkbox | `ds_checkbox()` | `TRUE` / `FALSE` |
-| Radio | `ds_radio()` | selected value string |
+| Radio group | `ds_radio_group()` | selected value string |
 | Select | `ds_select()` | selected value string |
 | Search | `ds_search()` | character string |
 | Suggestion | `ds_suggestion()` | selected value string |
 | Tabs | `ds_tabs()` | selected tab value string |
 | Pagination | `ds_pagination()` | current page integer |
+
+A single `ds_radio()` is not reactive on its own — one `<input type="radio">` means nothing in
+isolation, only the group has a value. `ds_radio_group()` binds the *container*
+(`<fieldset class="ds-shiny-input">`), not the individual radios, and reports whichever child is
+checked as one value — the same way Shiny's own `radioButtons()` works:
+
+```{r}
+#| eval: false
+# UI
+ds_radio_group("plan",
+  label    = "Choose a plan",
+  choices  = c("Free" = "free", "Pro" = "pro", "Team" = "team"),
+  selected = "free"
+)
+
+# Server
+observeEvent(input$plan, {
+  # input$plan is "free", "pro", or "team"
+})
+```
 
 ### Behaviour-only module components
 
