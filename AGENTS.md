@@ -202,7 +202,9 @@ See `tools/UPDATE.md` for the full procedure. The short version:
 
 This repo uses [release-please](https://github.com/googleapis/release-please) (config:
 `release-please-config.json`, baseline: `.release-please-manifest.json`) with Conventional Commits.
-`feat:` bumps minor, `fix:` bumps patch, `docs:`/`chore:`/`refactor:`/`ci:`/`test:`/`build:` don't
-bump the version (see `changelog-sections` in the config for exactly which types are hidden vs.
-shown in the changelog). Use Conventional Commits for both commit messages and branch names
-(e.g. `fix/...`, `feat/...`, `docs/...`) so release-please can parse them correctly.
+`feat:` bumps minor, a breaking-change footer/`!` bumps major, and **any other Conventional Commit
+type (`fix:`, `docs:`, `chore:`, `refactor:`, `ci:`, `test:`, `build:`) bumps patch** — there is no
+type that skips versioning entirely. `changelog-sections` in the config only controls which types
+are *shown* in the changelog (some are marked `hidden`); it does not affect whether they trigger a
+release. Use Conventional Commits for both commit messages and branch names (e.g. `fix/...`,
+`feat/...`, `docs/...`) so release-please can parse them correctly.
