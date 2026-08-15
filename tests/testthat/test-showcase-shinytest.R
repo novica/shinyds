@@ -131,6 +131,29 @@ test_that("tabs can be switched back after an initial switch", {
   expect_equal(app$get_value(input = "main_tabs"), "inputs")
 })
 
+test_that("an output inside a non-default tab renders after switching to it", {
+  # Regression test for the suspend-when-hidden bug: dsTabsBinding only
+  # toggled the `hidden` attribute on panels and never fired the
+  # `shown.bs.tab` event Shiny's own suspend-when-hidden mechanism listens
+  # for, so outputs inside any tab other than the initially active one
+  # (chip_out lives in the "feedback" tab, not the default "inputs" tab)
+  # stayed suspended server-side forever, even after switching to their tab.
+  # Interacting with a chip after switching proves the output is both
+  # rendering and reactive, not just frozen at a stale/blank value.
+  app <- new_app("tab-output-render")
+  withr::defer(app$stop())
+  app$wait_for_idle()
+
+  js_click(app, "ds-tab[data-value='feedback']")
+  app$wait_for_idle()
+
+  app$run_js('document.querySelector("#showcase_chips .ds-chip[value=\'vue\']").click()')
+  app$wait_for_idle()
+
+  chip_out <- app$get_value(output = "chip_out")
+  expect_match(chip_out, "vue")
+})
+
 # ── 4. Action button binding ───────────────────────────────────────────────
 
 test_that("action button starts at 0 and increments on each click", {

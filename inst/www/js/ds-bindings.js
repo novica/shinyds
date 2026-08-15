@@ -43,8 +43,17 @@ $.extend(dsTabsBinding, {
   },
   subscribe: function(el, callback) {
     $(el).on('click.dsTabsBinding', 'ds-tab', function(e) {
-      // Let the web component handle the visual update, then notify Shiny
-      setTimeout(function() { callback(true); }, 0);
+      // Let the web component handle the visual update, then notify Shiny.
+      // The web component manages panel visibility itself on click (unlike
+      // a server-driven update, which goes through setValue() above), so
+      // shown.bs.tab must be fired here too or Shiny's suspend-when-hidden
+      // logic never learns the newly active panel became visible.
+      var value = e.currentTarget.getAttribute('data-value');
+      setTimeout(function() {
+        var panel = el.querySelector('ds-tabpanel[data-value="' + value + '"]');
+        if (panel) $(panel).trigger('shown.bs.tab');
+        callback(true);
+      }, 0);
     });
   },
   unsubscribe: function(el) {
