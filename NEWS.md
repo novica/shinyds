@@ -1,3 +1,14 @@
+# shinyds 0.4.0
+
+## New features
+
+* update Designsystemet to 1.19.1 ([79fd2f5](https://github.com/novica/shinyds/commit/79fd2f5e21a346ee1a8484b9d11812bff2934b34))
+* add ds_radio_group() for reactive radio button groups ([79fd2f5](https://github.com/novica/shinyds/commit/79fd2f5e21a346ee1a8484b9d11812bff2934b34))
+
+## Bug fixes
+
+* fire shown.bs.tab for both server-driven and interactive tab switches, so outputs inside a non-default tab no longer stay suspended forever ([79fd2f5](https://github.com/novica/shinyds/commit/79fd2f5e21a346ee1a8484b9d11812bff2934b34))
+
 # shinyds 0.3.0
 
 ## New features

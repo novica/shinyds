@@ -50,6 +50,7 @@ reference:
   - ds_input
   - ds_checkbox
   - ds_radio
+  - ds_radio_group
   - ds_select
   - ds_textarea
   - ds_search
