@@ -96,6 +96,20 @@ test_that("toggle group reports its pre-selected value on load", {
   expect_equal(app$get_value(input = "view_mode"), "list")
 })
 
+test_that("chip group reports its pre-selected value on load", {
+  # Regression test: the shiny:sessioninitialized listener used
+  # document.addEventListener(), a native DOM listener, but Shiny fires that
+  # event via jQuery's $(document).trigger() — which native listeners never
+  # receive. The initial selected chip ("React") was silently never
+  # reported, even though clicking chips afterward worked fine (a real
+  # native "click" event reaches both listener styles).
+  app <- new_app("init-chip-group")
+  withr::defer(app$stop())
+  app$wait_for_idle()
+
+  expect_equal(app$get_value(input = "showcase_chips"), "react")
+})
+
 # ── 3. Tab binding ─────────────────────────────────────────────────────────
 #
 # app$click() treats its first argument as a Shiny input name and appends
