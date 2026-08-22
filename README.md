@@ -3,7 +3,7 @@
   [![Codecov test coverage](https://codecov.io/gh/novica/shinyds/graph/badge.svg)](https://app.codecov.io/gh/novica/shinyds)
   [![CRAN status](https://www.r-pkg.org/badges/version/shinyds)](https://CRAN.R-project.org/package=shinyds)
   [![CRAN downloads](https://cranlogs.r-pkg.org/badges/shinyds)](https://CRAN.R-project.org/package=shinyds)
-  [![Designsystemet version](https://img.shields.io/badge/Designsystemet-1.19.1-blue)](https://github.com/digdir/designsystemet/releases)  
+  [![Designsystemet version](https://img.shields.io/badge/Designsystemet-1.20.0-blue)](https://github.com/digdir/designsystemet/releases)  
 <!-- badges: end -->
 
 # shinyds - Designsystemet components for Shiny 
