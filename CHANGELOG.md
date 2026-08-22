@@ -1,3 +1,21 @@
+## [0.5.0](https://github.com/novica/shinyds/compare/v0.4.0...v0.5.0) (2026-08-22)
+
+
+### New features
+
+* update Designsystemet to 1.20.0 ([#53](https://github.com/novica/shinyds/issues/53)) ([50d0b22](https://github.com/novica/shinyds/commit/50d0b22029004419528baab489a4b18f79d242f6))
+
+
+### Bug fixes
+
+* **chip-group:** report pre-selected chip values on session init ([#49](https://github.com/novica/shinyds/issues/49)) ([f2c7cc4](https://github.com/novica/shinyds/commit/f2c7cc4f61a709d255bfaf5753dff5c335ae7b08))
+
+
+### Documentation
+
+* correct release-please bump behavior in AGENTS.md ([#51](https://github.com/novica/shinyds/issues/51)) ([e1a778d](https://github.com/novica/shinyds/commit/e1a778dadacf6e342a9060665fc117780ffad561))
+* update reactivity-patterns vignette for ds_radio_group() ([#48](https://github.com/novica/shinyds/issues/48)) ([b2025b7](https://github.com/novica/shinyds/commit/b2025b7f851d33edfb0c8087922be67db1e97c96))
+
 ## [0.4.0](https://github.com/novica/shinyds/compare/v0.3.0...v0.4.0) (2026-08-15)
 
 
