@@ -26,7 +26,6 @@ ds_dependencies <- function() {
     ),
 
     # Shiny input bindings (hand-written)
-    # ds-bindings-generated.js not loaded — conflicts with hand-written bindings until audited.
     htmltools::htmlDependency(
       name = "designsystemet-bindings",
       version = utils::packageVersion("shinyds"),

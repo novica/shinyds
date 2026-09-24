@@ -12,7 +12,7 @@
 ^.release-please-manifest.json$
 ^release-please-config.json$
 ^codecov\.yml$
-^tools$
+^UPDATING\.md$
 ^CHANGELOG.md$
 ^AGENTS\.md$
 ^cran-comments\.md$
