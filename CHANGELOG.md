@@ -1,3 +1,10 @@
+## [0.6.0](https://github.com/novica/shinyds/compare/v0.5.0...v0.6.0) (2026-09-24)
+
+
+### New features
+
+* update Designsystemet to 1.22.0 ([#56](https://github.com/novica/shinyds/issues/56)) ([69dcffa](https://github.com/novica/shinyds/commit/69dcffad48260e0e2f638bf363c92ba102b48eba))
+
 ## [0.5.0](https://github.com/novica/shinyds/compare/v0.4.0...v0.5.0) (2026-08-22)
 
 
