@@ -188,3 +188,13 @@ type that skips versioning entirely. `changelog-sections` in the config only con
 are *shown* in the changelog (some are marked `hidden`); it does not affect whether they trigger a
 release. Use Conventional Commits for both commit messages and branch names (e.g. `fix/...`,
 `feat/...`, `docs/...`) so release-please can parse them correctly.
+
+## AI attribution in commits and PRs
+
+Follow the Linux kernel coding-assistants policy
+(<https://docs.kernel.org/process/coding-assistants.html>) for attribution: use your tool's default
+attribution text, but as an `Assisted-by:` trailer instead of `Co-Authored-By:` or `Signed-off-by:`.
+
+- Commits end with e.g. `Assisted-by: Claude Opus 5.5 (1M context) <noreply@anthropic.com>`.
+- PR descriptions end with e.g. `Assisted-by: [Claude Code](https://claude.com/claude-code)`.
+- Never add `Co-Authored-By` or `Signed-off-by`. Signed-off-by is for the human author only.
