@@ -6,7 +6,7 @@ When a new Designsystemet version is released there are two paths:
   everything and opens a PR. Trigger it from the Actions tab with the new version number.
 - **Manual** — follow the steps below when you need more control or are working locally.
 
-Current bundled version: **1.20.0**
+Current bundled version: **1.22.0**
 
 ---
 
@@ -17,7 +17,7 @@ Current bundled version: **1.20.0**
 ```bash
 cd ../designsystemet
 git fetch --tags
-git checkout @digdir/designsystemet-css@<new-version>
+git checkout v<new-version>
 pnpm install --frozen-lockfile
 pnpm build
 ```

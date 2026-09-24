@@ -276,6 +276,10 @@ ds_skeleton <- function(variant = "text", width = NULL, height = NULL,
 #'
 #' Create an avatar using Designsystemet styles.
 #'
+#' Initials can be passed directly as text (e.g. `"AB"`); they scale
+#' automatically with `size`. The `data-initials` attribute is deprecated
+#' upstream and should not be used.
+#'
 #' @param ... Avatar content (typically an image or initials)
 #' @param variant Avatar variant
 #' @param size Size variant ("sm", "md", "lg")
@@ -298,9 +302,14 @@ ds_avatar <- function(..., variant = NULL, size = NULL, class = NULL) {
 
 #' Avatar Stack Component
 #'
-#' Create a stack of avatars using Designsystemet styles.
+#' Create a stack of avatars using Designsystemet styles. The stack is
+#' rendered as a `<ul>` and each avatar is wrapped in an `<li>`
+#' automatically (children that are already `<li>` tags are left as is).
 #'
-#' @param ... Avatar elements
+#' @param ... Avatar elements. Named arguments become attributes on the
+#'   `<ul>`.
+#' @param suffix Optional text shown after the avatars, e.g. `"+3"` to
+#'   indicate additional members. Rendered as a trailing `<li>`.
 #' @param class Additional CSS classes
 #'
 #' @return A Shiny tag object
@@ -312,10 +321,30 @@ ds_avatar <- function(..., variant = NULL, size = NULL, class = NULL) {
 #'   ds_avatar("CD"),
 #'   ds_avatar("EF")
 #' )
-ds_avatar_stack <- function(..., class = NULL) {
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-avatar-stack", class),
-    ...
+#'
+#' ds_avatar_stack(
+#'   ds_avatar("AB"),
+#'   ds_avatar("CD"),
+#'   suffix = "+2"
+#' )
+ds_avatar_stack <- function(..., suffix = NULL, class = NULL) {
+  dots <- list(...)
+  dot_names <- names(dots) %||% rep("", length(dots))
+  attribs <- dots[dot_names != ""]
+  children <- lapply(dots[dot_names == ""], function(child) {
+    if (inherits(child, "shiny.tag") && identical(child$name, "li")) {
+      child
+    } else {
+      htmltools::tags$li(child)
+    }
+  })
+  if (!is.null(suffix)) {
+    children <- c(children, list(htmltools::tags$li(suffix)))
+  }
+  tag <- htmltools::tag("ul", c(
+    list(class = .ds_classes("ds-avatar-stack", class)),
+    attribs,
+    children
   ))
   htmltools::attachDependencies(tag, ds_dependencies())
 }

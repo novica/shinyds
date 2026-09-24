@@ -21,6 +21,11 @@ A Shiny tag object
 \description{
 Create an avatar using Designsystemet styles.
 }
+\details{
+Initials can be passed directly as text (e.g. \code{"AB"}); they scale
+automatically with \code{size}. The \code{data-initials} attribute is deprecated
+upstream and should not be used.
+}
 \examples{
 ds_avatar("AB", size = "md")
 }
