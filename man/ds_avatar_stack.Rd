@@ -4,10 +4,14 @@
 \alias{ds_avatar_stack}
 \title{Avatar Stack Component}
 \usage{
-ds_avatar_stack(..., class = NULL)
+ds_avatar_stack(..., suffix = NULL, class = NULL)
 }
 \arguments{
-\item{...}{Avatar elements}
+\item{...}{Avatar elements. Named arguments become attributes on the
+\verb{<ul>}.}
+
+\item{suffix}{Optional text shown after the avatars, e.g. \code{"+3"} to
+indicate additional members. Rendered as a trailing \verb{<li>}.}
 
 \item{class}{Additional CSS classes}
 }
@@ -15,12 +19,20 @@ ds_avatar_stack(..., class = NULL)
 A Shiny tag object
 }
 \description{
-Create a stack of avatars using Designsystemet styles.
+Create a stack of avatars using Designsystemet styles. The stack is
+rendered as a \verb{<ul>} and each avatar is wrapped in an \verb{<li>}
+automatically (children that are already \verb{<li>} tags are left as is).
 }
 \examples{
 ds_avatar_stack(
   ds_avatar("AB"),
   ds_avatar("CD"),
   ds_avatar("EF")
+)
+
+ds_avatar_stack(
+  ds_avatar("AB"),
+  ds_avatar("CD"),
+  suffix = "+2"
 )
 }

@@ -12,7 +12,7 @@ ds_dependencies <- function() {
     # CSS from @digdir/designsystemet-css
     htmltools::htmlDependency(
       name = "designsystemet-css",
-      version = "1.20.0",
+      version = "1.22.0",
       src = system.file("www/css", package = "shinyds"),
       stylesheet = "designsystemet.min.css"
     ),
@@ -20,13 +20,12 @@ ds_dependencies <- function() {
     # Web components from @digdir/designsystemet-web (UMD bundle)
     htmltools::htmlDependency(
       name = "designsystemet-web",
-      version = "1.20.0",
+      version = "1.22.0",
       src = system.file("www/js", package = "shinyds"),
       script = "designsystemet-web.umd.js"
     ),
 
     # Shiny input bindings (hand-written)
-    # ds-bindings-generated.js not loaded — conflicts with hand-written bindings until audited.
     htmltools::htmlDependency(
       name = "designsystemet-bindings",
       version = utils::packageVersion("shinyds"),

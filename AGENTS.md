@@ -161,38 +161,18 @@ app$wait_for_idle()
 `app$set_inputs()` works fine for text, select, and checkbox inputs where you only need to test the
 binding's read path.
 
-### Generator (`tools/`)
-
-`tools/generate.R` reads `tools/component-registry.yaml` and is meant to generate R wrappers
-directly into `R/` and a combined JS bindings file. **R generation is currently unsafe — do not run
-`tools/generate.R --clean` without auditing every "Would write" line first.** Several registry
-entries (`chip`, `tag`, `spinner`, `skeleton`, `avatar`, `avatar_stack`, `skip_link`,
-`validation_message`, `combobox`, `popover`, …) are already hand-implemented inside `R/ds-misc.R`,
-but the generator computes a *different* target filename for each (e.g. `R/ds-chip.R`) and has no
-way to know the function already exists elsewhere under a different file. Since that target file
-doesn't exist, the generator's hand-written check (which only looks at whether its own target path
-exists) doesn't skip it — it writes a second, conflicting definition, breaking
-`devtools::load_all()`. The generated JS bindings file (`ds-bindings-generated.js`) is also **not**
-loaded by `ds_dependencies()` for the same reason — it hasn't been audited against the hand-written
-`ds-bindings.js` for selector/name conflicts. Treat `generate.R` as informational
-(`--dry-run`, `--summary`) until this is fixed (see the TODO at the top of `tools/generate.R`).
-
-```bash
-Rscript tools/generate.R --summary   # preview component list
-Rscript tools/generate.R --dry-run   # preview output without writing
-Rscript tools/generate.R --clean     # do NOT run without auditing first — see above
-```
-
 ### Updating to a new Designsystemet version
 
-See `tools/UPDATE.md` for the full procedure. The short version:
+See `UPDATING.md` for the full procedure. All R wrappers and JS bindings are hand-written; there
+is no code generator. The short version:
 
-1. Build the upstream: `cd ../designsystemet && pnpm install && pnpm build`
+1. Build the upstream: `cd ../designsystemet && git checkout v<version> && pnpm install && pnpm build`
 2. Copy assets to `inst/www/`
-3. Run `Rscript tools/bootstrap-registry.R` to check for new web components (it won't catch new
-   CSS-only components like `file-upload` — check the upstream release notes too)
-4. Bump the version strings in `DESCRIPTION` and `R/ds-dependencies.R`, and the "Current bundled
-   version" line in `tools/UPDATE.md`
+3. Read the upstream release notes (css and web changelogs) for every version since the bundled one
+   and update affected wrappers by hand — markup changes (e.g. AvatarStack `<div>` → `<ul>`/`<li>`
+   in 1.21.0), new components/attributes, deprecations
+4. Bump the version strings in `R/ds-dependencies.R`, the README badge, and the "Current bundled
+   version" line in `UPDATING.md`. Do not touch `Version:` in `DESCRIPTION` (release-please owns it)
 5. Rebuild and re-run `devtools::test()` / `NOT_CRAN=true devtools::test()` / `devtools::check()`,
    and smoke-test all three example apps (`examples/basic`, `examples/faithful`, `examples/showcase`)
    with shinytest2 screenshots — visually confirm styling didn't regress, and check
@@ -208,3 +188,13 @@ type that skips versioning entirely. `changelog-sections` in the config only con
 are *shown* in the changelog (some are marked `hidden`); it does not affect whether they trigger a
 release. Use Conventional Commits for both commit messages and branch names (e.g. `fix/...`,
 `feat/...`, `docs/...`) so release-please can parse them correctly.
+
+## AI attribution in commits and PRs
+
+Follow the Linux kernel coding-assistants policy
+(<https://docs.kernel.org/process/coding-assistants.html>) for attribution: use your tool's default
+attribution text, but as an `Assisted-by:` trailer instead of `Co-Authored-By:` or `Signed-off-by:`.
+
+- Commits end with e.g. `Assisted-by: Claude Opus 5.5 (1M context) <noreply@anthropic.com>`.
+- PR descriptions end with e.g. `Assisted-by: [Claude Code](https://claude.com/claude-code)`.
+- Never add `Co-Authored-By` or `Signed-off-by`. Signed-off-by is for the human author only.

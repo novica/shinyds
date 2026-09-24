@@ -299,15 +299,40 @@ test_that("ds_avatar creates a span with size", {
   expect_equal(av$attribs$`data-size`, "lg")
 })
 
-test_that("ds_avatar_stack creates a div wrapping avatars", {
+test_that("ds_avatar_stack creates a ul wrapping each avatar in li", {
   stack <- ds_avatar_stack(
     ds_avatar("AB"),
     ds_avatar("CD"),
     ds_avatar("EF")
   )
   expect_s3_class(stack, "shiny.tag")
-  expect_equal(stack$name, "div")
+  expect_equal(stack$name, "ul")
   expect_true(has_class(stack, "ds-avatar-stack"))
+  expect_length(stack$children, 3)
+  for (child in stack$children) {
+    expect_equal(child$name, "li")
+    expect_true(has_class(child$children[[1]], "ds-avatar"))
+  }
+})
+
+test_that("ds_avatar_stack does not double-wrap li children", {
+  stack <- ds_avatar_stack(htmltools::tags$li(ds_avatar("AB")))
+  expect_equal(stack$children[[1]]$name, "li")
+  expect_equal(stack$children[[1]]$children[[1]]$name, "span")
+})
+
+test_that("ds_avatar_stack suffix adds a trailing li with text", {
+  stack <- ds_avatar_stack(ds_avatar("AB"), ds_avatar("CD"), suffix = "+2")
+  expect_length(stack$children, 3)
+  last <- stack$children[[3]]
+  expect_equal(last$name, "li")
+  expect_equal(last$children[[1]], "+2")
+})
+
+test_that("ds_avatar_stack passes named args as attributes", {
+  stack <- ds_avatar_stack(ds_avatar("AB"), `aria-label` = "Team")
+  expect_equal(stack$attribs$`aria-label`, "Team")
+  expect_length(stack$children, 1)
 })
 
 # ── ds_validation_message ───────────────────────────────────────────────────

@@ -434,12 +434,14 @@ ds_avatar(
   size = "lg"
 )
 
-# Group several avatars in a stack
+# Group several avatars in a stack. Each avatar is wrapped in an <li>
+# automatically; `suffix` adds trailing text such as a count.
 ds_avatar_stack(
   ds_avatar("AB"),
   ds_avatar("CD"),
   ds_avatar("EF"),
-  ds_avatar("GH")
+  ds_avatar("GH"),
+  suffix = "+5"
 )
 ```
 

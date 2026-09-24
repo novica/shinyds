@@ -619,7 +619,8 @@ ui <- bslib::page_fluid(
                   ds_avatar("AB"),
                   ds_avatar("CD"),
                   ds_avatar("EF"),
-                  ds_avatar("GH")
+                  ds_avatar("GH"),
+                  suffix = "+5"
                 )
               ),
 

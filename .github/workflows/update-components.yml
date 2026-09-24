@@ -1,28 +1,78 @@
 name: Update Designsystemet components
 
 on:
-  # Trigger manually from the Actions tab
+  # Check daily for a new upstream release. Upstream does not notify us, so we poll.
+  schedule:
+    - cron: "0 5 * * *"
+
+  # Trigger manually from the Actions tab. Leave the version blank to use the
+  # latest upstream release.
   workflow_dispatch:
     inputs:
       designsystemet_version:
-        description: "Designsystemet version to build against (e.g. 1.15.0)"
-        required: true
+        description: "Designsystemet version to build against (e.g. 1.22.0). Blank = latest release."
+        required: false
         type: string
 
-  # Trigger automatically when a new release is published by the upstream
-  # org via repository_dispatch (requires a webhook or a companion workflow
-  # in the designsystemet repo that calls this one via the GitHub API).
-  repository_dispatch:
-    types: [designsystemet-release]
-
 jobs:
+  check:
+    name: Check for new release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    outputs:
+      current: ${{ steps.version.outputs.current }}
+      target: ${{ steps.version.outputs.target }}
+      skip: ${{ steps.version.outputs.skip }}
+
+    steps:
+      - name: Checkout shinyds
+        uses: actions/checkout@v7
+
+      - name: Resolve versions
+        id: version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_VERSION: ${{ inputs.designsystemet_version }}
+        run: |
+          CURRENT=$(grep -m1 -oP 'version = "\K[0-9.]+(?=")' R/ds-dependencies.R)
+          if [ -n "$INPUT_VERSION" ]; then
+            TARGET="${INPUT_VERSION#v}"
+          else
+            TARGET=$(gh api repos/digdir/designsystemet/releases/latest --jq '.tag_name')
+            TARGET="${TARGET#v}"
+          fi
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+          echo "Bundled: $CURRENT, target: $TARGET"
+
+          BRANCH="auto/update-designsystemet-${TARGET}"
+          if [ "$CURRENT" = "$TARGET" ]; then
+            echo "Already on $TARGET, nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "schedule" ] && \
+               git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null; then
+            echo "Branch $BRANCH already exists (PR pending), nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   update:
-    name: Regenerate wrappers
+    name: Update assets and open PR
+    needs: check
+    if: needs.check.outputs.skip != 'true'
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
       pull-requests: write
+
+    env:
+      CURRENT: ${{ needs.check.outputs.current }}
+      VERSION: ${{ needs.check.outputs.target }}
 
     steps:
       - name: Checkout shinyds
@@ -30,21 +80,11 @@ jobs:
         with:
           path: shinyds
 
-      # Clone the upstream at the specified tag/version so we can build assets.
-      - name: Resolve version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ inputs.designsystemet_version }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "version=${{ github.event.client_payload.version }}" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Checkout designsystemet upstream
         uses: actions/checkout@v7
         with:
           repository: digdir/designsystemet
-          ref: "@digdir/designsystemet-css@${{ steps.version.outputs.version }}"
+          ref: "v${{ needs.check.outputs.target }}"
           path: designsystemet
 
       - name: Setup Node
@@ -84,9 +124,6 @@ jobs:
         with:
           working-directory: shinyds
           extra-packages: |
-            yaml
-            jsonlite
-            whisker
             any::shinytest2
             any::chromote
 
@@ -101,61 +138,66 @@ jobs:
         run: |
           Rscript -e "devtools::test(filter = 'shinytest')"
 
-      - name: Check for new web components
-        working-directory: shinyds
-        run: Rscript tools/bootstrap-registry.R
+      # Collect release notes for every release after the bundled version up to
+      # and including the target, so skipped versions are not missed.
+      - name: Build PR body with upstream release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          newer() { [ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -1)" = "$1" ]; }
 
-      # - name: Fetch upstream release notes
-      #   id: release_notes
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     NOTES=$(gh api \
-      #       "repos/digdir/designsystemet/releases/tags/@digdir/designsystemet-css@${{ steps.version.outputs.version }}" \
-      #       --jq '.body' 2>/dev/null \
-      #       || echo "_Release notes not available for this tag._")
-      #     {
-      #       echo "notes<<EOF"
-      #       echo "$NOTES"
-      #       echo "EOF"
-      #     } >> "$GITHUB_OUTPUT"
+          VERSIONS=$(gh api "repos/digdir/designsystemet/releases?per_page=100" \
+            --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name' \
+            | sed 's/^v//' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            | while read -r v; do
+                if newer "$v" "$CURRENT" && ! newer "$v" "$VERSION"; then echo "$v"; fi
+              done | sort -rV)
+
+          {
+            echo "Automated update from Designsystemet \`$CURRENT\` to \`$VERSION\`."
+            echo
+            echo "## What changed"
+            echo "- CSS and JS assets copied from upstream \`v$VERSION\`"
+            echo "- Version strings bumped in \`R/ds-dependencies.R\`, \`README.md\`, and \`UPDATING.md\`"
+            echo
+            echo "## Checklist"
+            echo "- [ ] Review release notes below for markup/API changes to existing R wrappers and new components (see \`UPDATING.md\` step 3)"
+            echo "- [ ] Fix affected wrappers on this branch"
+            echo "- [ ] CI checks pass"
+            echo
+            echo "## Upstream release notes"
+            for v in $VERSIONS; do
+              echo
+              echo "### v$v"
+              echo
+              gh api "repos/digdir/designsystemet/releases/tags/v$v" --jq '.body' \
+                || echo "_Release notes not available._"
+            done
+          } > "$RUNNER_TEMP/pr-body.md"
 
       - name: Bump version strings
         working-directory: shinyds
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
           # ds-dependencies.R — both htmlDependency version strings
           sed -i "s/version = \"[0-9.]*\"/version = \"${VERSION}\"/g" R/ds-dependencies.R
-          # component-registry.yaml metadata
-          sed -i "s/designsystemet_version: \"[0-9.]*\"/designsystemet_version: \"${VERSION}\"/" tools/component-registry.yaml
+          # UPDATING.md current version line
+          sed -i "s/^Current bundled version: \*\*[0-9.]*\*\*/Current bundled version: **${VERSION}**/" UPDATING.md
           # README badge
           sed -i "s/Designsystemet-[0-9.]*-blue/Designsystemet-${VERSION}-blue/" README.md
 
+      # PRs opened with the default GITHUB_TOKEN do not trigger other workflows,
+      # so R CMD check would not run on them. Set the SHINYDS_UPDATE_PR_TOKEN secret
+      # (fine-grained PAT with contents + pull-requests write) to get CI on the PR.
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
           path: shinyds
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "auto/update-designsystemet-${{ steps.version.outputs.version }}"
+          token: ${{ secrets.SHINYDS_UPDATE_PR_TOKEN || secrets.GITHUB_TOKEN }}
+          branch: "auto/update-designsystemet-${{ needs.check.outputs.target }}"
           commit-message: |
-            chore: update Designsystemet to ${{ steps.version.outputs.version }}
+            chore: update Designsystemet to ${{ needs.check.outputs.target }}
 
-            Regenerated R wrappers and JS bindings from updated upstream assets.
-          title: "Update Designsystemet to ${{ steps.version.outputs.version }}"
-          body: |
-            Automated update triggered by a new Designsystemet release.
-
-            ## What changed
-            - CSS and JS assets copied from `@digdir/designsystemet-css@${{ steps.version.outputs.version }}`
-            - Version strings bumped in `DESCRIPTION`, `R/ds-dependencies.R`, `tools/component-registry.yaml`, and `README.md`
-
-            ## Upstream release notes
-
-            ${{ steps.release_notes.outputs.notes }}
-
-            ## Checklist
-            - [ ] Review `tools/bootstrap-registry.R` output in the Action log — any new web components to add?
-            - [ ] Review release notes above for API changes to existing R wrappers
-            - [ ] Run `R CMD check` worklow on the PR branch
-            - [ ] Run `NOT_CRAN=true devtools::test()` to exercise browser tests
+            Copied CSS and JS assets from the upstream build and bumped version strings.
+          title: "Update Designsystemet to ${{ needs.check.outputs.target }}"
+          body-path: ${{ runner.temp }}/pr-body.md
           labels: dependencies,automated
