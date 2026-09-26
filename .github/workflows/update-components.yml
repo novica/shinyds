@@ -127,10 +127,8 @@ jobs:
             any::shinytest2
             any::chromote
 
-      - name: Install Chromium for shinytest2
-        run: chromote::install_chrome()
-        shell: Rscript {0}
-
+      # No Chrome install step: ubuntu-latest ships Google Chrome, which
+      # chromote::find_chrome() picks up.
       - name: Run browser tests
         working-directory: shinyds
         env:
