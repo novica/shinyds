@@ -26,6 +26,7 @@ jobs:
       current: ${{ steps.version.outputs.current }}
       target: ${{ steps.version.outputs.target }}
       skip: ${{ steps.version.outputs.skip }}
+      commit_type: ${{ steps.version.outputs.commit_type }}
 
     steps:
       - name: Checkout shinyds
@@ -47,6 +48,14 @@ jobs:
           echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
           echo "target=$TARGET" >> "$GITHUB_OUTPUT"
           echo "Bundled: $CURRENT, target: $TARGET"
+
+          # Mirror the upstream bump for release-please: an upstream patch
+          # release gives fix:, a minor or major release gives feat:.
+          if [ "$(echo "$CURRENT" | cut -d. -f1,2)" = "$(echo "$TARGET" | cut -d. -f1,2)" ]; then
+            echo "commit_type=fix" >> "$GITHUB_OUTPUT"
+          else
+            echo "commit_type=feat" >> "$GITHUB_OUTPUT"
+          fi
 
           BRANCH="auto/update-designsystemet-${TARGET}"
           if [ "$CURRENT" = "$TARGET" ]; then
@@ -172,9 +181,9 @@ jobs:
           token: ${{ secrets.SHINYDS_UPDATE_PR_TOKEN || secrets.GITHUB_TOKEN }}
           branch: "auto/update-designsystemet-${{ needs.check.outputs.target }}"
           commit-message: |
-            chore: update Designsystemet to ${{ needs.check.outputs.target }}
+            ${{ needs.check.outputs.commit_type }}: update Designsystemet to ${{ needs.check.outputs.target }}
 
             Copied CSS and JS assets from the upstream build and bumped version strings.
-          title: "Update Designsystemet to ${{ needs.check.outputs.target }}"
+          title: "${{ needs.check.outputs.commit_type }}: update Designsystemet to ${{ needs.check.outputs.target }}"
           body-path: ${{ runner.temp }}/pr-body.md
           labels: dependencies,automated
