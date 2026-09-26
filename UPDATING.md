@@ -10,7 +10,7 @@ When a new Designsystemet version is released there are two paths:
   It can also be run manually from the Actions tab (blank version = latest release).
 - **Manual** — follow the steps below when you need more control or are working locally.
 
-Current bundled version: **1.22.0**
+Current bundled version: **1.23.0**
 
 ---
 
