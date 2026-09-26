@@ -1,9 +1,10 @@
 name: Update Designsystemet components
 
 on:
-  # Check daily for a new upstream release. Upstream does not notify us, so we poll.
+  # Check weekly (Monday) for a new upstream release. Upstream does not notify
+  # us, so we poll; it releases on varying weekdays, roughly weekly at most.
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 5 * * 1"
 
   # Trigger manually from the Actions tab. Leave the version blank to use the
   # latest upstream release.
