@@ -190,7 +190,7 @@ release-please log says "No user facing commits found ... skipping").
 Squash merges use the PR title as the commit message (repo setting), so the PR title's type is what
 release-please sees. To change the type of an already merged PR, add a
 `BEGIN_COMMIT_OVERRIDE` / `END_COMMIT_OVERRIDE` block with the corrected message to its description;
-release-please picks it up on its next run (push to `main`, or run the workflow manually).
+release-please picks it up on its next run (the next push to `main`).
 
 Use Conventional Commits for both commit messages and branch names (e.g. `fix/...`,
 `feat/...`, `docs/...`) so release-please can parse them correctly.

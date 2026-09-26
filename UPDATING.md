@@ -3,7 +3,7 @@
 When a new Designsystemet version is released there are two paths:
 
 - **Automated** — the GitHub Action `.github/workflows/update-components.yml` checks
-  daily for a new upstream release. When it finds one it builds upstream, copies the
+  weekly (Mondays) for a new upstream release. When it finds one it builds upstream, copies the
   assets, bumps the version strings (steps 1, 2 and 4 below) and opens a PR whose
   description contains the release notes of every version since the bundled one.
   You then do step 3 on the PR branch: read the notes, fix affected wrappers, push.
