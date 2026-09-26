@@ -114,28 +114,6 @@ jobs:
           cp designsystemet/packages/web/dist/umd/index.js \
              shinyds/inst/www/js/designsystemet-web.umd.js
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-
-      - name: Install R dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          working-directory: shinyds
-          extra-packages: |
-            any::shinytest2
-            any::chromote
-
-      # No Chrome install step: ubuntu-latest ships Google Chrome, which
-      # chromote::find_chrome() picks up.
-      - name: Run browser tests
-        working-directory: shinyds
-        env:
-          NOT_CRAN: true
-        run: |
-          Rscript -e "devtools::test(filter = 'shinytest')"
-
       # Collect release notes for every release after the bundled version up to
       # and including the target, so skipped versions are not missed.
       - name: Build PR body with upstream release notes
@@ -183,9 +161,10 @@ jobs:
           # README badge
           sed -i "s/Designsystemet-[0-9.]*-blue/Designsystemet-${VERSION}-blue/" README.md
 
-      # PRs opened with the default GITHUB_TOKEN do not trigger other workflows,
-      # so R CMD check would not run on them. Set the SHINYDS_UPDATE_PR_TOKEN secret
-      # (fine-grained PAT with contents + pull-requests write) to get CI on the PR.
+      # Tests are not run here: R CMD check runs on the PR, including the
+      # shinytest2 browser tests. PRs opened with the default GITHUB_TOKEN do
+      # not trigger other workflows, so the SHINYDS_UPDATE_PR_TOKEN secret
+      # (fine-grained PAT with contents + pull-requests write) is used instead.
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
