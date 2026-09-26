@@ -31,6 +31,14 @@ install.packages("shinyds")
 remotes::install_github("novica/shinyds")
 ```
 
+### Which version to install
+
+> [!NOTE]
+> GitHub releases follow Designsystemet: a new shinyds release is published on GitHub
+> shortly after each upstream release. The [CRAN policy](https://cran.r-project.org/web/packages/policies.html)
+> asks for updates no more than every 1–2 months, so only releases with breaking changes are
+> submitted to CRAN. Install from GitHub to get the latest Designsystemet version.
+
 ## Quick start
 
 ```r
