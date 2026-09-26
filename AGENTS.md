@@ -182,11 +182,17 @@ is no code generator. The short version:
 
 This repo uses [release-please](https://github.com/googleapis/release-please) (config:
 `release-please-config.json`, baseline: `.release-please-manifest.json`) with Conventional Commits.
-`feat:` bumps minor, a breaking-change footer/`!` bumps major, and **any other Conventional Commit
-type (`fix:`, `docs:`, `chore:`, `refactor:`, `ci:`, `test:`, `build:`) bumps patch** — there is no
-type that skips versioning entirely. `changelog-sections` in the config only controls which types
-are *shown* in the changelog (some are marked `hidden`); it does not affect whether they trigger a
-release. Use Conventional Commits for both commit messages and branch names (e.g. `fix/...`,
+`feat:` bumps minor, a breaking-change footer/`!` bumps major, and `fix:`, `docs:`, `perf:` and
+`revert:` bump patch. Types marked `hidden` in `changelog-sections` (`chore:`, `ci:`, `refactor:`,
+`test:`, `build:`) are not user facing: on their own they do **not** trigger a release (the
+release-please log says "No user facing commits found ... skipping").
+
+Squash merges use the PR title as the commit message (repo setting), so the PR title's type is what
+release-please sees. To change the type of an already merged PR, add a
+`BEGIN_COMMIT_OVERRIDE` / `END_COMMIT_OVERRIDE` block with the corrected message to its description;
+release-please picks it up on its next run (push to `main`, or run the workflow manually).
+
+Use Conventional Commits for both commit messages and branch names (e.g. `fix/...`,
 `feat/...`, `docs/...`) so release-please can parse them correctly.
 
 ## AI attribution in commits and PRs
