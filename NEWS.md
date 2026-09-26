@@ -1,3 +1,9 @@
+# shinyds 0.7.0
+
+## New features
+
+* update Designsystemet to 1.23.0 ([dd17d13](https://github.com/novica/shinyds/commit/dd17d130c3caa20c3b51d2844e221413d68b064a))
+
 # shinyds 0.6.0
 
 ## New features
