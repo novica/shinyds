@@ -1,3 +1,9 @@
+# shinyds 0.7.1
+
+## Documentation
+
+* add citation files with the CRAN DOI and compare shinyds with shinyreact ([#68](https://github.com/novica/shinyds/issues/68)) ([e538028](https://github.com/novica/shinyds/commit/e53802810772fd4c8fb4a0f258974e55420a8ddc))
+
 # shinyds 0.7.0
 
 ## New features
