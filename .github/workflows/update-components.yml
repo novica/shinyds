@@ -15,6 +15,12 @@ on:
         required: false
         type: string
 
+# Queue instead of cancel: two runs at once could race to push the same
+# update branch.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   check:
     name: Check for new release
