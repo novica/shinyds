@@ -4,9 +4,14 @@ on:
   pull_request:
     paths-ignore:
       - "*.md"
-      - ".github/**"
-      - "*.json "
-      - "*.toml "
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/*.md"
+      - ".release-please-manifest.json"
+      - "release-please-config.json"
+      - "codecov.yml"
+      - "_pkgdown.yml"
+      - "pkgdown/**"
+      - "CITATION.cff"
   schedule:
     - cron: "17 4 * * 1" # Mondays 04:17 UTC
   workflow_dispatch:
@@ -18,7 +23,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  air:
+    name: air format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install
+        uses: posit-dev/setup-air@v1
+
+      - name: Check
+        run: air format . --check
+
+  jarl:
+    name: jarl check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Runs `jarl check` by default.
+      - uses: etiennebacher/setup-jarl@v0.1.1
+
   R-CMD-check:
+    needs: [air, jarl]
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -28,12 +55,14 @@ jobs:
       matrix:
         config:
           - { os: macos-latest, r: "release" }
-          - { os: windows-latest, r: "release" }
+          # quarto can't load the package while R CMD build renders vignettes
+          # on Windows; R CMD check still re-builds them.
+          - { os: windows-latest, r: "release", build-args: 'c("--no-manual", "--no-build-vignettes")' }
           - { os: ubuntu-latest, r: "devel", http-user-agent: "release" }
           - { os: ubuntu-latest, r: "release" }
           - { os: ubuntu-latest, r: "oldrel-1" }
         # R-devel has no binary packages, so that job compiles every
-        # dependency. Run it weekly, not on PRs.
+        # dependency. Run it weekly and on demand, not on PRs.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"config":{"os":"ubuntu-latest","r":"devel","http-user-agent":"release"}}]') || fromJSON('[]') }}
 
     env:
@@ -50,6 +79,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
+          # extra-repositories: https://example.org/R  # e.g. for non-CRAN Suggests
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -60,5 +90,5 @@ jobs:
         with:
           error-on: '"error"'
           upload-snapshots: true
-          build_args: 'c("--no-build-vignettes")'
+          build_args: ${{ matrix.config.build-args || '"--no-manual"' }}
           args: 'c("--no-manual", "--as-cran")'
