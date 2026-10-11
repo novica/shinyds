@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "shinyds: Shiny Bindings for Designsystemet Components"
+abstract: >-
+  Provides R wrappers for the Designsystemet component library
+  <https://designsystemet.no>, enabling use of Norwegian government design
+  system components in Shiny applications. Includes web components and
+  CSS-based HTML components with full Shiny input binding support.
+authors:
+  - family-names: Nakov
+    given-names: Novica
+    email: nnovica@gmail.com
+    orcid: "https://orcid.org/0009-0005-7773-7718"
+version: 0.7.0 # x-release-please-version
+date-released: 2026-09-26
+license: MIT
+repository-code: "https://github.com/novica/shinyds"
+repository: "https://CRAN.R-project.org/package=shinyds"
+doi: 10.32614/CRAN.package.shinyds
+keywords:
+  - R
+  - shiny
+  - design-system
+  - designsystemet

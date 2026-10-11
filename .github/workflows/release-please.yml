@@ -73,3 +73,17 @@ jobs:
           git diff --staged --quiet || \
             git commit -m "style: update NEWS.md from CHANGELOG.md"
           git push origin "$PR_BRANCH"
+
+      # release-please bumps the version in CITATION.cff (extra-files) but
+      # cannot set dates, so keep date-released at the day the PR was updated.
+      - name: Update date-released in CITATION.cff
+        if: ${{ steps.release.outputs.pr }}
+        env:
+          PR_JSON: ${{ steps.release.outputs.pr }}
+        run: |
+          PR_BRANCH=$(echo "$PR_JSON" | jq -r '.headBranchName')
+          sed -i "s/^date-released: .*/date-released: $(date -u +%F)/" CITATION.cff
+          git add CITATION.cff
+          git diff --staged --quiet || \
+            git commit -m "chore: update CITATION.cff date-released"
+          git push origin "$PR_BRANCH"

@@ -4,6 +4,7 @@
   [![CRAN status](https://www.r-pkg.org/badges/version/shinyds)](https://CRAN.R-project.org/package=shinyds)
   [![CRAN downloads](https://cranlogs.r-pkg.org/badges/shinyds)](https://CRAN.R-project.org/package=shinyds)
   [![Designsystemet version](https://img.shields.io/badge/Designsystemet-1.23.0-blue)](https://github.com/digdir/designsystemet/releases)  
+  [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.shinyds-blue)](https://doi.org/10.32614/CRAN.package.shinyds)
 <!-- badges: end -->
 
 # shinyds - Designsystemet components for Shiny 
@@ -86,6 +87,22 @@ Three example apps are bundled with the package:
 ## What's included
 
 `shinyds` covers the full Designsystemet component set: form controls (button, input, checkbox, radio, select, textarea, search, suggestion), layout (card, table, tabs, pagination), typography (heading, paragraph, link, list), and feedback (alert, badge, spinner, skeleton). Components compose naturally with `bslib` layout functions.
+
+## shinyds or shinyreact?
+
+[shinyreact](https://github.com/posit-dev/shinyreact) ([announcement](https://opensource.posit.co/blog/2026-09-30_introducing-shinyreact/)) keeps Shiny on the server and hands the whole UI to a React client you write yourself. Paired with Designsystemet's official React components, [`@digdir/designsystemet-react`](https://www.npmjs.com/package/@digdir/designsystemet-react), it is another way to build Designsystemet apps on Shiny.
+
+| | shinyds | shinyreact + `@digdir/designsystemet-react` |
+|---|---|---|
+| UI written in | R | JavaScript / TypeScript (JSX) |
+| Node.js toolchain | Not needed | Recommended |
+| Works with bslib, htmlwidgets, modules, `renderUI()` | Yes | No — React owns the page |
+| Adopt incrementally in an existing app | Yes, one component at a time | Requires rewriting the UI |
+| Designsystemet layer | CSS + web components | React components |
+
+Use **shinyds** if you want to stay in R, add Designsystemet to an existing Shiny app, or keep the project free of a JavaScript build.
+
+Use **shinyreact** if your team already works in React and the app needs custom layouts, heavy client-side interaction, or components beyond what Designsystemet and Shiny provide.
 
 ## Learn more
 
