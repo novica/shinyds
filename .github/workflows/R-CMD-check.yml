@@ -1,6 +1,9 @@
 name: R CMD Check
 
 on:
+  # Keeps the README badge on the status of main.
+  push:
+    branches: [main]
   pull_request:
     paths-ignore:
       - "*.md"
@@ -56,14 +59,15 @@ jobs:
         config:
           - { os: macos-latest, r: "release" }
           # quarto can't load the package while R CMD build renders vignettes
-          # on Windows; R CMD check still re-builds them.
-          - { os: windows-latest, r: "release", build-args: 'c("--no-manual", "--no-build-vignettes")' }
+          # on Windows, so vignettes are neither built nor checked there. The
+          # other platforms check them.
+          - { os: windows-latest, r: "release", build-args: 'c("--no-manual", "--no-build-vignettes")', check-args: 'c("--no-manual", "--as-cran", "--ignore-vignettes")' }
           - { os: ubuntu-latest, r: "devel", http-user-agent: "release" }
           - { os: ubuntu-latest, r: "release" }
           - { os: ubuntu-latest, r: "oldrel-1" }
         # R-devel has no binary packages, so that job compiles every
-        # dependency. Run it weekly and on demand, not on PRs.
-        exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"config":{"os":"ubuntu-latest","r":"devel","http-user-agent":"release"}}]') || fromJSON('[]') }}
+        # dependency. Run it weekly and on demand, not on PRs or pushes.
+        exclude: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && fromJSON('[{"config":{"os":"ubuntu-latest","r":"devel","http-user-agent":"release"}}]') || fromJSON('[]') }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -91,4 +95,4 @@ jobs:
           error-on: '"error"'
           upload-snapshots: true
           build_args: ${{ matrix.config.build-args || '"--no-manual"' }}
-          args: 'c("--no-manual", "--as-cran")'
+          args: ${{ matrix.config.check-args || 'c("--no-manual", "--as-cran")' }}
