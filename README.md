@@ -1,5 +1,5 @@
 <!-- badges: start -->
-  [![R-CMD-check](https://github.com/novica/shinyds/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/novica/shinyds/actions/workflows/R-CMD-check.yml)
+  [![R-CMD-check](https://github.com/novica/shinyds/actions/workflows/R-CMD-check.yml/badge.svg?branch=main)](https://github.com/novica/shinyds/actions/workflows/R-CMD-check.yml)
   [![Codecov test coverage](https://codecov.io/gh/novica/shinyds/graph/badge.svg)](https://app.codecov.io/gh/novica/shinyds)
   [![CRAN status](https://www.r-pkg.org/badges/version/shinyds)](https://CRAN.R-project.org/package=shinyds)
   [![CRAN downloads](https://cranlogs.r-pkg.org/badges/shinyds)](https://CRAN.R-project.org/package=shinyds)
