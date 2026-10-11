@@ -18,11 +18,17 @@
 #' @examples
 #' ds_input("name", placeholder = "Enter your name")
 #' ds_input("email", type = "email", placeholder = "your@email.com")
-ds_input <- function(inputId, value = "", type = "text",
-                     placeholder = NULL, size = NULL,
-                     readonly = FALSE, disabled = FALSE,
-                     invalid = FALSE, ...) {
-
+ds_input <- function(
+  inputId,
+  value = "",
+  type = "text",
+  placeholder = NULL,
+  size = NULL,
+  readonly = FALSE,
+  disabled = FALSE,
+  invalid = FALSE,
+  ...
+) {
   attribs <- list(
     id = inputId,
     name = inputId,
@@ -62,11 +68,17 @@ ds_input <- function(inputId, value = "", type = "text",
 #'
 #' @examples
 #' ds_textarea("msg", placeholder = "Type here...", rows = 4)
-ds_textarea <- function(inputId, value = "", placeholder = NULL,
-                        rows = 3, size = NULL,
-                        readonly = FALSE, disabled = FALSE,
-                        invalid = FALSE, ...) {
-
+ds_textarea <- function(
+  inputId,
+  value = "",
+  placeholder = NULL,
+  rows = 3,
+  size = NULL,
+  readonly = FALSE,
+  disabled = FALSE,
+  invalid = FALSE,
+  ...
+) {
   attribs <- list(
     id = inputId,
     name = inputId,
@@ -102,24 +114,35 @@ ds_textarea <- function(inputId, value = "", placeholder = NULL,
 #'
 #' @examples
 #' ds_checkbox("agree", "I agree to the terms", value = FALSE)
-ds_checkbox <- function(inputId, label, value = FALSE,
-                        size = NULL, disabled = FALSE, ...) {
+ds_checkbox <- function(
+  inputId,
+  label,
+  value = FALSE,
+  size = NULL,
+  disabled = FALSE,
+  ...
+) {
+  input_el <- htmltools::tag(
+    "input",
+    list(
+      id = inputId,
+      name = inputId,
+      class = "ds-input ds-shiny-input",
+      type = "checkbox",
+      checked = if (value) NA else NULL,
+      `data-size` = size,
+      disabled = if (disabled) NA else NULL,
+      ...
+    )
+  )
 
-  input_el <- htmltools::tag("input", list(
-    id = inputId,
-    name = inputId,
-    class = "ds-input ds-shiny-input",
-    type = "checkbox",
-    checked = if (value) NA else NULL,
-    `data-size` = size,
-    disabled = if (disabled) NA else NULL,
-    ...
-  ))
-
-  label_el <- htmltools::tag("label", list(
-    `for` = inputId,
-    label
-  ))
+  label_el <- htmltools::tag(
+    "label",
+    list(
+      `for` = inputId,
+      label
+    )
+  )
 
   tag <- htmltools::tagList(input_el, label_el)
   htmltools::attachDependencies(tag, ds_dependencies())
@@ -146,26 +169,38 @@ ds_checkbox <- function(inputId, label, value = FALSE,
 #'
 #' @examples
 #' ds_radio("opt_a", label = "Option A", value = "a", name = "opts")
-ds_radio <- function(inputId, label, value, name,
-                     checked = FALSE, size = NULL,
-                     disabled = FALSE, ...) {
+ds_radio <- function(
+  inputId,
+  label,
+  value,
+  name,
+  checked = FALSE,
+  size = NULL,
+  disabled = FALSE,
+  ...
+) {
+  input_el <- htmltools::tag(
+    "input",
+    list(
+      id = inputId,
+      name = name,
+      class = "ds-input",
+      type = "radio",
+      value = value,
+      checked = if (checked) NA else NULL,
+      `data-size` = size,
+      disabled = if (disabled) NA else NULL,
+      ...
+    )
+  )
 
-  input_el <- htmltools::tag("input", list(
-    id = inputId,
-    name = name,
-    class = "ds-input",
-    type = "radio",
-    value = value,
-    checked = if (checked) NA else NULL,
-    `data-size` = size,
-    disabled = if (disabled) NA else NULL,
-    ...
-  ))
-
-  label_el <- htmltools::tag("label", list(
-    `for` = inputId,
-    label
-  ))
+  label_el <- htmltools::tag(
+    "label",
+    list(
+      `for` = inputId,
+      label
+    )
+  )
 
   htmltools::tagList(input_el, label_el)
 }
@@ -193,38 +228,49 @@ ds_radio <- function(inputId, label, value, name,
 #'   choices = c("Choice A" = "a", "Choice B" = "b", "Choice C" = "c"),
 #'   selected = "a"
 #' )
-ds_radio_group <- function(inputId, label, choices, selected = NULL,
-                           size = NULL, disabled = FALSE, class = NULL) {
-
+ds_radio_group <- function(
+  inputId,
+  label,
+  choices,
+  selected = NULL,
+  size = NULL,
+  disabled = FALSE,
+  class = NULL
+) {
   # Handle both named and unnamed vectors
   if (is.null(names(choices))) {
     names(choices) <- choices
   }
 
-  if (is.null(selected)) selected <- choices[[1]]
+  if (is.null(selected)) {
+    selected <- choices[[1]]
+  }
 
   radios <- lapply(seq_along(choices), function(i) {
     val <- choices[[i]]
     lbl <- names(choices)[i]
     ds_radio(
-      inputId  = paste0(inputId, "_", make.names(val)),
-      label    = lbl,
-      value    = val,
-      name     = inputId,
-      checked  = identical(val, selected),
-      size     = size,
+      inputId = paste0(inputId, "_", make.names(val)),
+      label = lbl,
+      value = val,
+      name = inputId,
+      checked = identical(val, selected),
+      size = size,
       disabled = disabled
     )
   })
 
-  tag <- htmltools::tag("fieldset", c(
-    list(
-      id = inputId,
-      class = .ds_classes("ds-fieldset", "ds-shiny-input", class),
-      htmltools::tag("legend", list(label))
-    ),
-    radios
-  ))
+  tag <- htmltools::tag(
+    "fieldset",
+    c(
+      list(
+        id = inputId,
+        class = .ds_classes("ds-fieldset", "ds-shiny-input", class),
+        htmltools::tag("legend", list(label))
+      ),
+      radios
+    )
+  )
 
   htmltools::attachDependencies(tag, ds_dependencies())
 }
@@ -248,9 +294,14 @@ ds_radio_group <- function(inputId, label, choices, selected = NULL,
 #'   choices = c("Norway" = "no", "Sweden" = "se", "Denmark" = "dk"),
 #'   selected = "no"
 #' )
-ds_select <- function(inputId, choices, selected = NULL,
-                      size = NULL, disabled = FALSE, ...) {
-
+ds_select <- function(
+  inputId,
+  choices,
+  selected = NULL,
+  size = NULL,
+  disabled = FALSE,
+  ...
+) {
   # Handle both named and unnamed vectors
   if (is.null(names(choices))) {
     names(choices) <- choices
@@ -259,24 +310,30 @@ ds_select <- function(inputId, choices, selected = NULL,
   options <- lapply(seq_along(choices), function(i) {
     val <- choices[[i]]
     label <- names(choices)[i]
-    htmltools::tag("option", list(
-      value = val,
-      selected = if (identical(val, selected)) NA else NULL,
-      label
-    ))
+    htmltools::tag(
+      "option",
+      list(
+        value = val,
+        selected = if (identical(val, selected)) NA else NULL,
+        label
+      )
+    )
   })
 
-  tag <- htmltools::tag("select", c(
-    list(
-      id = inputId,
-      name = inputId,
-      class = "ds-input ds-shiny-input",
-      `data-size` = size,
-      disabled = if (disabled) NA else NULL,
-      ...
-    ),
-    options
-  ))
+  tag <- htmltools::tag(
+    "select",
+    c(
+      list(
+        id = inputId,
+        name = inputId,
+        class = "ds-input ds-shiny-input",
+        `data-size` = size,
+        disabled = if (disabled) NA else NULL,
+        ...
+      ),
+      options
+    )
+  )
 
   htmltools::attachDependencies(tag, ds_dependencies())
 }
@@ -296,8 +353,11 @@ ds_select <- function(inputId, choices, selected = NULL,
 #' \dontrun{
 #' update_ds_input(session, "name", value = "")
 #' }
-update_ds_input <- function(session = shiny::getDefaultReactiveDomain(),
-                            inputId, value = NULL) {
+update_ds_input <- function(
+  session = shiny::getDefaultReactiveDomain(),
+  inputId,
+  value = NULL
+) {
   message <- list(value = value)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)
@@ -318,8 +378,11 @@ update_ds_input <- function(session = shiny::getDefaultReactiveDomain(),
 #' \dontrun{
 #' update_ds_checkbox(session, "agree", value = FALSE)
 #' }
-update_ds_checkbox <- function(session = shiny::getDefaultReactiveDomain(),
-                               inputId, value = NULL) {
+update_ds_checkbox <- function(
+  session = shiny::getDefaultReactiveDomain(),
+  inputId,
+  value = NULL
+) {
   message <- list(value = value)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)
@@ -341,8 +404,12 @@ update_ds_checkbox <- function(session = shiny::getDefaultReactiveDomain(),
 #' \dontrun{
 #' update_ds_select(session, "country", value = "no")
 #' }
-update_ds_select <- function(session = shiny::getDefaultReactiveDomain(),
-                             inputId, value = NULL, choices = NULL) {
+update_ds_select <- function(
+  session = shiny::getDefaultReactiveDomain(),
+  inputId,
+  value = NULL,
+  choices = NULL
+) {
   message <- list(value = value, choices = choices)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)
@@ -363,8 +430,11 @@ update_ds_select <- function(session = shiny::getDefaultReactiveDomain(),
 #' \dontrun{
 #' update_ds_radio_group(session, "opts", value = "b")
 #' }
-update_ds_radio_group <- function(session = shiny::getDefaultReactiveDomain(),
-                                  inputId, value = NULL) {
+update_ds_radio_group <- function(
+  session = shiny::getDefaultReactiveDomain(),
+  inputId,
+  value = NULL
+) {
   message <- list(value = value)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)

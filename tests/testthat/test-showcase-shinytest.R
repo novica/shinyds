@@ -21,17 +21,19 @@ tryCatch(
 )
 
 app_dir <- system.file("examples/showcase", package = "shinyds")
-if (nchar(app_dir) == 0) testthat::skip("Package not installed")
+if (nchar(app_dir) == 0) {
+  testthat::skip("Package not installed")
+}
 
 # ── Helpers ────────────────────────────────────────────────────────────────
 
 new_app <- function(name) {
   shinytest2::AppDriver$new(
     app_dir,
-    name            = name,
-    load_timeout    = 20000,
-    timeout         = 10000,
-    options         = list(shiny.testmode = TRUE)
+    name = name,
+    load_timeout = 20000,
+    timeout = 10000,
+    options = list(shiny.testmode = TRUE)
   )
 }
 
@@ -117,7 +119,10 @@ test_that("chip group reports its pre-selected value on load", {
 # to dispatch the click directly through the browser instead.
 
 js_click <- function(app, selector) {
-  app$run_js(sprintf('document.querySelector(%s).click()', jsonlite::toJSON(selector)))
+  app$run_js(sprintf(
+    'document.querySelector(%s).click()',
+    jsonlite::toJSON(selector)
+  ))
 }
 
 test_that("clicking a tab updates input$main_tabs", {
@@ -161,7 +166,9 @@ test_that("an output inside a non-default tab renders after switching to it", {
   js_click(app, "ds-tab[data-value='feedback']")
   app$wait_for_idle()
 
-  app$run_js('document.querySelector("#showcase_chips .ds-chip[value=\'vue\']").click()')
+  app$run_js(
+    'document.querySelector("#showcase_chips .ds-chip[value=\'vue\']").click()'
+  )
   app$wait_for_idle()
 
   chip_out <- app$get_value(output = "chip_out")

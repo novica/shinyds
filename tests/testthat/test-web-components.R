@@ -1,7 +1,8 @@
 # Tests for Designsystemet web components (custom elements)
 
 test_that("ds_tabs creates correct HTML structure", {
-  tabs <- ds_tabs("test_tabs",
+  tabs <- ds_tabs(
+    "test_tabs",
     ds_tablist(
       ds_tab("Tab 1", value = "t1", selected = TRUE),
       ds_tab("Tab 2", value = "t2")
@@ -44,7 +45,8 @@ test_that("ds_pagination creates correct HTML structure", {
 })
 
 test_that("ds_suggestion creates correct HTML structure", {
-  suggestion <- ds_suggestion("test_suggest",
+  suggestion <- ds_suggestion(
+    "test_suggest",
     choices = c("Option A", "Option B", "Option C"),
     placeholder = "Type to search..."
   )

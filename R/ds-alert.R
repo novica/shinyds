@@ -14,16 +14,21 @@
 #' ds_alert("Warning: Please review before continuing.", variant = "warning")
 #' ds_alert("Error: Something went wrong.", variant = "danger")
 #' ds_alert("Success! Your changes were saved.", variant = "success")
-ds_alert <- function(..., variant = c("info", "warning", "danger", "success"),
-                     class = NULL) {
-
+ds_alert <- function(
+  ...,
+  variant = c("info", "warning", "danger", "success"),
+  class = NULL
+) {
   variant <- match.arg(variant)
 
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-alert", class),
-    `data-variant` = variant,
-    role = "alert",
-    ...
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-alert", class),
+      `data-variant` = variant,
+      role = "alert",
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }

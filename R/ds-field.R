@@ -16,11 +16,14 @@
 #'   ds_validation_message("Please enter a valid email")
 #' )
 ds_field <- function(..., size = NULL, class = NULL) {
-  tag <- htmltools::tag("ds-field", list(
-    `data-size` = size,
-    class = .ds_classes("ds-field", class),
-    ...
-  ))
+  tag <- htmltools::tag(
+    "ds-field",
+    list(
+      `data-size` = size,
+      class = .ds_classes("ds-field", class),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -41,10 +44,13 @@ ds_field <- function(..., size = NULL, class = NULL) {
 #'   ds_checkbox("opt2", "Option 2")
 #' )
 ds_fieldset <- function(legend, ..., class = NULL) {
-  tag <- htmltools::tag("fieldset", list(
-    class = .ds_classes("ds-fieldset", class),
-    htmltools::tag("legend", list(legend)),
-    ...
-  ))
+  tag <- htmltools::tag(
+    "fieldset",
+    list(
+      class = .ds_classes("ds-fieldset", class),
+      htmltools::tag("legend", list(legend)),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }

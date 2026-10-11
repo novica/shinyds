@@ -25,11 +25,14 @@
 #'   )
 #' )
 ds_table <- function(..., size = NULL, class = NULL) {
-  tag <- htmltools::tag("table", list(
-    class = .ds_classes("ds-table", class),
-    `data-size` = size,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "table",
+    list(
+      class = .ds_classes("ds-table", class),
+      `data-size` = size,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 

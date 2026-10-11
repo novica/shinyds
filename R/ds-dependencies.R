@@ -93,16 +93,24 @@ use_designsystemet <- function(color_scheme = "light") {
 #'   ds_theme(color = "brand1", border_radius = "2px", button_padding = "0.3rem 0.8rem"),
 #'   ds_button("Click me", inputId = "btn")
 #' )
-ds_theme <- function(color = NULL,
-                     font_size = NULL,
-                     border_radius = NULL,
-                     button_padding = NULL,
-                     ...) {
+ds_theme <- function(
+  color = NULL,
+  font_size = NULL,
+  border_radius = NULL,
+  button_padding = NULL,
+  ...
+) {
   tokens <- list(...)
 
-  if (!is.null(font_size))     tokens[["--ds-font-size-base"]]    <- font_size
-  if (!is.null(border_radius)) tokens[["--ds-border-radius-md"]]  <- border_radius
-  if (!is.null(button_padding)) tokens[["--dsc-button-padding"]]  <- button_padding
+  if (!is.null(font_size)) {
+    tokens[["--ds-font-size-base"]] <- font_size
+  }
+  if (!is.null(border_radius)) {
+    tokens[["--ds-border-radius-md"]] <- border_radius
+  }
+  if (!is.null(button_padding)) {
+    tokens[["--dsc-button-padding"]] <- button_padding
+  }
 
   tags <- list()
 
@@ -116,7 +124,10 @@ ds_theme <- function(color = NULL,
   }
 
   if (!is.null(color)) {
-    js <- sprintf('document.documentElement.setAttribute("data-color", "%s");', color)
+    js <- sprintf(
+      'document.documentElement.setAttribute("data-color", "%s");',
+      color
+    )
     tags <- c(tags, list(htmltools::tags$script(htmltools::HTML(js))))
   }
 

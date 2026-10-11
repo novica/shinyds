@@ -16,12 +16,15 @@
 #'   ds_paragraph("Hidden content goes here.")
 #' )
 ds_details <- function(summary, ..., open = FALSE, class = NULL) {
-  tag <- htmltools::tag("details", list(
-    class = .ds_classes("ds-details", class),
-    open = if (open) NA else NULL,
-    htmltools::tag("summary", list(summary)),
-    ...
-  ))
+  tag <- htmltools::tag(
+    "details",
+    list(
+      class = .ds_classes("ds-details", class),
+      open = if (open) NA else NULL,
+      htmltools::tag("summary", list(summary)),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -46,11 +49,14 @@ ds_details <- function(summary, ..., open = FALSE, class = NULL) {
 #'   ds_button("Close", onclick = "this.closest('dialog').close()")
 #' )
 ds_dialog <- function(..., id = NULL, class = NULL) {
-  tag <- htmltools::tag("dialog", list(
-    id = id,
-    class = .ds_classes("ds-dialog", class),
-    ...
-  ))
+  tag <- htmltools::tag(
+    "dialog",
+    list(
+      id = id,
+      class = .ds_classes("ds-dialog", class),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -114,13 +120,19 @@ hide_ds_dialog <- function(id, session = shiny::getDefaultReactiveDomain()) {
 #' )
 ds_dropdown <- function(trigger, ..., id = NULL, class = NULL) {
   panel_id <- id %||% paste0("ds-dropdown-", sample.int(1e6, 1))
-  trigger_out <- htmltools::tagAppendAttributes(trigger, popovertarget = panel_id)
-  panel <- htmltools::tag("div", list(
-    id = panel_id,
-    class = .ds_classes("ds-dropdown", class),
-    popover = NA,
-    ...
-  ))
+  trigger_out <- htmltools::tagAppendAttributes(
+    trigger,
+    popovertarget = panel_id
+  )
+  panel <- htmltools::tag(
+    "div",
+    list(
+      id = panel_id,
+      class = .ds_classes("ds-dropdown", class),
+      popover = NA,
+      ...
+    )
+  )
   result <- htmltools::tagList(trigger_out, panel)
   htmltools::attachDependencies(result, ds_dependencies())
 }
@@ -141,21 +153,33 @@ ds_dropdown <- function(trigger, ..., id = NULL, class = NULL) {
 #'
 #' @examples
 #' ds_search("search", placeholder = "Search…")
-ds_search <- function(inputId, value = "", placeholder = NULL,
-                      size = NULL, class = NULL, ...) {
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-search", class),
-    `data-size` = size,
-    htmltools::tag("input", list(
-      id = inputId,
-      name = inputId,
-      class = "ds-input ds-shiny-input",
-      type = "search",
-      value = value,
-      placeholder = placeholder,
-      ...
-    ))
-  ))
+ds_search <- function(
+  inputId,
+  value = "",
+  placeholder = NULL,
+  size = NULL,
+  class = NULL,
+  ...
+) {
+  tag <- htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-search", class),
+      `data-size` = size,
+      htmltools::tag(
+        "input",
+        list(
+          id = inputId,
+          name = inputId,
+          class = "ds-input ds-shiny-input",
+          type = "search",
+          value = value,
+          placeholder = placeholder,
+          ...
+        )
+      )
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -182,13 +206,16 @@ ds_search <- function(inputId, value = "", placeholder = NULL,
 #' )
 #' }
 ds_toggle_group <- function(inputId, ..., size = NULL, class = NULL) {
-  tag <- htmltools::tag("div", list(
-    id = inputId,
-    class = .ds_classes("ds-toggle-group", class),
-    `data-size` = size,
-    role = "group",
-    ...
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      id = inputId,
+      class = .ds_classes("ds-toggle-group", class),
+      `data-size` = size,
+      role = "group",
+      ...
+    )
+  )
 
   # Reactivity via Shiny.setInputValue rather than InputBinding, because the
   # @digdir/designsystemet-web behaviour module also operates on this element

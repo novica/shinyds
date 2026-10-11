@@ -10,7 +10,11 @@
 # This handler is a last-resort safety net for anything that slips through.
 
 .onLoad <- function(libname, pkgname) {
-  shiny::registerInputHandler("ds", function(value, session, name) {
-    value
-  }, force = TRUE)
+  shiny::registerInputHandler(
+    "ds",
+    function(value, session, name) {
+      value
+    },
+    force = TRUE
+  )
 }

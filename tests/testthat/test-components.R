@@ -7,7 +7,7 @@ has_class <- function(tag, cls) {
 # ── ds_action_button ─────────────────────────────────────────────────────────
 
 test_that("ds_action_button produces same tag as ds_button with args swapped", {
-  via_alias  <- ds_action_button("btn1", "Click me")
+  via_alias <- ds_action_button("btn1", "Click me")
   via_button <- ds_button("Click me", inputId = "btn1")
   expect_equal(as.character(via_alias), as.character(via_button))
 })
@@ -44,7 +44,11 @@ test_that("ds_button creates correct HTML structure", {
 
 test_that("ds_button variant works", {
   btn_primary <- ds_button("Primary", inputId = "btn1", variant = "primary")
-  btn_secondary <- ds_button("Secondary", inputId = "btn2", variant = "secondary")
+  btn_secondary <- ds_button(
+    "Secondary",
+    inputId = "btn2",
+    variant = "secondary"
+  )
 
   # Primary is default, so data-variant is NULL (not set)
   expect_null(btn_primary$attribs$`data-variant`)
@@ -86,7 +90,8 @@ test_that("ds_select creates correct HTML structure", {
 })
 
 test_that("ds_radio_group creates a fieldset with ds-shiny-input", {
-  grp <- ds_radio_group("test_grp",
+  grp <- ds_radio_group(
+    "test_grp",
     label = "Pick one",
     choices = c("A" = "a", "B" = "b", "C" = "c")
   )
@@ -103,7 +108,8 @@ test_that("ds_radio_group creates a fieldset with ds-shiny-input", {
 })
 
 test_that("ds_radio_group shares one `name` across radios and checks the selected value", {
-  grp <- ds_radio_group("test_grp2",
+  grp <- ds_radio_group(
+    "test_grp2",
     label = "Pick one",
     choices = c("A" = "a", "B" = "b", "C" = "c"),
     selected = "b"
@@ -120,7 +126,8 @@ test_that("ds_radio_group shares one `name` across radios and checks the selecte
 })
 
 test_that("ds_radio_group defaults `selected` to the first choice", {
-  grp <- ds_radio_group("test_grp3",
+  grp <- ds_radio_group(
+    "test_grp3",
     label = "Pick one",
     choices = c("A" = "a", "B" = "b")
   )

@@ -15,11 +15,14 @@
 #' ds_heading("Section Title", level = 2, size = "lg")
 ds_heading <- function(..., level = 2, size = NULL, class = NULL) {
   tag_name <- paste0("h", level)
-  tag <- htmltools::tag(tag_name, list(
-    class = .ds_classes("ds-heading", class),
-    `data-size` = size,
-    ...
-  ))
+  tag <- htmltools::tag(
+    tag_name,
+    list(
+      class = .ds_classes("ds-heading", class),
+      `data-size` = size,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -37,11 +40,14 @@ ds_heading <- function(..., level = 2, size = NULL, class = NULL) {
 #' @examples
 #' ds_paragraph("This is a paragraph of text.")
 ds_paragraph <- function(..., size = NULL, class = NULL) {
-  tag <- htmltools::tag("p", list(
-    class = .ds_classes("ds-paragraph", class),
-    `data-size` = size,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "p",
+    list(
+      class = .ds_classes("ds-paragraph", class),
+      `data-size` = size,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -59,11 +65,14 @@ ds_paragraph <- function(..., size = NULL, class = NULL) {
 #' @examples
 #' ds_link("Visit our website", href = "https://example.com")
 ds_link <- function(..., href = "#", class = NULL) {
-  tag <- htmltools::tag("a", list(
-    class = .ds_classes("ds-link", class),
-    href = href,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "a",
+    list(
+      class = .ds_classes("ds-link", class),
+      href = href,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -81,10 +90,13 @@ ds_link <- function(..., href = "#", class = NULL) {
 #' @examples
 #' ds_label("Email address", `for` = "email")
 ds_label <- function(..., `for` = NULL, class = NULL) {
-  tag <- htmltools::tag("label", list(
-    class = .ds_classes("ds-label", class),
-    `for` = `for`,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "label",
+    list(
+      class = .ds_classes("ds-label", class),
+      `for` = `for`,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
