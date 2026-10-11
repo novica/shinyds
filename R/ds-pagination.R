@@ -14,18 +14,26 @@
 #'
 #' @examples
 #' ds_pagination("mypage", current = 1, total = 10)
-ds_pagination <- function(inputId, current = 1, total,
-                          label = "Sidenavigasjon",
-                          href = NULL, ...) {
-  tag <- htmltools::tag("ds-pagination", list(
-    id = inputId,
-    class = "ds-pagination ds-shiny-input",
-    `aria-label` = label,
-    `data-current` = current,
-    `data-total` = total,
-    `data-href` = href,
-    ...
-  ))
+ds_pagination <- function(
+  inputId,
+  current = 1,
+  total,
+  label = "Sidenavigasjon",
+  href = NULL,
+  ...
+) {
+  tag <- htmltools::tag(
+    "ds-pagination",
+    list(
+      id = inputId,
+      class = "ds-pagination ds-shiny-input",
+      `aria-label` = label,
+      `data-current` = current,
+      `data-total` = total,
+      `data-href` = href,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -45,8 +53,12 @@ ds_pagination <- function(inputId, current = 1, total,
 #' \dontrun{
 #' update_ds_pagination(session, "pager", current = 1)
 #' }
-update_ds_pagination <- function(session = shiny::getDefaultReactiveDomain(),
-                                  inputId, current = NULL, total = NULL) {
+update_ds_pagination <- function(
+  session = shiny::getDefaultReactiveDomain(),
+  inputId,
+  current = NULL,
+  total = NULL
+) {
   message <- list(current = current, total = total)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)

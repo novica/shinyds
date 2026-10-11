@@ -12,7 +12,9 @@ ui <- bslib::page_fluid(
     style = "max-width: 600px; margin: 2rem auto; padding: 1rem;",
 
     ds_heading("Hello Designsystemet!", level = 1),
-    ds_paragraph("A simple example using Norwegian government design components."),
+    ds_paragraph(
+      "A simple example using Norwegian government design components."
+    ),
 
     ds_divider(),
 
@@ -41,7 +43,10 @@ ui <- bslib::page_fluid(
 
     ds_divider(),
 
-    ds_alert("Your form data will appear below when you interact with the form.", variant = "info"),
+    ds_alert(
+      "Your form data will appear below when you interact with the form.",
+      variant = "info"
+    ),
 
     verbatimTextOutput("output")
   )

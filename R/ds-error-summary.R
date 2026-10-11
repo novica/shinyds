@@ -16,10 +16,13 @@
 #'   htmltools::tags$li(ds_link("Email is invalid", href = "#email"))
 #' )
 ds_error_summary <- function(..., heading = "Feil i skjema", class = NULL) {
-  tag <- htmltools::tag("ds-error-summary", list(
-    class = .ds_classes("ds-error-summary", class),
-    htmltools::tag("h2", list(heading)),
-    htmltools::tag("ul", list(...))
-  ))
+  tag <- htmltools::tag(
+    "ds-error-summary",
+    list(
+      class = .ds_classes("ds-error-summary", class),
+      htmltools::tag("h2", list(heading)),
+      htmltools::tag("ul", list(...))
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }

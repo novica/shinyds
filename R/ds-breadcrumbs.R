@@ -17,9 +17,12 @@
 #'   )
 #' )
 ds_breadcrumbs <- function(..., class = NULL) {
-  tag <- htmltools::tag("ds-breadcrumbs", list(
-    class = .ds_classes("ds-breadcrumbs", class),
-    ...
-  ))
+  tag <- htmltools::tag(
+    "ds-breadcrumbs",
+    list(
+      class = .ds_classes("ds-breadcrumbs", class),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }

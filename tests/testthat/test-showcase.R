@@ -45,7 +45,9 @@ test_that("fn_tag renders a span with monospace inline style", {
 })
 
 test_that("demo_card wraps content in a ds_card", {
-  card <- showcase_env$demo_card("Button", list("ds_button()"),
+  card <- showcase_env$demo_card(
+    "Button",
+    list("ds_button()"),
     shiny::tags$p("demo content")
   )
   expect_s3_class(card, "shiny.tag")
@@ -54,7 +56,9 @@ test_that("demo_card wraps content in a ds_card", {
 })
 
 test_that("demo_card with warn=TRUE still renders", {
-  card <- showcase_env$demo_card("Toggle", list("ds_toggle_group()"),
+  card <- showcase_env$demo_card(
+    "Toggle",
+    list("ds_toggle_group()"),
     warn = TRUE,
     shiny::tags$p("content")
   )
@@ -178,10 +182,18 @@ test_that("ds_search creates a ds-search div wrapping an input", {
 test_that("ds_toggle_group returns a tagList containing div and script", {
   tg <- ds_toggle_group(
     "view_mode",
-    shiny::tags$button(class = "ds-button", `aria-pressed` = "true",
-                       value = "list", "List"),
-    shiny::tags$button(class = "ds-button", `aria-pressed` = "false",
-                       value = "grid", "Grid")
+    shiny::tags$button(
+      class = "ds-button",
+      `aria-pressed` = "true",
+      value = "list",
+      "List"
+    ),
+    shiny::tags$button(
+      class = "ds-button",
+      `aria-pressed` = "false",
+      value = "grid",
+      "Grid"
+    )
   )
   expect_s3_class(tg, "shiny.tag.list")
   html <- as.character(htmltools::tagList(tg))
@@ -193,7 +205,8 @@ test_that("ds_toggle_group returns a tagList containing div and script", {
 # ── ds_combobox ─────────────────────────────────────────────────────────────
 
 test_that("ds_combobox creates a div with ds-combobox class", {
-  cb <- ds_combobox("demo_combo",
+  cb <- ds_combobox(
+    "demo_combo",
     shiny::tags$div(class = "ds-combobox__input__wrapper")
   )
   expect_s3_class(cb, "shiny.tag")
@@ -214,7 +227,7 @@ test_that("ds_details creates a details/summary element", {
 })
 
 test_that("ds_details open=TRUE adds open attribute", {
-  d_open   <- ds_details(summary = "Open",   open = TRUE,  ds_paragraph("x"))
+  d_open <- ds_details(summary = "Open", open = TRUE, ds_paragraph("x"))
   d_closed <- ds_details(summary = "Closed", open = FALSE, ds_paragraph("x"))
   expect_false(is.null(d_open$attribs$open))
   expect_null(d_closed$attribs$open)
@@ -384,13 +397,13 @@ test_that("ds_skip_link accepts custom href", {
 
 test_that("ds_tooltip adds data-tooltip and placement to the wrapped element", {
   btn <- ds_button("Hover me")
-  tt  <- ds_tooltip(btn, text = "Helpful hint", placement = "right")
+  tt <- ds_tooltip(btn, text = "Helpful hint", placement = "right")
   expect_equal(tt$attribs$`data-tooltip`, "Helpful hint")
   expect_equal(tt$attribs$`data-tooltip-placement`, "right")
 })
 
 test_that("ds_tooltip defaults to top placement", {
   btn <- ds_button("Hover")
-  tt  <- ds_tooltip(btn, text = "tip")
+  tt <- ds_tooltip(btn, text = "tip")
   expect_equal(tt$attribs$`data-tooltip-placement`, "top")
 })

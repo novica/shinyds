@@ -17,11 +17,14 @@
 #'   )
 #' )
 ds_card <- function(..., variant = NULL, class = NULL) {
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-card", class),
-    `data-variant` = variant,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-card", class),
+      `data-variant` = variant,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -38,8 +41,11 @@ ds_card <- function(..., variant = NULL, class = NULL) {
 #' @examples
 #' ds_card_block(ds_paragraph("Card content."))
 ds_card_block <- function(..., class = NULL) {
-  htmltools::tag("div", list(
-    class = .ds_classes("ds-card__block", class),
-    ...
-  ))
+  htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-card__block", class),
+      ...
+    )
+  )
 }

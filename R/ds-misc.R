@@ -10,9 +10,12 @@
 #' @examples
 #' ds_divider()
 ds_divider <- function(class = NULL) {
-  tag <- htmltools::tag("hr", list(
-    class = .ds_classes("ds-divider", class)
-  ))
+  tag <- htmltools::tag(
+    "hr",
+    list(
+      class = .ds_classes("ds-divider", class)
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -53,16 +56,25 @@ ds_divider <- function(class = NULL) {
 #'   ds_badge(count = 4, color = "danger")
 #' )
 #' }
-ds_badge <- function(count = NULL, color = NULL, variant = NULL,
-                     size = NULL, class = NULL, ...) {
-  tag <- htmltools::tag("span", list(
-    class       = .ds_classes("ds-badge", class),
-    `data-color`   = color,
-    `data-variant` = variant,
-    `data-size`    = size,
-    `data-count`   = if (!is.null(count)) as.character(count) else NULL,
-    ...
-  ))
+ds_badge <- function(
+  count = NULL,
+  color = NULL,
+  variant = NULL,
+  size = NULL,
+  class = NULL,
+  ...
+) {
+  tag <- htmltools::tag(
+    "span",
+    list(
+      class = .ds_classes("ds-badge", class),
+      `data-color` = color,
+      `data-variant` = variant,
+      `data-size` = size,
+      `data-count` = if (!is.null(count)) as.character(count) else NULL,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -85,14 +97,21 @@ ds_badge <- function(count = NULL, color = NULL, variant = NULL,
 #'   ds_badge(count = 3, color = "danger"),
 #'   placement = "top-right"
 #' )
-ds_badge_position <- function(..., placement = "top-right",
-                              overlap = NULL, class = NULL) {
-  tag <- htmltools::tag("span", list(
-    class            = .ds_classes("ds-badge--position", class),
-    `data-placement` = placement,
-    `data-overlap`   = overlap,
-    ...
-  ))
+ds_badge_position <- function(
+  ...,
+  placement = "top-right",
+  overlap = NULL,
+  class = NULL
+) {
+  tag <- htmltools::tag(
+    "span",
+    list(
+      class = .ds_classes("ds-badge--position", class),
+      `data-placement` = placement,
+      `data-overlap` = overlap,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -120,15 +139,23 @@ ds_badge_position <- function(..., placement = "top-right",
 #' ds_tag("New")
 #' ds_tag("Active",  color = "success")
 #' ds_tag("Warning", color = "warning", variant = "outline")
-ds_tag <- function(..., color = NULL, variant = NULL, size = NULL,
-                   class = NULL) {
-  tag <- htmltools::tag("span", list(
-    class          = .ds_classes("ds-tag", class),
-    `data-color`   = color,
-    `data-variant` = variant,
-    `data-size`    = size,
-    ...
-  ))
+ds_tag <- function(
+  ...,
+  color = NULL,
+  variant = NULL,
+  size = NULL,
+  class = NULL
+) {
+  tag <- htmltools::tag(
+    "span",
+    list(
+      class = .ds_classes("ds-tag", class),
+      `data-color` = color,
+      `data-variant` = variant,
+      `data-size` = size,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -148,15 +175,23 @@ ds_tag <- function(..., color = NULL, variant = NULL, size = NULL,
 #' @examples
 #' ds_chip("React")
 #' ds_chip("Vue", selected = TRUE)
-ds_chip <- function(..., variant = NULL, size = NULL,
-                    selected = FALSE, class = NULL) {
-  tag <- htmltools::tag("button", list(
-    class = .ds_classes("ds-chip", class),
-    `data-variant` = variant,
-    `data-size` = size,
-    `aria-pressed` = if (selected) "true" else "false",
-    ...
-  ))
+ds_chip <- function(
+  ...,
+  variant = NULL,
+  size = NULL,
+  selected = FALSE,
+  class = NULL
+) {
+  tag <- htmltools::tag(
+    "button",
+    list(
+      class = .ds_classes("ds-chip", class),
+      `data-variant` = variant,
+      `data-size` = size,
+      `aria-pressed` = if (selected) "true" else "false",
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -182,12 +217,15 @@ ds_chip <- function(..., variant = NULL, size = NULL,
 #' )
 #' }
 ds_chip_group <- function(inputId, ..., class = NULL) {
-  container <- htmltools::tag("div", list(
-    id    = inputId,
-    class = .ds_classes("ds-chip-group", class),
-    style = "display:flex; flex-wrap:wrap; gap:0.5rem;",
-    ...
-  ))
+  container <- htmltools::tag(
+    "div",
+    list(
+      id = inputId,
+      class = .ds_classes("ds-chip-group", class),
+      style = "display:flex; flex-wrap:wrap; gap:0.5rem;",
+      ...
+    )
+  )
 
   script <- htmltools::tags$script(htmltools::HTML(sprintf(
     '(function() {
@@ -229,12 +267,15 @@ ds_chip_group <- function(inputId, ..., class = NULL) {
 #' @examples
 #' ds_spinner(title = "Loading...")
 ds_spinner <- function(title = "Laster...", size = NULL, class = NULL) {
-  tag <- htmltools::tag("span", list(
-    class = .ds_classes("ds-spinner", class),
-    `data-size` = size,
-    `aria-label` = title,
-    role = "status"
-  ))
+  tag <- htmltools::tag(
+    "span",
+    list(
+      class = .ds_classes("ds-spinner", class),
+      `data-size` = size,
+      `aria-label` = title,
+      role = "status"
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -253,22 +294,33 @@ ds_spinner <- function(title = "Laster...", size = NULL, class = NULL) {
 #' @examples
 #' ds_skeleton(variant = "text", width = "200px")
 #' ds_skeleton(variant = "circle", width = "50px", height = "50px")
-ds_skeleton <- function(variant = "text", width = NULL, height = NULL,
-                        class = NULL) {
+ds_skeleton <- function(
+  variant = "text",
+  width = NULL,
+  height = NULL,
+  class = NULL
+) {
   style <- NULL
   if (!is.null(width) || !is.null(height)) {
     style_parts <- c()
-    if (!is.null(width)) style_parts <- c(style_parts, paste0("width:", width))
-    if (!is.null(height)) style_parts <- c(style_parts, paste0("height:", height))
+    if (!is.null(width)) {
+      style_parts <- c(style_parts, paste0("width:", width))
+    }
+    if (!is.null(height)) {
+      style_parts <- c(style_parts, paste0("height:", height))
+    }
     style <- paste(style_parts, collapse = ";")
   }
 
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-skeleton", class),
-    `data-variant` = variant,
-    style = style,
-    `aria-hidden` = "true"
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-skeleton", class),
+      `data-variant` = variant,
+      style = style,
+      `aria-hidden` = "true"
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -291,12 +343,15 @@ ds_skeleton <- function(variant = "text", width = NULL, height = NULL,
 #' @examples
 #' ds_avatar("AB", size = "md")
 ds_avatar <- function(..., variant = NULL, size = NULL, class = NULL) {
-  tag <- htmltools::tag("span", list(
-    class = .ds_classes("ds-avatar", class),
-    `data-variant` = variant,
-    `data-size` = size,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "span",
+    list(
+      class = .ds_classes("ds-avatar", class),
+      `data-variant` = variant,
+      `data-size` = size,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -341,11 +396,14 @@ ds_avatar_stack <- function(..., suffix = NULL, class = NULL) {
   if (!is.null(suffix)) {
     children <- c(children, list(htmltools::tags$li(suffix)))
   }
-  tag <- htmltools::tag("ul", c(
-    list(class = .ds_classes("ds-avatar-stack", class)),
-    attribs,
-    children
-  ))
+  tag <- htmltools::tag(
+    "ul",
+    c(
+      list(class = .ds_classes("ds-avatar-stack", class)),
+      attribs,
+      children
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -363,11 +421,14 @@ ds_avatar_stack <- function(..., suffix = NULL, class = NULL) {
 #' @examples
 #' ds_skip_link("Skip to main content", href = "#main")
 ds_skip_link <- function(..., href = "#main", class = NULL) {
-  tag <- htmltools::tag("a", list(
-    class = .ds_classes("ds-skip-link", class),
-    href = href,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "a",
+    list(
+      class = .ds_classes("ds-skip-link", class),
+      href = href,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -385,11 +446,14 @@ ds_skip_link <- function(..., href = "#main", class = NULL) {
 #' @examples
 #' ds_validation_message("This field is required")
 ds_validation_message <- function(..., variant = "error", class = NULL) {
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-validation-message", class),
-    `data-variant` = variant,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-validation-message", class),
+      `data-variant` = variant,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -416,11 +480,14 @@ ds_validation_message <- function(..., variant = "error", class = NULL) {
 #' )
 ds_combobox <- function(inputId, ..., size = NULL, class = NULL) {
   size_class <- if (!is.null(size)) paste0("ds-combobox--", size) else NULL
-  tag <- htmltools::tag("div", list(
-    id = inputId,
-    class = .ds_classes("ds-combobox", size_class, class),
-    ...
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      id = inputId,
+      class = .ds_classes("ds-combobox", size_class, class),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -439,10 +506,13 @@ ds_combobox <- function(inputId, ..., size = NULL, class = NULL) {
 #' ds_popover("Helpful information about this field.")
 #' ds_popover("Highlighted note", variant = "tinted")
 ds_popover <- function(..., variant = NULL, class = NULL) {
-  tag <- htmltools::tag("div", list(
-    class = .ds_classes("ds-popover", class),
-    `data-variant` = variant,
-    ...
-  ))
+  tag <- htmltools::tag(
+    "div",
+    list(
+      class = .ds_classes("ds-popover", class),
+      `data-variant` = variant,
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }

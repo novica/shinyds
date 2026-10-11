@@ -19,12 +19,14 @@
 #'   ds_tabpanel(value = "tab2", "Content 2")
 #' )
 ds_tabs <- function(inputId, ..., class = NULL) {
-  tag <- htmltools::tag("ds-tabs", list(
-    id = inputId,
-    class = .ds_classes("ds-tabs", "ds-shiny-input", class),
-    ...
-
-  ))
+  tag <- htmltools::tag(
+    "ds-tabs",
+    list(
+      id = inputId,
+      class = .ds_classes("ds-tabs", "ds-shiny-input", class),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
@@ -44,10 +46,13 @@ ds_tabs <- function(inputId, ..., class = NULL) {
 #'   ds_tab("Second", value = "tab2")
 #' )
 ds_tablist <- function(..., class = NULL) {
-  htmltools::tag("ds-tablist", list(
-    class = class,
-    ...
-  ))
+  htmltools::tag(
+    "ds-tablist",
+    list(
+      class = class,
+      ...
+    )
+  )
 }
 
 #' Tab Button
@@ -65,12 +70,15 @@ ds_tablist <- function(..., class = NULL) {
 #' @examples
 #' ds_tab("Overview", value = "overview", selected = TRUE)
 ds_tab <- function(label, value, selected = FALSE, ...) {
-  htmltools::tag("ds-tab", list(
-    `data-value` = value,
-    `aria-selected` = if (selected) "true" else NULL,
-    label,
-    ...
-  ))
+  htmltools::tag(
+    "ds-tab",
+    list(
+      `data-value` = value,
+      `aria-selected` = if (selected) "true" else NULL,
+      label,
+      ...
+    )
+  )
 }
 
 #' Tab Panel
@@ -87,11 +95,14 @@ ds_tab <- function(label, value, selected = FALSE, ...) {
 #' @examples
 #' ds_tabpanel(value = "overview", ds_paragraph("Content here."))
 ds_tabpanel <- function(..., value, class = NULL) {
-  htmltools::tag("ds-tabpanel", list(
-    `data-value` = value,
-    class = class,
-    ...
-  ))
+  htmltools::tag(
+    "ds-tabpanel",
+    list(
+      `data-value` = value,
+      class = class,
+      ...
+    )
+  )
 }
 
 #' Update Tabs Input
@@ -109,8 +120,11 @@ ds_tabpanel <- function(..., value, class = NULL) {
 #' \dontrun{
 #' update_ds_tabs(session, "my_tabs", selected = "overview")
 #' }
-update_ds_tabs <- function(session = shiny::getDefaultReactiveDomain(),
-                           inputId, selected = NULL) {
+update_ds_tabs <- function(
+  session = shiny::getDefaultReactiveDomain(),
+  inputId,
+  selected = NULL
+) {
   message <- list(selected = selected)
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)

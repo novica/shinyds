@@ -22,12 +22,18 @@
 #' ds_button("Click me", inputId = "btn")
 #' ds_button("Submit", variant = "primary", type = "submit")
 #' ds_button("Cancel", variant = "secondary")
-ds_button <- function(label, inputId = NULL,
-                      variant = c("primary", "secondary", "tertiary"),
-                      size = NULL, icon = FALSE, loading = FALSE,
-                      disabled = FALSE, fullwidth = FALSE,
-                      type = "button", ...) {
-
+ds_button <- function(
+  label,
+  inputId = NULL,
+  variant = c("primary", "secondary", "tertiary"),
+  size = NULL,
+  icon = FALSE,
+  loading = FALSE,
+  disabled = FALSE,
+  fullwidth = FALSE,
+  type = "button",
+  ...
+) {
   variant <- match.arg(variant)
 
   attribs <- list(

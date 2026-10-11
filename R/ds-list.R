@@ -17,10 +17,13 @@
 #' )
 ds_list <- function(..., ordered = FALSE, class = NULL) {
   tag_name <- if (ordered) "ol" else "ul"
-  tag <- htmltools::tag(tag_name, list(
-    class = .ds_classes("ds-list", class),
-    ...
-  ))
+  tag <- htmltools::tag(
+    tag_name,
+    list(
+      class = .ds_classes("ds-list", class),
+      ...
+    )
+  )
   htmltools::attachDependencies(tag, ds_dependencies())
 }
 
