@@ -4,7 +4,7 @@
       "release-type": "r",
       "package-name": "",
       "changelog-path": "CHANGELOG.md",
-      "extra-files": ["DESCRIPTION"],
+      "extra-files": ["DESCRIPTION", "CITATION.cff"],
       "changelog-sections": [
         {"type": "feat",     "section": "New features"},
         {"type": "fix",      "section": "Bug fixes"},

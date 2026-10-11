@@ -1,0 +1,15 @@
+year <- if (is.null(meta$`Date/Publication`)) {
+  format(Sys.Date(), "%Y")
+} else {
+  sub("-.*", "", meta$`Date/Publication`)
+}
+
+bibentry(
+  bibtype = "Manual",
+  title = "{shinyds}: Shiny Bindings for Designsystemet Components",
+  author = person("Novica", "Nakov", comment = c(ORCID = "0009-0005-7773-7718")),
+  year = year,
+  note = paste("R package version", meta$Version),
+  url = "https://CRAN.R-project.org/package=shinyds",
+  doi = "10.32614/CRAN.package.shinyds"
+)
