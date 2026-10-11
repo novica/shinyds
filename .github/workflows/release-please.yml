@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+# Queue instead of cancel: a cancelled run could stop halfway through
+# pushing NEWS.md or CITATION.cff to the release PR branch.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
