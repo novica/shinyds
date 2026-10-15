@@ -32,6 +32,12 @@ install.packages("shinyds")
 remotes::install_github("novica/shinyds")
 ```
 
+### From R-Universe
+
+```r
+install.packages('shinyds', repos = c('https://novica.r-universe.dev'))
+```
+
 ### Which version to install
 
 > [!NOTE]
