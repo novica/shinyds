@@ -5,6 +5,7 @@
   [![CRAN downloads](https://cranlogs.r-pkg.org/badges/shinyds)](https://CRAN.R-project.org/package=shinyds)
   [![Designsystemet version](https://img.shields.io/badge/Designsystemet-1.23.0-blue)](https://github.com/digdir/designsystemet/releases)  
   [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.shinyds-blue)](https://doi.org/10.32614/CRAN.package.shinyds)
+  [![shinyds status badge](https://novica.r-universe.dev/shinyds/badges/version)](https://novica.r-universe.dev/shinyds)
 <!-- badges: end -->
 
 # shinyds - Designsystemet components for Shiny 
