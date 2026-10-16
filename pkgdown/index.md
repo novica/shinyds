@@ -1,6 +1,6 @@
 # shinyds
 
-<img src="man/figures/shinyds.svg" alt="shinyds logo" width="180" align="right" style="margin-left:1.5rem;">
+<img src="man/figures/logo.svg" alt="shinyds logo" width="180" align="right" style="margin-left:1.5rem;">
 
 ## Designsystemet components for Shiny
 
