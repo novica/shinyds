@@ -8,9 +8,7 @@
   [![shinyds status badge](https://novica.r-universe.dev/shinyds/badges/version)](https://novica.r-universe.dev/shinyds)
 <!-- badges: end -->
 
-# shinyds - Designsystemet components for Shiny 
-
-<img src="man/figures/shinyds.svg" alt="shinyds logo" width="200">
+# shinyds - Designsystemet components for Shiny <img src="man/figures/shinyds.svg" alt="shinyds logo" width="200">
 
 `shinyds` brings [Designsystemet](https://designsystemet.no) — the Norwegian government's shared design system — to Shiny. It provides `ds_*` R functions that produce accessible, consistently styled UI components following Norwegian public sector design guidelines.
 
