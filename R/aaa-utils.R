@@ -7,6 +7,7 @@ NULL
 #'
 #' @param ... Class names (can be NULL)
 #' @keywords internal
+#' @noRd
 .ds_classes <- function(...) {
   classes <- c(...)
   classes <- classes[!is.null(classes) & classes != ""]

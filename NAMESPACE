@@ -65,9 +65,11 @@ export(update_ds_select)
 export(update_ds_suggestion)
 export(update_ds_tabs)
 export(use_designsystemet)
-importFrom(htmltools,HTML)
-importFrom(htmltools,attachDependencies)
-importFrom(htmltools,htmlDependency)
-importFrom(htmltools,tag)
-importFrom(htmltools,tagList)
+importFrom(htmltools,
+  HTML,
+  attachDependencies,
+  htmlDependency,
+  tag,
+  tagList
+)
 importFrom(shiny,getDefaultReactiveDomain)

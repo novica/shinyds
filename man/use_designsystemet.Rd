@@ -19,8 +19,10 @@ Include this function in your UI to load all necessary Designsystemet
 CSS and JavaScript dependencies.
 }
 \examples{
+\dontshow{if (requireNamespace("bslib", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 ui <- bslib::page_fluid(
   use_designsystemet(),
   ds_button("Click me", inputId = "btn")
 )
+\dontshow{\}) # examplesIf}
 }
