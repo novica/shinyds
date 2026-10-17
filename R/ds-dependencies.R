@@ -47,7 +47,7 @@ ds_dependencies <- function() {
 #' @return A tagList containing the dependencies
 #' @export
 #'
-#' @examples
+#' @examplesIf requireNamespace("bslib", quietly = TRUE)
 #' ui <- bslib::page_fluid(
 #'   use_designsystemet(),
 #'   ds_button("Click me", inputId = "btn")
@@ -87,7 +87,7 @@ use_designsystemet <- function(color_scheme = "light") {
 #'   set `data-color` on `<html>`.
 #' @export
 #'
-#' @examples
+#' @examplesIf requireNamespace("bslib", quietly = TRUE)
 #' ui <- bslib::page_fluid(
 #'   use_designsystemet(),
 #'   ds_theme(color = "brand1", border_radius = "2px", button_padding = "0.3rem 0.8rem"),

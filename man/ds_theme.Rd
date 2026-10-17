@@ -43,9 +43,11 @@ Color palette tokens follow the Designsystemet naming convention. Use
 \code{color} here to change the global default.
 }
 \examples{
+\dontshow{if (requireNamespace("bslib", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 ui <- bslib::page_fluid(
   use_designsystemet(),
   ds_theme(color = "brand1", border_radius = "2px", button_padding = "0.3rem 0.8rem"),
   ds_button("Click me", inputId = "btn")
 )
+\dontshow{\}) # examplesIf}
 }
