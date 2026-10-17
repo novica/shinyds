@@ -1,3 +1,11 @@
+## [0.7.2](https://github.com/novica/shinyds/compare/v0.7.1...v0.7.2) (2026-10-17)
+
+
+### Documentation
+
+* add r-universe installation info ([#74](https://github.com/novica/shinyds/issues/74)) ([e044a04](https://github.com/novica/shinyds/commit/e044a04c9503b34e0bef4f0076492c093e2669e5))
+* guard bslib examples and quote 'Designsystemet' ([#81](https://github.com/novica/shinyds/issues/81)) ([461ac94](https://github.com/novica/shinyds/commit/461ac9497c7fdd6f42dfc6b6d9b6e3643618fa98))
+
 ## [0.7.1](https://github.com/novica/shinyds/compare/v0.7.0...v0.7.1) (2026-10-11)
 
 
