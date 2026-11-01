@@ -1,2 +1,6 @@
 [lint]
 default-exclude = true
+
+# `<<-` is how the test mocks record their calls.
+[lint.undesirable_operator]
+operators = ["->>", ":::"]
