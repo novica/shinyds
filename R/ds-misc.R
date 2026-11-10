@@ -166,7 +166,8 @@ ds_tag <- function(
 #' Designsystemet CSS uses for the selected state. On its own a chip has no
 #' Shiny value; wrap chips in [ds_chip_group()] to report the selection.
 #'
-#' @param ... Chip content (label text or tags)
+#' @param ... Chip content (label text or tags). Named arguments become
+#'   attributes on the chip's `<label>`.
 #' @param value Value reported by [ds_chip_group()] when the chip is selected.
 #'   If `NULL`, the chip's text is used.
 #' @param selected If TRUE, the chip starts selected
@@ -188,22 +189,32 @@ ds_chip <- function(
   size = NULL,
   class = NULL
 ) {
+  args <- list(...)
+  nm <- names(args)
+  if (is.null(nm)) {
+    nm <- rep("", length(args))
+  }
   tag <- htmltools::tag(
     "label",
-    list(
-      class = .ds_classes("ds-chip", class),
-      `data-size` = size,
-      htmltools::tag(
-        "input",
-        list(
-          type = "checkbox",
-          class = "ds-input",
-          value = value,
-          checked = if (selected) NA else NULL,
-          disabled = if (disabled) NA else NULL
-        )
+    c(
+      list(
+        class = .ds_classes("ds-chip", class),
+        `data-size` = size
       ),
-      htmltools::tag("span", list(...))
+      args[nm != ""],
+      list(
+        htmltools::tag(
+          "input",
+          list(
+            type = "checkbox",
+            class = "ds-input",
+            value = value,
+            checked = if (selected) NA else NULL,
+            disabled = if (disabled) NA else NULL
+          )
+        ),
+        htmltools::tag("span", args[nm == ""])
+      )
     )
   )
   htmltools::attachDependencies(tag, ds_dependencies())

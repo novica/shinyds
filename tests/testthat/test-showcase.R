@@ -165,6 +165,13 @@ test_that("ds_chip disabled=TRUE disables the checkbox", {
   expect_null(chip_input(ds_chip("On"))$attribs$disabled)
 })
 
+test_that("ds_chip puts named ... on the label, unnamed in the span", {
+  chip <- ds_chip("React", id = "c1", title = "Pick React")
+  expect_equal(chip$attribs$id, "c1")
+  expect_equal(chip$attribs$title, "Pick React")
+  expect_match(as.character(chip), "<span>React</span>", fixed = TRUE)
+})
+
 test_that("ds_chip_group is a group-level Shiny input", {
   grp <- ds_chip_group("langs", ds_chip("R", value = "r"))
   expect_equal(grp$attribs$id, "langs")

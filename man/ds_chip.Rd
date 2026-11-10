@@ -14,7 +14,8 @@ ds_chip(
 )
 }
 \arguments{
-\item{...}{Chip content (label text or tags)}
+\item{...}{Chip content (label text or tags). Named arguments become
+attributes on the chip's \verb{<label>}.}
 
 \item{value}{Value reported by \code{\link[=ds_chip_group]{ds_chip_group()}} when the chip is selected.
 If \code{NULL}, the chip's text is used.}
