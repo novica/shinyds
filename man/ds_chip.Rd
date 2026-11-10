@@ -4,16 +4,26 @@
 \alias{ds_chip}
 \title{Chip Component}
 \usage{
-ds_chip(..., variant = NULL, size = NULL, selected = FALSE, class = NULL)
+ds_chip(
+  ...,
+  value = NULL,
+  selected = FALSE,
+  disabled = FALSE,
+  size = NULL,
+  class = NULL
+)
 }
 \arguments{
-\item{...}{Chip content}
+\item{...}{Chip content (label text or tags)}
 
-\item{variant}{Chip variant}
+\item{value}{Value reported by \code{\link[=ds_chip_group]{ds_chip_group()}} when the chip is selected.
+If \code{NULL}, the chip's text is used.}
+
+\item{selected}{If TRUE, the chip starts selected}
+
+\item{disabled}{If TRUE, the chip cannot be toggled}
 
 \item{size}{Size variant ("sm", "md", "lg")}
-
-\item{selected}{If TRUE, shows selected state}
 
 \item{class}{Additional CSS classes}
 }
@@ -21,9 +31,12 @@ ds_chip(..., variant = NULL, size = NULL, selected = FALSE, class = NULL)
 A Shiny tag object
 }
 \description{
-Create an interactive chip using Designsystemet styles.
+Create a filter chip using Designsystemet styles. The chip renders as a
+\verb{<label class="ds-chip">} wrapping a checkbox, which is what the
+Designsystemet CSS uses for the selected state. On its own a chip has no
+Shiny value; wrap chips in \code{\link[=ds_chip_group]{ds_chip_group()}} to report the selection.
 }
 \examples{
 ds_chip("React")
-ds_chip("Vue", selected = TRUE)
+ds_chip("Vue", value = "vue", selected = TRUE)
 }

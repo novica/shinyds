@@ -134,19 +134,43 @@ test_that("ds_tag without color has no data-color attribute", {
 
 # ── ds_chip ─────────────────────────────────────────────────────────────────
 
-test_that("ds_chip selected=TRUE sets aria-pressed=true", {
-  chip <- ds_chip("React", selected = TRUE)
-  expect_equal(chip$attribs$`aria-pressed`, "true")
+chip_input <- function(chip) {
+  Filter(
+    function(x) inherits(x, "shiny.tag") && x$name == "input",
+    chip$children
+  )[[1]]
+}
+
+test_that("ds_chip renders a label wrapping a checkbox", {
+  chip <- ds_chip("React", value = "react")
+  expect_equal(chip$name, "label")
+  expect_true(has_class(chip, "ds-chip"))
+  input <- chip_input(chip)
+  expect_equal(input$attribs$type, "checkbox")
+  expect_equal(input$attribs$value, "react")
+  expect_match(as.character(chip), "<span>React</span>", fixed = TRUE)
 })
 
-test_that("ds_chip selected=FALSE sets aria-pressed=false", {
-  chip <- ds_chip("Vue")
-  expect_equal(chip$attribs$`aria-pressed`, "false")
+test_that("ds_chip selected=TRUE checks the checkbox", {
+  expect_false(is.null(
+    chip_input(ds_chip("React", selected = TRUE))$attribs$checked
+  ))
+  expect_null(chip_input(ds_chip("Vue"))$attribs$checked)
 })
 
-test_that("ds_chip accepts extra attributes via ...", {
-  chip <- ds_chip("Disabled", disabled = NA)
-  expect_false(is.null(chip$attribs$disabled))
+test_that("ds_chip disabled=TRUE disables the checkbox", {
+  expect_false(is.null(
+    chip_input(ds_chip("Off", disabled = TRUE))$attribs$disabled
+  ))
+  expect_null(chip_input(ds_chip("On"))$attribs$disabled)
+})
+
+test_that("ds_chip_group is a group-level Shiny input", {
+  grp <- ds_chip_group("langs", ds_chip("R", value = "r"))
+  expect_equal(grp$attribs$id, "langs")
+  expect_true(has_class(grp, "ds-chip-group"))
+  expect_true(has_class(grp, "ds-shiny-input"))
+  expect_false(grepl("<script", as.character(grp), fixed = TRUE))
 })
 
 # ── ds_fieldset ─────────────────────────────────────────────────────────────

@@ -99,17 +99,46 @@ test_that("toggle group reports its pre-selected value on load", {
 })
 
 test_that("chip group reports its pre-selected value on load", {
-  # Regression test: the shiny:sessioninitialized listener used
-  # document.addEventListener(), a native DOM listener, but Shiny fires that
-  # event via jQuery's $(document).trigger() — which native listeners never
-  # receive. The initial selected chip ("React") was silently never
-  # reported, even though clicking chips afterward worked fine (a real
-  # native "click" event reaches both listener styles).
+  # Regression test (#49): the pre-selected chip ("React") must be reported
+  # on load, not only after the first click.
   app <- new_app("init-chip-group")
   withr::defer(app$stop())
   app$wait_for_idle()
 
   expect_equal(app$get_value(input = "showcase_chips"), "react")
+})
+
+test_that("clicking chips toggles their checked state and the group value", {
+  app <- new_app("chip-toggle")
+  withr::defer(app$stop())
+  app$wait_for_idle()
+
+  click_chip <- function(value) {
+    app$run_js(sprintf(
+      'document.querySelector("#showcase_chips input[value=\'%s\']").click()',
+      value
+    ))
+    app$wait_for_idle()
+  }
+  is_checked <- function(value) {
+    app$get_js(sprintf(
+      'document.querySelector("#showcase_chips input[value=\'%s\']").checked',
+      value
+    ))
+  }
+
+  click_chip("vue")
+  expect_true(is_checked("vue"))
+  expect_equal(app$get_value(input = "showcase_chips"), c("react", "vue"))
+
+  click_chip("react")
+  click_chip("vue")
+  expect_false(is_checked("react"))
+  expect_null(app$get_value(input = "showcase_chips"))
+
+  # Disabled chip cannot be selected
+  click_chip("disabled")
+  expect_false(is_checked("disabled"))
 })
 
 # ── 3. Tab binding ─────────────────────────────────────────────────────────
@@ -167,7 +196,7 @@ test_that("an output inside a non-default tab renders after switching to it", {
   app$wait_for_idle()
 
   app$run_js(
-    'document.querySelector("#showcase_chips .ds-chip[value=\'vue\']").click()'
+    'document.querySelector("#showcase_chips input[value=\'vue\']").click()'
   )
   app$wait_for_idle()
 

@@ -17,16 +17,15 @@ ds_chip_group(inputId, ..., class = NULL)
 A Shiny tag object
 }
 \description{
-Create a reactive group of toggle chips. Selected chip values are reported
-to Shiny as a character vector via \code{input[[inputId]]}.
+Create a reactive group of filter chips. The values of the selected chips
+are reported to Shiny as a character vector via \code{input[[inputId]]} (\code{NULL}
+when none is selected), like Shiny's own \code{checkboxGroupInput()}.
 }
 \examples{
-\dontrun{
 ds_chip_group(
   "languages",
   ds_chip("R",      value = "r",      selected = TRUE),
   ds_chip("Python", value = "python"),
   ds_chip("Julia",  value = "julia")
 )
-}
 }

@@ -161,12 +161,17 @@ ds_tag <- function(
 
 #' Chip Component
 #'
-#' Create an interactive chip using Designsystemet styles.
+#' Create a filter chip using Designsystemet styles. The chip renders as a
+#' `<label class="ds-chip">` wrapping a checkbox, which is what the
+#' Designsystemet CSS uses for the selected state. On its own a chip has no
+#' Shiny value; wrap chips in [ds_chip_group()] to report the selection.
 #'
-#' @param ... Chip content
-#' @param variant Chip variant
+#' @param ... Chip content (label text or tags)
+#' @param value Value reported by [ds_chip_group()] when the chip is selected.
+#'   If `NULL`, the chip's text is used.
+#' @param selected If TRUE, the chip starts selected
+#' @param disabled If TRUE, the chip cannot be toggled
 #' @param size Size variant ("sm", "md", "lg")
-#' @param selected If TRUE, shows selected state
 #' @param class Additional CSS classes
 #'
 #' @return A Shiny tag object
@@ -174,22 +179,31 @@ ds_tag <- function(
 #'
 #' @examples
 #' ds_chip("React")
-#' ds_chip("Vue", selected = TRUE)
+#' ds_chip("Vue", value = "vue", selected = TRUE)
 ds_chip <- function(
   ...,
-  variant = NULL,
-  size = NULL,
+  value = NULL,
   selected = FALSE,
+  disabled = FALSE,
+  size = NULL,
   class = NULL
 ) {
   tag <- htmltools::tag(
-    "button",
+    "label",
     list(
       class = .ds_classes("ds-chip", class),
-      `data-variant` = variant,
       `data-size` = size,
-      `aria-pressed` = if (selected) "true" else "false",
-      ...
+      htmltools::tag(
+        "input",
+        list(
+          type = "checkbox",
+          class = "ds-input",
+          value = value,
+          checked = if (selected) NA else NULL,
+          disabled = if (disabled) NA else NULL
+        )
+      ),
+      htmltools::tag("span", list(...))
     )
   )
   htmltools::attachDependencies(tag, ds_dependencies())
@@ -197,8 +211,9 @@ ds_chip <- function(
 
 #' Chip Group Component
 #'
-#' Create a reactive group of toggle chips. Selected chip values are reported
-#' to Shiny as a character vector via `input[[inputId]]`.
+#' Create a reactive group of filter chips. The values of the selected chips
+#' are reported to Shiny as a character vector via `input[[inputId]]` (`NULL`
+#' when none is selected), like Shiny's own `checkboxGroupInput()`.
 #'
 #' @param inputId Shiny input ID
 #' @param ... `ds_chip()` elements
@@ -208,49 +223,23 @@ ds_chip <- function(
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' ds_chip_group(
 #'   "languages",
 #'   ds_chip("R",      value = "r",      selected = TRUE),
 #'   ds_chip("Python", value = "python"),
 #'   ds_chip("Julia",  value = "julia")
 #' )
-#' }
 ds_chip_group <- function(inputId, ..., class = NULL) {
-  container <- htmltools::tag(
+  tag <- htmltools::tag(
     "div",
     list(
       id = inputId,
-      class = .ds_classes("ds-chip-group", class),
+      class = .ds_classes("ds-chip-group", "ds-shiny-input", class),
       style = "display:flex; flex-wrap:wrap; gap:0.5rem;",
       ...
     )
   )
-
-  script <- htmltools::tags$script(htmltools::HTML(sprintf(
-    '(function() {
-      function selectedValues(el) {
-        return Array.from(el.querySelectorAll(".ds-chip[aria-pressed=\'true\']"))
-          .map(function(c) { return c.value || c.textContent.trim(); });
-      }
-      $(document).on("shiny:sessioninitialized", function() {
-        var el = document.getElementById("%1$s");
-        if (el) Shiny.setInputValue("%1$s", selectedValues(el));
-      });
-      document.addEventListener("click", function(e) {
-        var chip = e.target.closest("#%1$s .ds-chip");
-        if (!chip || chip.disabled) return;
-        var pressed = chip.getAttribute("aria-pressed") === "true";
-        chip.setAttribute("aria-pressed", pressed ? "false" : "true");
-        var el = document.getElementById("%1$s");
-        Shiny.setInputValue("%1$s", selectedValues(el));
-      });
-    })();',
-    inputId
-  )))
-
-  result <- htmltools::tagList(container, script)
-  htmltools::attachDependencies(result, ds_dependencies())
+  htmltools::attachDependencies(tag, ds_dependencies())
 }
 
 #' Spinner Component
