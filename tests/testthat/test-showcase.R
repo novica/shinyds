@@ -353,12 +353,12 @@ test_that("ds_avatar_stack passes named args as attributes", {
 test_that("ds_validation_message error variant is set", {
   vm <- ds_validation_message("Required", variant = "error")
   expect_true(has_class(vm, "ds-validation-message"))
-  expect_equal(vm$attribs$`data-variant`, "error")
+  expect_equal(vm$attribs$`data-color`, "danger")
 })
 
 test_that("ds_validation_message warning variant is set", {
   vm <- ds_validation_message("Unusual value", variant = "warning")
-  expect_equal(vm$attribs$`data-variant`, "warning")
+  expect_equal(vm$attribs$`data-color`, "warning")
 })
 
 # ── ds_error_summary ────────────────────────────────────────────────────────

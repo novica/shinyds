@@ -25,7 +25,7 @@ ds_alert <- function(
     "div",
     list(
       class = .ds_classes("ds-alert", class),
-      `data-variant` = variant,
+      `data-color` = variant,
       role = "alert",
       ...
     )

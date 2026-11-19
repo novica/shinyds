@@ -450,7 +450,7 @@ ds_validation_message <- function(..., variant = "error", class = NULL) {
     "div",
     list(
       class = .ds_classes("ds-validation-message", class),
-      `data-variant` = variant,
+      `data-color` = if (identical(variant, "error")) "danger" else variant,
       ...
     )
   )

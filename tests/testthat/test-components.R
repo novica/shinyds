@@ -150,7 +150,7 @@ test_that("ds_alert creates correct HTML structure", {
   expect_s3_class(alert, "shiny.tag")
   expect_equal(alert$name, "div")
   expect_true("ds-alert" %in% strsplit(alert$attribs$class, " ")[[1]])
-  expect_equal(alert$attribs$`data-variant`, "warning")
+  expect_equal(alert$attribs$`data-color`, "warning")
   expect_equal(alert$attribs$role, "alert")
 })
 
