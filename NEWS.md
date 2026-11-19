@@ -1,3 +1,11 @@
+# shinyds 0.7.3
+
+## Bug fixes
+
+* render chips as checkboxes and bind ds_chip_group() ([#85](https://github.com/novica/shinyds/issues/85)) ([1ed1d45](https://github.com/novica/shinyds/commit/1ed1d45a524d2ef67510cdaf5b32235f553e4112))
+* update Designsystemet to 1.24.0 ([#83](https://github.com/novica/shinyds/issues/83)) ([2383305](https://github.com/novica/shinyds/commit/2383305d200f22338201e95059be643495e93b18))
+* use data-color for alert and validation message variants ([#84](https://github.com/novica/shinyds/issues/84)) ([ee7c9c0](https://github.com/novica/shinyds/commit/ee7c9c0f37677b4c0410e2e25f98cf359fab1f8c))
+
 # shinyds 0.7.2
 
 ## Documentation
