@@ -1,3 +1,11 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+This is a bugfix release that
+sync the package to the upstream
+library.
+
+Warnings for (possibly) invalid URLs
+probably because automated check on
+those are not possible
+
+0 errors | 1 warning | 0 notes
