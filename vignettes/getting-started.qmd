@@ -448,7 +448,8 @@ ds_avatar_stack(
 
 ### Chip
 
-A toggleable filter chip with an `aria-pressed` state:
+A filter chip. Each chip is a checkbox inside a `<label class="ds-chip">`, so it shows a
+selected state when checked:
 
 ```{r}
 #| eval: false
@@ -458,7 +459,7 @@ ds_chip("Angular")
 ds_chip("Svelte")
 ```
 
-`ds_chip()` renders as a `<button>` and is display-only on its own.
+On its own a chip has no Shiny value.
 
 For reactive multi-select filtering, wrap chips in `ds_chip_group()`. Selected chip
 values are reported to Shiny as a character vector via `input[[inputId]]`:
@@ -479,9 +480,9 @@ observeEvent(input$languages, {
 })
 ```
 
-Each chip needs a `value` attribute (passed via `...`) that becomes the reported value.
-If `value` is omitted, the chip's text content is used instead. Disabled chips are
-excluded from click handling automatically.
+Each chip's `value` becomes the reported value; if it is omitted, the chip's text is used
+instead. With no chip selected, `input[[inputId]]` is `NULL`. Chips with `disabled = TRUE`
+cannot be toggled.
 
 ### Tooltip
 

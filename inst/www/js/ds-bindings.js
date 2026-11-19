@@ -284,6 +284,35 @@ $.extend(dsRadioGroupBinding, {
 });
 Shiny.inputBindings.register(dsRadioGroupBinding, 'designsystemet.radioGroup', true);
 
+// Chip group binding: group-level input like the radio group. Each chip is a
+// <label class="ds-chip"> wrapping a checkbox; the group reports the values
+// of the checked ones (null when none, like checkboxGroupInput()).
+var dsChipGroupBinding = new Shiny.InputBinding();
+$.extend(dsChipGroupBinding, {
+  find: function(scope) {
+    return $(scope).find('.ds-chip-group.ds-shiny-input');
+  },
+  getId: function(el) {
+    return el.id;
+  },
+  getValue: function(el) {
+    var checked = el.querySelectorAll('.ds-chip > input[type="checkbox"]:checked');
+    var values = Array.prototype.map.call(checked, function(cb) {
+      return cb.hasAttribute('value') ? cb.value : cb.parentNode.textContent.trim();
+    });
+    return values.length ? values : null;
+  },
+  subscribe: function(el, callback) {
+    $(el).on('change.dsChipGroupBinding', 'input[type="checkbox"]', function() {
+      callback(false);
+    });
+  },
+  unsubscribe: function(el) {
+    $(el).off('.dsChipGroupBinding');
+  }
+});
+Shiny.inputBindings.register(dsChipGroupBinding, 'designsystemet.chipGroup', true);
+
 // Select binding
 var dsSelectBinding = new Shiny.InputBinding();
 $.extend(dsSelectBinding, {

@@ -50,12 +50,15 @@ Each R file wraps one or more components using `htmltools::tag()`. Every compone
 2. A matching binding registered in `inst/www/js/ds-bindings.js`
 
 **Group-level inputs.** Some inputs aren't reactive as individual elements — a single
-`<input type="radio">` or a single chip button means nothing on its own; only the group has a
+`<input type="radio">` or a single chip means nothing on its own; only the group has a
 value. For these, put `ds-shiny-input` on the *container*, not the individual elements, and bind
 `find()` to the container selector (e.g. `fieldset.ds-shiny-input` for `ds_radio_group()`), reading
 the value from whichever child is checked/selected. `ds_radio_group()` +`dsRadioGroupBinding` is
 the reference implementation of this pattern — mirrors how Shiny's own `radioButtons()` reports one
-value per group. Don't try to make each individual radio/chip independently reactive.
+value per group. `ds_chip_group()` + `dsChipGroupBinding` is the multi-select version (checked
+chip checkboxes → character vector, `NULL` when empty, like `checkboxGroupInput()`). Don't try to
+make each individual radio/chip independently reactive, and don't give the child inputs an `id`:
+Shiny's built-in checkbox/radio bindings would bind them as separate inputs.
 
 ### JS bindings (`inst/www/js/ds-bindings.js`)
 
@@ -93,6 +96,16 @@ For CSS components (plain HTML tags):
 ```r
 class = .ds_classes("ds-button", if (!is.null(inputId)) "ds-action-button")
 ```
+
+**Match the upstream markup and attributes, not just the class.** Check the bundled
+`designsystemet.min.css` for the selectors a component actually styles before choosing markup or
+attributes — a wrong attribute fails silently (the element renders, just in the default style).
+Examples: alerts and validation messages take their colour from `data-color`
+(`info`/`success`/`warning`/`danger`), not `data-variant`; a chip's selected state comes from a
+checked `<input type="checkbox">` inside `<label class="ds-chip">`
+(`.ds-chip:has(input:checked)`), not from `aria-pressed` on a `<button>`. Don't add arguments for
+attributes the CSS doesn't style. The `Shiny.setInputValue()` approach is only for behaviour-only
+module components (see below); plain CSS components like chip use an `InputBinding`.
 
 ### Behaviour-only modules and phantom Shiny inputs
 
